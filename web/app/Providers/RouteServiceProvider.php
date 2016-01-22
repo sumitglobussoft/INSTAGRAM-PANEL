@@ -14,12 +14,13 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'InstagramAutobot\Http\Controllers';
+//    protected $namespace = 'InstagramAutobot\Http\Controllers';
+    protected $namespace = 'InstagramAutobot\Http\Modules';
 
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Routing\Router $router
      * @return void
      */
     public function boot(Router $router)
@@ -32,13 +33,20 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Routing\Router $router
      * @return void
      */
     public function map(Router $router)
     {
+//        $router->group(['namespace' => $this->namespace], function ($router) {
+//            require app_path('Http/routes.php');
+//        });
+
         $router->group(['namespace' => $this->namespace], function ($router) {
-            require app_path('Http/routes.php');
+            $modules = config("module.modules");
+            while (list(, $module) = each($modules)) {
+                include public_path() . '/../app/Http/Modules/' . $module . '/routes.php';
+            }
         });
     }
 }

@@ -13,8 +13,20 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
+//    protected $middleware = [
+//        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+//    ];
+
+    /*
+   * EXTRA ADDED LINES
+   */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \InstagramAutobot\Http\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+//        \FlashSale\Http\Middleware\VerifyCsrfToken::class,//UNCOMMENT THIS TO DISABLE CROSS ORIGIN REQUESTS
     ];
 
     /**
@@ -22,19 +34,20 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
-    protected $middlewareGroups = [
-        'web' => [
-            \InstagramAutobot\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \InstagramAutobot\Http\Middleware\VerifyCsrfToken::class,
-        ],
+//    protected $middlewareGroups = [
+//        'web' => [
+//            \InstagramAutobot\Http\Middleware\EncryptCookies::class,
+//            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+//            \Illuminate\Session\Middleware\StartSession::class,
+//            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+//            \InstagramAutobot\Http\Middleware\VerifyCsrfToken::class,
+//        ],
+//
+//        'api' => [
+//            'throttle:60,1',
+//        ],
+//    ];
 
-        'api' => [
-            'throttle:60,1',
-        ],
-    ];
 
     /**
      * The application's route middleware.
@@ -45,8 +58,8 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \InstagramAutobot\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest' => \InstagramAutobot\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+//        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+//        'guest' => \InstagramAutobot\Http\Middleware\RedirectIfAuthenticated::class,
+//        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];
 }

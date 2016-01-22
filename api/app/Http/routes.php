@@ -26,6 +26,13 @@ Route::get('/', function () {
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    //
-});
+Route::resource('/login','Supplier\AuthenticationController@login');
+Route::resource('/signUp','Supplier\AuthenticationController@signUp');
+Route::resource('/forgotPassword','Supplier\AuthenticationController@forgotPassword');
+Route::resource('/supplier/showProfileDetails','Supplier\ProfileController@showProfileDetails');
+Route::resource('/supplier/updateProfileInfo','Supplier\ProfileController@updateProfileInfo');
+Route::resource('/supplier/updatePassword','Supplier\ProfileController@updatePassword');
+Route::resource('/supplier/changeAvatar','Supplier\ProfileController@changeAvatar');
+
+Route::resource('/supplier/getAddOrderFormDetails','Supplier\OrderController@getAddOrderFormDetails');
+Route::resource('/supplier/addOrder','Supplier\OrderController@addOrder');

@@ -9,7 +9,7 @@ Route::group(array('module' => 'Admin', 'namespace' => 'InstagramAutobot\Http\Mo
 //    });
 
 
-    Route::group(['middleware'=>'auth:admin'],function(){
+    Route::group(['middleware' => 'auth:admin'], function () {
         Route::resource('admin/dashboard', 'AdminController@dashboard');
     });
 
