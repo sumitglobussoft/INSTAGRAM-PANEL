@@ -8,21 +8,19 @@ use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
-    public function getPlansDetails($where, $selectedColumns = ['*'])
+    public function insertOrder()
     {
-        try {
-            $result = DB::table('plans')
-                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
-                ->leftjoin('plangroups','plans.plangroup_id','=','plangroups.plangroup_id')
-                ->select('plans.*','plangroups.plangroup_name', 'plangroups.status')
-                ->get();
+        if (func_num_args() > 0)
+        {
+            $data = func_get_arg(0);
 
+            $result = DB::table('orders')->insert($data);
             if ($result)
-                return $result;
+                return 1;
             else
                 return 0;
-        } catch (QueryException $exc) {
-            return $exc->getMessage();
         }
     }
-}
+
+
+}//END OF CLASS ORDER

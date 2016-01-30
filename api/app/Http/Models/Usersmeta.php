@@ -23,10 +23,10 @@ class Usersmeta extends Model implements AuthenticatableContract,
 
     public function getUsermetaWhere($where, $selectedColumns = ['*'])
     {
-       $result = DB::table("usersmeta")
-                ->select($selectedColumns)
-                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
-                ->first();
+        $result = DB::table("usersmeta")
+            ->select($selectedColumns)
+            ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+            ->first();
 
         if ($result)
             return $result;
@@ -34,18 +34,24 @@ class Usersmeta extends Model implements AuthenticatableContract,
             return 0;
 
     }
+
     public function updateUsermetaWhere()
     {
         if (func_num_args() > 0) {
             $where = func_get_arg(0);
             $data = func_get_arg(1);
-            $result = DB::table('usersmeta')
-                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
-                ->update($data);
-            if($result)
-            return 1;
-            else
+            try {
+                $result = DB::table('usersmeta')
+                    ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                    ->update($data);
+                if ($result)
+                    return 1;
+                else
+                    return 0;
+
+            } catch (QueryException $e) {
                 return 0;
+            }
         }
     }
 
@@ -57,6 +63,24 @@ class Usersmeta extends Model implements AuthenticatableContract,
             if ($result) {
                 return 1;
             } else {
+                return 0;
+            }
+        }
+    }
+
+    public function insertUsermeta()
+    {
+        if (func_num_args() > 0) {
+            $data = func_get_arg(0);
+            try {
+                $id = DB::table('usersmeta')
+                    ->insertGetId($data);
+
+                if ($id)
+                    return $id;
+                else
+                    return 0;
+            } catch (QueryException $exc) {
                 return 0;
             }
         }

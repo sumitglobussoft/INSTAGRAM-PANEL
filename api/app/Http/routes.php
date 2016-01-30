@@ -36,3 +36,4 @@ Route::resource('/supplier/changeAvatar','Supplier\ProfileController@changeAvata
 
 Route::resource('/supplier/getAddOrderFormDetails','Supplier\OrderController@getAddOrderFormDetails');
 Route::resource('/supplier/addOrder','Supplier\OrderController@addOrder');
+Route::resource('/supplier/getCommentsList','Supplier\OrderController@getCommentsList');

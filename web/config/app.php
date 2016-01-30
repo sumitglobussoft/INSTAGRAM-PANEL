@@ -157,6 +157,8 @@ return [
         InstagramAutobot\Providers\AuthServiceProvider::class,
         InstagramAutobot\Providers\EventServiceProvider::class,
         InstagramAutobot\Providers\RouteServiceProvider::class,
+//        Curl\CurlRequestHandler::class
+
 
     ],
 
@@ -203,6 +205,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+//        'Curl' => Curl\CurlRequestHandler::class
 
     ],
 

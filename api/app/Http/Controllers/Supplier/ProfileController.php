@@ -259,7 +259,7 @@ class ProfileController extends Controller
                             echo json_encode($response, true);
                         } else {
                             $response->code = 400;
-                            $response->message = "Something went wrong";
+                            $response->message = "Information Already updated";
                             $response->data = 1;
                             echo json_encode($response, true);
                         }
@@ -370,7 +370,7 @@ class ProfileController extends Controller
                             }
                         } else {
                             $response->code = 400;
-                            $response->message = "Invalid Password";
+                            $response->message = "Invalid Old Password";
                             $response->data = null;
                             echo json_encode($response, true);
                         }

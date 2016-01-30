@@ -38,6 +38,7 @@ class AuthenticationController extends Controller
         $response = new stdClass();
         if ($request->isMethod("POST")) {
             $postData = $request->all();
+            $objUsermeta = new Usersmeta();
 
             $apiToken = "";
             if (isset($postData['api_token'])) {
@@ -83,10 +84,20 @@ class AuthenticationController extends Controller
                     ]);
 
                     if ($supplier) {
-                        $response->code = 200;
-                        $response->message = "Signup successful.";
-                        $response->data = $supplier['original'];
-                        echo json_encode($response);
+                        $userOriginalData = $supplier['original'];
+                        $userOriginalData['account_bal'] = 0;
+
+                        $data['user_id'] = $userOriginalData['id'];
+                        $data['account_bal'] = 0;
+
+                        $result = $objUsermeta->insertUsermeta($data);
+                        if ($result) {
+                            $response->code = 200;
+                            $response->message = "Signup successful.";
+                            $response->data = $userOriginalData;
+                            echo json_encode($response);
+                        }
+
                     }
 
 
@@ -185,11 +196,11 @@ class AuthenticationController extends Controller
 
             if ($apiToken == $this->API_TOKEN) {
                 $rules = array(
-                    'username' => 'required',
+                    'emailOrUsername' => 'required',
                     'password' => 'required',
                 );
                 $messages = [
-                    'username.required' => 'Please enter email address or username ',
+                    'emailOrUsername.required' => 'Please enter email address or username ',
                     'password.required' => 'Please enter a password',
                 ];
 
@@ -198,7 +209,7 @@ class AuthenticationController extends Controller
                     $objUserModel = new User();
                     $objUsermetaModel = new Usersmeta();
 
-                    $username = $postData['username'];
+                    $username = $postData['emailOrUsername'];
                     $password = $postData['password'];
                     $field = 'username';
                     if (strpos($username, '@') !== false) {
