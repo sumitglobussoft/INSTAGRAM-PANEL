@@ -14,19 +14,43 @@ use InstagramAutobot\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
-    protected $apiurl;
+    protected $API_URL;
     protected $API_TOKEN;
 
     public function __construct()
     {
         $this->API_TOKEN = env('API_TOKEN');
-        $this->apiurl = env('API_URL');
+        $this->API_URL = env('API_URL');
     }
 
     public function addOrder(Request $request)
     {
         if ($request->isMethod('post')) {
-            $url = $this->apiurl . '/supplier/addOrder';
+
+            $date = new \DateTime();
+//        echo $date->format('U = Y-m-d H:i:s') . "\n";
+//
+//        $date->setTimestamp(1171502725);
+//        echo $date->format('U = Y-m-d H:i:s') . "\n";
+//        dd();
+//        $nowtime = time();
+//        $oldtime = 1454599590;
+//        echo $nowtime;
+//        $temp = $nowtime - $oldtime;
+//        echo $temp;
+//        $date->setTimestamp($nowtime - $oldtime);
+//        dd($date->format('H:i'));
+//        date('d.m.Y H:i:s', 1454585614);
+//        dd($date->format('d.m.Y H:i:s'));
+
+//            $time=$request['starting_time'];
+//            echo $time, "\n";
+//            $d=strtotime($time);
+//            echo strtotime($time), "\n";
+//            dd();
+
+
+            $url = $this->API_URL . '/supplier/addOrder';
             $postData = $request->all();
 
             $rules = [
@@ -56,23 +80,28 @@ class OrderController extends Controller
                 $objCurlHandler = CurlRequestHandler::getInstance();
                 $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
 
-
-//                dd($curlResponse);
-                return Redirect::back()->with(['successMessage' => $curlResponse->message]);
+                if ($curlResponse->code == 200) {
+                    Session::put("ig_supplier.account_bal", $curlResponse->data['account_bal']);
+                    return Redirect::back()->with(['successMessage' => $curlResponse->message]);
+                } else if ($curlResponse->code == 204) {
+                    return Redirect::back()->withErrors($curlResponse->message)->withInput();
+                } else {
+                    return Redirect::back()->with(['errorMessage' => $curlResponse->message])->withInput();
+                }
             } else {
-//                dd($validator->messages());
+                dd($validator->messages());
                 return Redirect::back()->with(['errorMessage' => "Please correct the following errors"])->withErrors($validator)->withInput();
             }
         }
 
-        $url = $this->apiurl . '/supplier/getAddOrderFormDetails';
+        $url = $this->API_URL . '/supplier/getAddOrderFormDetails';
 
         $data['api_token'] = $this->API_TOKEN;
         $objCurlHandler = CurlRequestHandler::getInstance();
         $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
         $planDetailsData = $curlResponse->data;
 
-        $url = $this->apiurl . '/supplier/getCommentsList';
+        $url = $this->API_URL . '/supplier/getCommentsList';
 
         $data['api_token'] = $this->API_TOKEN;
         $data['user_id'] = Session::get('ig_supplier')['id'];
@@ -86,6 +115,15 @@ class OrderController extends Controller
 
     public function orderHistory(Request $request)
     {
-        return view('Supplier::order.orderHistory');
+        $url = $this->API_URL . '/supplier/getOrderHistory';
+        $data['api_token'] = $this->API_TOKEN;
+        $data['user_id'] = Session::get('ig_supplier')['id'];
+        $objCurlHandler = CurlRequestHandler::getInstance();
+        $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+        if ($curlResponse->code == 200)
+            return view('Supplier::order.orderHistory')->with(['orders' => $curlResponse->data]);
+        else
+            return view('Supplier::order.orderHistory');
+
     }
 }

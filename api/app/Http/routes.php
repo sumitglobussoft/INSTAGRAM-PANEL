@@ -26,14 +26,21 @@ Route::get('/', function () {
 |
 */
 
-Route::resource('/login','Supplier\AuthenticationController@login');
-Route::resource('/signUp','Supplier\AuthenticationController@signUp');
-Route::resource('/forgotPassword','Supplier\AuthenticationController@forgotPassword');
-Route::resource('/supplier/showProfileDetails','Supplier\ProfileController@showProfileDetails');
-Route::resource('/supplier/updateProfileInfo','Supplier\ProfileController@updateProfileInfo');
-Route::resource('/supplier/updatePassword','Supplier\ProfileController@updatePassword');
-Route::resource('/supplier/changeAvatar','Supplier\ProfileController@changeAvatar');
+Route::resource('/login','User\AuthenticationController@login');
+Route::resource('/signUp','User\AuthenticationController@signUp');
+Route::resource('/forgotPassword','User\AuthenticationController@forgotPassword');
+Route::resource('/user/showProfileDetails','User\ProfileController@showProfileDetails');
+Route::resource('/user/updateProfileInfo','User\ProfileController@updateProfileInfo');
+Route::resource('/user/updatePassword','User\ProfileController@updatePassword');
+Route::resource('/user/changeAvatar','User\ProfileController@changeAvatar');
 
-Route::resource('/supplier/getAddOrderFormDetails','Supplier\OrderController@getAddOrderFormDetails');
-Route::resource('/supplier/addOrder','Supplier\OrderController@addOrder');
-Route::resource('/supplier/getCommentsList','Supplier\OrderController@getCommentsList');
+Route::resource('/user/getAddOrderFormDetails','User\OrderController@getAddOrderFormDetails');
+Route::resource('/user/getCommentsList','User\OrderController@getCommentsList');
+Route::resource('/user/addOrder','User\OrderController@addOrder');
+Route::resource('/user/getOrderHistory','User\OrderController@getOrderHistory');
+Route::resource('/user/cancelOrder','User\OrderController@cancelOrder');
+Route::resource('/user/reAddOrder','User\OrderController@reAddOrder');
+
+//To test for cron function
+Route::resource('/user/addOrderToServerCronJob','User\OrderController@addOrderToServerCronJob');
+Route::resource('/user/updateOrderStatusCronJob','User\OrderController@updateOrderStatusCronJob');

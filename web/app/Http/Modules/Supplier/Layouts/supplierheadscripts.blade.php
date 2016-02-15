@@ -9,8 +9,11 @@
 {{--<link rel="shortcut icon" href="img/favicon.ico">--}}
 
 <link href="https://fonts.googleapis.com/css?family=Exo" rel="stylesheet" />
-<link href="/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="/assets/plugins/bootstrap/css/new.css" rel="stylesheet">
+{{--<link href="/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">--}}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<link href="/assets/css/new.css" rel="stylesheet">
+<link href="/assets/plugins/datatables/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<link href="/assets/css/select2.min.css" rel="stylesheet" />
 
 <link href="/assets/plugins/fonts/font-awesome.min.css" rel="stylesheet">
 

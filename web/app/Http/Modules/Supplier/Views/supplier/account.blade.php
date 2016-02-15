@@ -7,9 +7,6 @@
     {{--OPTIONAL--}}
     {{--PAGE STYLES OR SCRIPTS LINKS--}}
 
-
-    <link href="/assets/plugins/datatables/css/jquery.dataTables.min.css" rel="stylesheet"/>
-
     <style>
         .badge {
             background-color: #777;
@@ -204,14 +201,16 @@
                                         <tbody>
                                         <tr>
                                             <td><i class="fa fa-user"></i></td>
-                                            <td> Username </td>
+                                            <td> Username</td>
                                             <td> {{Session::get('ig_supplier')['username']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><i class="fa fa fa-euro"></i></td>
                                             <td> Account Balance</td>
-                                            <td> $ {{Session::get('ig_supplier')['account_bal']}}
+                                            <td>
+                                                $ @if(isset(Session::get('ig_supplier')['account_bal'])) {{Session::get('ig_supplier')['account_bal']}} @else
+                                                    0.0000 @endif
                                                 {{--<a href="javascript:;">( Add More )</a>--}}
                                             </td>
                                         </tr>
@@ -554,7 +553,7 @@
                                                 <div class="input-group-addon"><span class="fa fa-user"></span>
                                                 </div>
                                                 <input type="text" class="form-control" id="addressline1"
-                                                       name="addressline1" placeholder=""
+                                                       name="addressline1" placeholder="" maxlength="60"
                                                        value="{{$userData['addressline1']}}"/>
                                             </div>
                                         </div>
@@ -565,7 +564,7 @@
                                                 <div class="input-group-addon"><span class="fa fa-user"></span>
                                                 </div>
                                                 <input type="text" class="form-control" id="addressline2"
-                                                       name="addressline2" placeholder=""
+                                                       name="addressline2" placeholder="" maxlength="60"
                                                        value="{{$userData['addressline2']}}"/>
                                             </div>
                                         </div>
@@ -580,6 +579,7 @@
                                                        value="{{$userData['city']}}"/>
                                             </div>
                                         </div>
+
                                         <div class="form-group">
                                             <label class="">State</label>
 
@@ -591,6 +591,7 @@
                                                        value="{{$userData['state']}}"/>
                                             </div>
                                         </div>
+
                                         <div class="form-group">
                                             <label class="">Country</label>
 
@@ -602,6 +603,7 @@
                                                        value="{{$userData['country_id']}}"/>
                                             </div>
                                         </div>
+
                                         <div class="form-group">
                                             <label class="">Contact No.</label>
 
@@ -687,7 +689,7 @@
 
                                             <div class="input-group">
                                                 <div class="input-group-addon"><span class="fa fa-unlock"></span></div>
-                                                <input type="text" class="form-control" id="oldPassword"
+                                                <input type="password" class="form-control" id="oldPassword"
                                                        name="oldPassword"
                                                        placeholder="Your Current Password" value=""/>
                                             </div>
@@ -698,7 +700,7 @@
 
                                             <div class="input-group">
                                                 <div class="input-group-addon"><span class="fa fa-lock"></span></div>
-                                                <input type="text" class="form-control" id="newPassword"
+                                                <input type="password" class="form-control" id="newPassword"
                                                        name="newPassword" placeholder="New Password"
                                                        value=""/>
                                             </div>
@@ -710,7 +712,7 @@
                                             <div class="input-group">
                                                 <div class="input-group-addon"><span class="fa fa-unlock-alt"></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="conformNewPassword"
+                                                <input type="password" class="form-control" id="conformNewPassword"
                                                        name="conformNewPassword"
                                                        placeholder="Confirm New Password" value=""/>
                                             </div>
@@ -734,15 +736,30 @@
                                 <div class="col-md-12">
                                     <form class="" role="form" id="changeAvatar">
 
-                                        <div class="form-group">
-                                            <img src="{{Session::get('ig_supplier')['profile_pic']}}" alt="user Avatar"
-                                                 width="100px"
-                                                 height="100px">
-
-                                            <input type="file" name="profilepic" accept="image/*">
-
-                                            <div><input type="button" id="avatar-submit" value="Submit"></div>
+                                        <div class="clearfix"></div>
+                                        <div class="form-group col-md-6 ">
+                                            <?php if (isset($_COOKIE['profile_pic_url'])) {
+                                               Session::put('ig_supplier.profile_pic' , $_COOKIE['profile_pic_url']);
+                                            }?>
+                                            <img class="img-thumbnail col-md-6 " alt="user Avatar" width="304" height="236"
+                                                    src="@if(isset(Session::get('ig_supplier')['profile_pic'])) {{Session::get('ig_supplier')['profile_pic']}} @else /assets/uploads/useravatar/default-profile-pic.png @endif " >
                                         </div>
+                                        <div class="form-group col-md-6">
+                                            <input type="file" name="profilepic" accept="image/*"><br>
+
+                                            <div><input type="button" class="col-md-6" id="avatar-submit"
+                                                        value="Submit"></div>
+                                        </div>
+
+                                        {{--<div class="form-group">--}}
+                                        {{--<img class="img-thumbnail form-group col-md-6"--}}
+                                        {{--src="@if(isset(Session::get('ig_supplier')['profile_pic'])) {{Session::get('ig_supplier')['profile_pic']}} @else /assets/uploads/useravatar/default-profile-pic.png @endif "--}}
+                                        {{--alt="user Avatar" width="304" height="236">--}}
+
+                                        {{--<input type="file" name="profilepic" accept="image/*">--}}
+
+                                        {{--<div><input type="button" id="avatar-submit" value="Submit"></div>--}}
+                                        {{--</div>--}}
                                     </form>
                                 </div>
                             </div>
@@ -869,11 +886,14 @@
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 
     <script type="text/javascript">
-        jQuery('.navbar-links').on('click', function(){
-            console.log('asdlasdk');
-            jQuery(this).parent().addClass('active');
-            jQuery(this).parent().siblings().removeClass('active');
-        });
+
+        //        jQuery('.navbar-links').on('click', function () {
+        //            console.log('asdlasdk');
+        //            jQuery('.navbar-links').removeClass('active');
+        //            jQuery(this).addClass('active');
+        //        });
+
+
         $(document).ready(function () {
 
             $('#changePassword').validate({
@@ -892,7 +912,7 @@
                 messages: {
                     conformNewPassword: " Enter Confirm Password Same as Password"
                 },
- //               errorPlacement: function (error, element) {
+                //               errorPlacement: function (error, element) {
 //                    if (element.attr("name") == "oldPassword") {
 //                        if ($(error).html() != '')
 //                            $('#oldPasswordError').html($(error).html());
@@ -911,7 +931,7 @@
 //                        else
 //                            $('#conformNewPasswordError').html("");
 //                    }
- //               },
+                //               },
 
                 submitHandler: function (form) {
                     console.log("Form validate successful");
@@ -957,23 +977,27 @@
                 formData.append('file', $('input[type=file]')[0].files[0]);
                 formData.append('api_token', '{{env('API_TOKEN')}}');
                 formData.append('user_id', '{{Session::get('ig_supplier')['id']}}');
+                var profile_pic_url = "";
                 $.ajax({
                     type: "POST",
 //                url: "/supplier/changeAvatar",
-                    url: "http://api.instagramautolike.localhost.com/supplier/changeAvatar",
+                    url: '{{env('API_URL')}}/supplier/changeAvatar',
                     contentType: false,
                     dataType: "json",
                     processData: false,
                     data: formData,
                     success: function (response) {
                         console.log(response);
+                        console.log({{env('API_TOKEN')}});
                         if (response['code'] == 200) {
-                            var profile_pic_url = response['data'];
+                            profile_pic_url = response['data'];
                             var d = new Date();
-                            d.setTime(d.getTime() + (60 * 1000));
+                            d.setTime(d.getTime() + (60 * 2000));
                             var expires = "expires=" + d.toUTCString();
                             document.cookie = "profile_pic_url=" + profile_pic_url + ';' + expires;
                             <?php
+
+
                             if (isset($_COOKIE['profile_pic_url'])) {
                                 Session::put('ig_supplier.profile_pic' , $_COOKIE['profile_pic_url']);
                             }?>
@@ -982,20 +1006,25 @@
                     },
                     error: function (response) {
                         console.log(response);
+                        console.log("error");
                     }
                 });
+
+
             });
 
             $('#accountSetting').validate({
                 rules: {
                     firstname: {required: true},
                     lastname: {required: true},
-                    addressline1: {required: true},
-                    city: {required: true},
-                    state: {required: true},
-                    country_id: {required: true},
-                    contact_no: {
-                        required: true
+                    username: {required: true},
+                    email: {required: true}
+//                    addressline1: {required: true},
+//                    city: {required: true},
+//                    state: {required: true},
+//                    country_id: {required: true},
+//                    contact_no: {
+//                        required: true
 //                    remote: {
 //                        url: "/supplier/ajaxHandler",
 //                        type: 'POST',
@@ -1004,7 +1033,7 @@
 //                            method: 'checkContactNumber'
 //                        }
 //                    }
-                    }
+//                    }
 
                 },
                 messages: {
@@ -1013,23 +1042,23 @@
                     },
                     lastname: {
                         required: "Please enter last name"
-                    },
-                    addressline1: {
-                        required: "Please enter an address"
-                    },
-                    city: {
-                        required: "Please enter city"
-                    },
-                    state: {
-                        required: "Please enter state"
-                    },
-                    country_id: {
-                        required: "Please enter country name"
-                    },
-                    contact_no: {
-                        required: "Please enter your contact number"
-//                    remote: "This Contact Number is already in use."
                     }
+//                    addressline1: {
+//                        required: "Please enter an address"
+//                    },
+//                    city: {
+//                        required: "Please enter city"
+//                    },
+//                    state: {
+//                        required: "Please enter state"
+//                    },
+//                    country_id: {
+//                        required: "Please enter country name"
+//                    },
+//                    contact_no: {
+//                        required: "Please enter your contact number"
+////                    remote: "This Contact Number is already in use."
+//                    }
                 },
                 submitHandler: function (form) {
                     console.log("Form validate successful");

@@ -43,7 +43,7 @@ class SupplierController extends Controller
             $objCurlHandler = CurlRequestHandler::getInstance();
 
             $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
-
+//            dd($curlResponse);
             $field = 'username';
             if (strpos($data['emailOrUsername'], '@') !== false) {
                 $field = 'email';
@@ -64,6 +64,7 @@ class SupplierController extends Controller
 
                 //return view('Supplier::supplier.login')->withErrors(['errMsg' => 'Invalid credentials.']);
             } else
+                //dd($curlResponse);
                 return Redirect::back()->withErrors($curlResponse->message)->withInput();
         }
         return view('Supplier::supplier.login');
@@ -96,39 +97,36 @@ class SupplierController extends Controller
         return view('Supplier::supplier.forgotPassword');
     }
 
-
-    function resetPassword(Request $request, $resetCode = "", $id = "")
+    public function verifyResetCode(Request $request, $resetCode)
     {
-        if ($request->isMethod('post')) {
-            $url = $this->apiurl . '/forgotPassword';
-            $data['fpwemail'] = $request['fpwemail'];
-            $data['password'] = $request['password'];
-            $data['conformPassword'] = $request['conformPassword'];
-            $data['method'] = 'resetPassword';
-            $data['api_token'] = $this->API_TOKEN;
-            $objCurlHandler = CurlRequestHandler::getInstance();
-            $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
-            if ($curlResponse->code == 200) {
-                //TODO change this statement when ajax call used
-                return view('Supplier::supplier.login');
-            } else {
-                return view('Supplier::supplier.resetPassword')->withErrors(['errMsg' => $curlResponse->message]);
-            }
+        $url = $this->apiurl . '/forgotPassword';
+        $data['resetCode'] = $resetCode;
+        $data['method'] = 'verifyResetCode';
+        $data['api_token'] = $this->API_TOKEN;
 
+        $objCurlHandler = CurlRequestHandler::getInstance();
+        $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+
+        if ($curlResponse->code == 200) {
+            if ($request->isMethod('post')) {
+                $url = $this->apiurl . '/forgotPassword';
+                $data['newPassword'] = $request['newPassword'];
+                $data['conformNewPassword'] = $request['conformNewPassword'];
+                $data['method'] = 'resetPassword';
+                $data['api_token'] = $this->API_TOKEN;
+                $objCurlHandler = CurlRequestHandler::getInstance();
+                $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+                if ($curlResponse->code == 200) {
+                    //TODO change this statement when ajax call used
+
+                    return view('Supplier::supplier.login')->with(['passwordChangeSuccessMessage'=> 'Please Login with your New Credential']);
+                } else {
+                    return view('Supplier::supplier.resetPassword')->withErrors($curlResponse->message);
+                }
+            }
+            return view('Supplier::supplier.resetPassword');
         } else {
-            $url = $this->apiurl . '/forgotPassword';
-            $data['id'] = $id;
-            $data['resetCode'] = $resetCode;
-            $data['method'] = 'verifyResetCode';
-
-            $objCurlHandler = CurlRequestHandler::getInstance();
-            $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
-
-            if ($curlResponse->code == 200) {
-                return view('Supplier::supplier.resetPassword');
-            } else {
-                return view('Supplier::supplier.forgotPassword')->withErrors(['errMsg' => $curlResponse->message]);
-            }
+            return view('Supplier::supplier.forgotPassword')->withErrors(['errMsg' => $curlResponse->message]);
         }
     }
 
@@ -155,8 +153,6 @@ class SupplierController extends Controller
             $objCurlHandler = CurlRequestHandler::getInstance();
             $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
 
-            //dd($curlResponse);
-
             if ($curlResponse->code == 200) {
                 return json_encode(array('status' => 1, 'successMessage' => $curlResponse->message));
             } else
@@ -172,36 +168,49 @@ class SupplierController extends Controller
         }
 
         if ($request->isMethod('post')) {
-            $url = $this->apiurl . '/signUp';
 
+            $rules = array(
+                'firstname' => 'required|regex:/^[A-Za-z\s]+$/|max:255',
+                'lastname' => 'required|regex:/^[A-Za-z\s]+$/|max:255',
+                'username' => 'required|regex:/^[A-Za-z0-9._\s]+$/|max:255|unique:users',
+                'email' => 'required|email|max:255|unique:users',
+                'password' => 'required|regex:/^[A-Za-z0-9@#$_\s]+$/',
+                'conform_password' => 'required|same:password',
+            );
+            $messages = [
+                'firstname.regex' => 'The :attribute cannot contain special characters.',
+                'lastname.regex' => 'The :attribute cannot contain special characters.',
+                'username.regex' => 'The :attribute cannot contain special characters.',
+                'email.unique' => 'The: attribute already exist',
+                'password.regex' => 'The :attribute cannot contain special characters except @#$_.',
+            ];
+            $validator = Validator::make($request->all(), $rules, $messages);
+//            if (!$validator->fails()) {
+            $url = $this->apiurl . '/signUp';
             $data['firstname'] = $request['firstname'];
             $data['lastname'] = $request['lastname'];
             $data['username'] = $request['username'];
             $data['email'] = $request['email'];
             $data['password'] = $request['password'];
+            $data['conform_password'] = $request['conform_password'];
             $data['role'] = 1;
             $data['api_token'] = $this->API_TOKEN;
             $objCurlHandler = CurlRequestHandler::getInstance();
             $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
             //echo '<pre>'; print_r($curlResponse);die;
 
-            if ($curlResponse->code == 200) {
-                $responseData = $curlResponse->data;
-                if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
-                    if ($responseData['role'] == 1) {
-                        Session::put('ig_supplier', $responseData);
-//                    dd(Session::all());
-                        return redirect('supplier/dashboard');
-                    } else
-                        return redirect('supplier/login');
-                }
-            } else
-                if ($curlResponse->code == 400) {
-                    return Redirect::back()->withErrors(['registerErrMsg' => $curlResponse['message']])->withInput();
-                } else {
-                    return Redirect::back()->withErrors(['registerErrMsg' => 'Something went wrong, please try again.'])->withInput();
-                }
+            if ($curlResponse->code == 200)
+                return view('Supplier::supplier.login')->with(['registerSuccesMessage'=> 'You have succesfull sign up, please wait for Admin Approval']);
+            else if ($curlResponse->code == 100)
+                return Redirect::back()->withErrors($curlResponse->message)->withInput();
+            else
+                return Redirect::back()->with(['registerErrorMessage' => $curlResponse->message])->withInput();
+//            } else {
+//                return Redirect::back()->withErrors($validator->messages())->withInput();
+//            }
+
         }
+
         return view('Supplier::supplier.register');
     }
 
@@ -211,7 +220,8 @@ class SupplierController extends Controller
         return view('Supplier::supplier.dashboard');
     }
 
-    public function myAccount()
+    public
+    function myAccount()
     {
         $url = $this->apiurl . '/supplier/showProfileDetails';
         $data['user_id'] = Session::get('ig_supplier')['id'];
@@ -222,7 +232,8 @@ class SupplierController extends Controller
         return view('Supplier::supplier.account', ['userData' => $userDetails]);
     }
 
-    public function logout()
+    public
+    function logout()
     {
         Session::forget('ig_supplier');
         return redirect('/supplier/login');
@@ -239,7 +250,8 @@ class SupplierController extends Controller
         return view('Supplier::supplier.showProfile', ['userData' => $userDetails]);
     }
 
-    public function updateProfileInfo(Request $request)
+    public
+    function updateProfileInfo(Request $request)
     {
         $url = $this->apiurl . '/supplier/updateProfileInfo';
 
@@ -259,14 +271,15 @@ class SupplierController extends Controller
 
         $objCurlHandler = CurlRequestHandler::getInstance();
         $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
-        if($curlResponse->code==200){
-            echo json_encode(array('status'=>1,'successMessage'=>$curlResponse->message));
-        }else{
-            echo json_encode(array('status'=>0,'errorMessage'=>$curlResponse->message));
+        if ($curlResponse->code == 200) {
+            echo json_encode(array('status' => 1, 'successMessage' => $curlResponse->message));
+        } else {
+            echo json_encode(array('status' => 0, 'errorMessage' => $curlResponse->message));
         }
     }
 
-    public function changeAvatar(Request $request)
+    public
+    function changeAvatar(Request $request)
     {
         if (Input::hasFile('file')) {
             $validator = Validator::make($request->all(), ['file' => 'image']);

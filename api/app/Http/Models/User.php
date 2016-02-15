@@ -124,18 +124,19 @@ class User extends Model implements AuthenticatableContract,
     public function resetPassword()
     {
         if (func_num_args() > 0) {
-            $fpwemail = func_get_arg(0);
+            $resetCode = func_get_arg(0);
             $password = func_get_arg(1);
             $row = DB::table("users")
                 ->select()
-                ->where('email', $fpwemail)
+                ->where('pd_reset_token', $resetCode)
                 ->first();
             if ($row) {
                 try {
                     $data = array('password' => $password, 'pd_reset_token' => '');
                     $updated = DB::table('users')
-                        ->where('email', $fpwemail)
+                        ->where('email', $row->email)
                         ->update($data);
+
                     if ($updated)
                         return $updated;
                     else

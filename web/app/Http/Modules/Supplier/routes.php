@@ -4,10 +4,16 @@
 Route::group(array('module' => 'Supplier', 'namespace' => 'Supplier\Controllers'), function () {
 //Your routes belong to this module.
 
+    Route::get('/', function () {
+        return view('Supplier::supplier.login');
+    });
+
     Route::resource('supplier/login', 'SupplierController@login');
     Route::resource('supplier/register', 'SupplierController@register');
     Route::resource('supplier/logout', 'SupplierController@logout');
     Route::resource('supplier/forgotPassword', 'SupplierController@forgotPassword');
+    Route::get('supplier/verifyResetCode/{resetCode}', 'SupplierController@verifyResetCode');
+    Route::post('supplier/verifyResetCode/{resetCode}', 'SupplierController@verifyResetCode');
 
 
 
@@ -25,5 +31,4 @@ Route::group(array('module' => 'Supplier', 'namespace' => 'Supplier\Controllers'
 
     });
 
-    Route::resource('supplier/resetPassword/{resetCode?}/{id?}', 'SupplierController@resetPassword');
 });
