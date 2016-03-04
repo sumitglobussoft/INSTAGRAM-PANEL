@@ -188,6 +188,7 @@ class AuthenticationController extends Controller
 
     function login(Request $request)
     {
+
         $response = new stdClass();
         if ($request->isMethod("POST")) {
             $postData = $request->all();

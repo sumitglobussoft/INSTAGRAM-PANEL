@@ -29,4 +29,26 @@ class PasswordController extends Controller
     {
         $this->middleware('guest');
     }
+
+
+   // use ResetsPasswords;
+
+    public function resetPassword(Request $request)
+    {
+        $this->validate($request, ['email' => 'required']);
+
+        $response = $this->passwords->sendResetLink($request->only('email'), function($message)
+        {
+            $message->subject('Password Reminder');
+        });
+
+        switch ($response)
+        {
+            case PasswordBroker::RESET_LINK_SENT:
+                return redirect()->back()->with('status', trans($response));
+
+            case PasswordBroker::INVALID_USER:
+                return redirect()->back()->withErrors(['email' => trans($response)]);
+        }
+    }
 }

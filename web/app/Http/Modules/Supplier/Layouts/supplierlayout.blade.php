@@ -136,6 +136,20 @@
                         {{--<li><a href="javascript:;">API</a></li>--}}
                     {{--</ul>--}}
                 {{--</li>--}}
+
+                <li class="">
+                    <a href="javascript:;"  class="navbar-links"><i class="fa fa-shopping-cart"></i>Tickets</a>
+                    <ul>
+                        <li><a href="/user/create-ticket">Create Tickets</a></li>
+                        <li><a href="/user/show-tickets">Show Tickets</a></li>
+                        {{--<li><a href="javascript:;">Automatic Orders</a></li>--}}
+                        {{--<li><a href="javascript:;">Instagram Auto-Likes</a></li>--}}
+                        {{--<li><a href="javascript:;">Pricing &amp; Information</a></li>--}}
+                        {{--<li style="border-top:1px #FFF solid;"><a href="javascript:;">API Docs</a></li>--}}
+                        {{--<li><a href="javascript:;">Scripts</a></li>--}}
+                    </ul>
+                </li>
+
             </ul>
         </div>
         <!-- Top Nav End -->

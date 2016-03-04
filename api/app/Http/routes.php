@@ -44,3 +44,20 @@ Route::resource('/user/reAddOrder','User\OrderController@reAddOrder');
 //To test for cron function
 Route::resource('/user/addOrderToServerCronJob','User\OrderController@addOrderToServerCronJob');
 Route::resource('/user/updateOrderStatusCronJob','User\OrderController@updateOrderStatusCronJob');
+
+
+//  Routes for ticket generation done by saurabh
+Route::resource('/user/create-tickets','User\TicketsController@createTicket');
+
+//Routes for Payment Controller done by saurabh
+Route::resource('/user/paymenta','User\PaymentController@payment');
+Route::resource('/user/add-balance','User\PaymentController@addBalance');
+Route::resource('/user/expressCallback', 'User\PaymentController@expressCallback');
+
+//Routes for CHEAPBULK API done by SAURABH
+Route::resource('/user/order-status-cheapbulk','API\CheapBulk@order_status');
+Route::resource('/user/add-order-cheapbulk','API\CheapBulk@order_add');
+
+//To test for cron function
+Route::resource('/user/scheduleOrdersCronJob','User\OrderController@scheduleOrdersCronJob');
+Route::resource('/user/addProcessOrdersToServerCronJob','User\OrderController@addProcessOrdersToServerCronJob');

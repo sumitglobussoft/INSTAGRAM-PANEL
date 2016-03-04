@@ -27,6 +27,7 @@ class SupplierController extends Controller
     {
         $this->apiurl = env('API_URL');
         $this->API_TOKEN = env('API_TOKEN');
+
     }
 
     function login(Request $request)
@@ -305,4 +306,6 @@ class SupplierController extends Controller
             die;
         }
     }
+
+
 }

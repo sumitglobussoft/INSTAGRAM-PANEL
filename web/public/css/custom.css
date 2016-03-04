@@ -1,0 +1,294 @@
+/* CUSTOM SYTLE */
+
+body#page-authentication {
+    height: auto;
+    min-height: auto;
+}
+
+.authentication-header {
+    background-color: #9b6954 !important;
+}
+
+#page-authentication {
+    background: rgba(0, 0, 0, 0) url("../images/bg1.jpg") no-repeat scroll left 37% / cover;
+    overflow: auto !important;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+#authentication-box {
+    margin: 5% auto 0;
+}
+
+#authentication-box .authentication-box-wrapper {
+    transform: translateY(0%);
+}
+
+.logo {
+    background-color: #ded1c1 !important;
+}
+
+.btn-theme {
+    background-color: #9b6954;
+    border-color: #9b6954;
+    color: #FFF;
+}
+
+.btn-theme:hover {
+    color: #FFF;
+}
+
+.form-group .form-control ~ .form-control-line::after,
+.form-group .form-control ~ label::after {
+    background-color: #9b6954;
+}
+
+.has-success .form-control ~ .form-control-line::after,
+.has-success .form-control ~ label::after {
+    background-color: #4caf50;
+}
+
+.form-group .form-control:focus ~ label {
+    color: #9b6954;
+}
+
+.has-success.form-group .form-control:focus ~ label {
+    color: #4caf50;
+}
+
+.text-theme {
+    color: #9b6954;
+}
+
+.text-theme:hover {
+    color: #5a2e1b;
+}
+
+.foot-login {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 1%;
+}
+
+section.page-header.alternative-header {
+    background: #9B6954 url("../images/page-title-bg.png") no-repeat scroll 0 0 / cover;
+}
+
+.open .menu-item-ico.ico-right {
+    margin-right: 0 !important;
+}
+
+.open .menu-item-ico.ico-right i {
+    font-size: 17px !important;
+}
+
+.open .menu-item-name.menu-right {
+    font-size: 13px;
+}
+
+body .header-container .header-wrapper #header-brand {
+    width: 250px;
+}
+
+#page-wrapper #left-content {
+    max-width: 250px;
+    min-width: 250px;
+    width: 250px;
+}
+
+#page-wrapper #left-content.SidebarClose {
+    margin-left: -250px;
+}
+
+/* Prasanna */
+.tab-style {
+    background-color: #FFF;
+}
+
+.profile-avatar {
+    background-image: url("../images/avatar.png");
+    background-size: cover;
+    border-radius: 100%;
+    margin: 4rem auto 2rem auto;
+    width: 10rem;
+    height: 10rem;
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.2);
+    transition: all 0.5s ease-in-out;
+}
+
+.profile-avatar:hover {
+    box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.6);
+}
+
+.profile-name {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 300;
+    color: #ffffff;
+    text-shadow: 1px 1px 2px #444444;
+    margin: 0;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+    border-bottom: 2px solid #9D7868;
+    color: #9D7868 !important;
+}
+
+.panel-heading.nav-tabs > li > a, .panel-heading > header {
+    color: #9D7868 !important;
+}
+
+.panel-heading.nav-tabs > li > a, .panel-heading > .nav-tabs > li > a {
+    color: #9D7868 !important;
+}
+
+.btn-primary {
+    background-color: #886353;
+    border-color: #886353;
+    color: #fff;
+}
+
+.btn-primary.active, .btn-primary.focus, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open .dropdown-toggle.btn-primary {
+    background-color: #9b6954;
+    border-color: #9b6954;
+    color: #fff;
+}
+
+.btn-primary.active:focus:not(.disabled), .btn-primary.active:hover:not(.disabled), .btn-primary:active:focus:not(.disabled), .btn-primary:active:hover:not(.disabled), .open > .dropdown-toggle.btn-primary:focus:not(.disabled), .open > .dropdown-toggle.btn-primary:hover:not(.disabled) {
+    background-color: #9b6954;
+    border-color: #9b6954;
+}
+
+.btn-flat {
+    color: #FFF !important;
+}
+
+/* Portlets */
+
+/* Portlet */
+.portlet {
+    background: #fff;
+    padding: 20px;
+}
+
+.portlet.portlet-gray {
+    background: #f7f7f7;
+}
+
+.portlet.portlet-bordered {
+    border: 1px solid #eee;
+}
+
+/* Portlet Title */
+.portlet-title {
+    padding: 0;
+    min-height: 40px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 18px;
+}
+
+.caption {
+    float: left;
+    display: inline-block;
+    font-size: 18px;
+    line-height: 18px;
+}
+
+.caption.caption-green .caption-subject,
+.caption.caption-green i {
+    color: #4db3a2;
+    font-weight: 200;
+}
+
+.caption.caption-red .caption-subject,
+.caption.caption-red i {
+    color: #e26a6a;
+    font-weight: 200;
+}
+
+.caption.caption-purple .caption-subject,
+.caption.caption-purple i {
+    color: #8775a7;
+    font-weight: 400;
+}
+
+.caption i {
+    color: #777;
+    font-size: 15px;
+    font-weight: 300;
+    margin-top: 3px;
+}
+
+.caption-subject {
+    color: #666;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.caption-helper {
+    padding: 0;
+    margin: 0;
+    line-height: 13px;
+    color: #9eacb4;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+/* Tab */
+.portlet-title > .nav-tabs {
+    background: none;
+    margin: 0;
+    float: right;
+    display: inline-block;
+    border: 0;
+}
+
+.portlet-title > .nav-tabs > li {
+    background: none;
+    margin: 0;
+    border: 0;
+}
+
+.portlet-title > .nav-tabs > li > a {
+    background: none;
+    border: 0;
+    padding: 2px 10px 13px;
+    color: #444;
+}
+
+.portlet-title > .nav-tabs > li.active,
+.portlet-title > .nav-tabs > li.active:hover {
+    border-bottom: 4px solid #f3565d;
+    position: relative;
+}
+
+.portlet-title > .nav-tabs > li:hover {
+    border-bottom: 4px solid #f29b9f;
+}
+
+.portlet-title > .nav-tabs > li.active > a,
+.portlet-title > .nav-tabs > li:hover > a {
+    color: #333;
+    background: #fff;
+    border: 0;
+}
+
+.dtp-btn-ok.btn.btn-flat {
+    background-color: #886353;
+}
+
+.dtp > .dtp-content > .dtp-date-view > header.dtp-header, .dtp-btn-cancel.btn.btn-flat {
+    background: #886353 none repeat scroll 0 0;
+}
+
+.dtp div.dtp-date, .dtp div.dtp-time, .dtp table.dtp-picker-days tr > td > a.selected, .dtp .dtp-picker-time > a.dtp-select-hour.selected, .dtp .dtp-actual-meridien a.selected, .dtp .dtp-hand.on, .dtp .dtp-picker-time > a.dtp-select-minute.selected {
+    background: #c49165 none repeat scroll 0 0;
+}
+
+.dtp-select-month-before > .material-icons, .dtp-select-month-after > .material-icons, .dtp-actual-year, .dtp-select-year-before > .material-icons, .dtp-select-year-after > .material-icons, .dtp-actual-year {
+    color: #FFF !important;
+}
+
+body .header-container .header-wrapper #header-brand {
+    min-width: auto;
+}

@@ -11,9 +11,15 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use InstagramAutobot\Http\Modules\User\Models\Transaction;
 use InstagramAutobot\Http\Modules\User\Models\User;
 use InstagramAutobot\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
+
+use InstagramAutobot\Http\Modules\User\Models\Usersmeta;
+use vendor\Payment\Paypal\Paypal;
+
+include public_path() . "/../vendor/Payment/Paypal/Paypal.php";
 
 //include public_path() . "/../vendor/curl/CurlRequestHandler.php";
 
@@ -130,7 +136,7 @@ class UserController extends Controller
         }
     }
 
-   public function changePassword(Request $request)
+    public function changePassword(Request $request)
     {
         if ($request->isMethod('post')) {
             $rules = array(
@@ -308,4 +314,168 @@ class UserController extends Controller
     {
         return view('User::user.changeAvatar');
     }
+    /*-------------------function created by saurabh------------------------------*/
+    //PAYPAL Integration
+    public function payment(Request $request)
+    {
+
+        if ($request->isMethod('post')) {
+
+            $url = $this->apiurl . '/user/add-balance';
+//            print_r($url);
+            $data['api_token'] = $this->API_TOKEN;
+            $this->validate($request, [
+                'money' => 'required|regex:/^[0-9]+([.][0-9]+)?$/',
+            ], [
+                'money.required' => 'Please Enter Amount that you want to add to your wallet',
+                'money.regex' => 'Please Enter a valid Amount i.e. number or decimal value '
+            ]);
+            $data['money'] = $request['money'];
+            $objCurlHandler = CurlRequestHandler::getInstance();
+            $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+//                print_r($curlResponse);
+//dd("asd");
+            if ($curlResponse->code == 200) {
+                $token = $curlResponse->data;
+                $token = json_decode($token);
+//                return $curlResponse->data;
+//                return redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_notify-validate');
+                return redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $token);
+
+//                return json_encode(array('status' => 1, 'successMessage' => $curlResponse->message));
+            } else
+                return json_encode(array('status' => 0, 'errorMessage' => $curlResponse->message));
+        }
+        return view('User::user.addbalance');
+
+//api.instagramautolike.localhost.com/user/payment
+
+
+//        $objPaypal = paypal::getInstance();
+//        print_r($objPaypal);
+//        die;
+    }
+
+//    public function addBalance(Request $request)
+//    {
+//
+//        if ($request->isMethod('post')) {
+//            $paymentAmount = $request->input('money');
+//            $this->validate($request,[
+//                'money'=>'required'
+//            ],[
+//                'money.required'=>'Please Enter Amount that you want to add to your wallet'
+//            ]);
+//
+////            $objPaypal = paypal::getInstance();
+////            $description="Adding Credit";
+//            $returnURL = "http://instagramautolike.localhost.com/expressCallback/".$paymentAmount;
+//            $cancelURL = "http://instagramautolike.localhost.com/paymentError/196";
+//            $payment_request_quantity = 1;
+//            $description = "Adding Credit";
+//            $payment_request_number = 1;
+//            $payment_type = "Any";
+//            $custom = "";
+//            $subscription_type = "";
+//
+//            $objpaypal = paypal::getInstance();
+//            $result = $objpaypal->CallShortcutExpressCheckout($paymentAmount, $returnURL, $cancelURL, $payment_request_quantity, $description, $payment_request_number, $payment_type, $custom, $subscription_type);
+//            $token=$result['TOKEN'];
+//            return redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='.$token);
+////            echo "<pre>";print_r($token);
+////            die;
+//        }
+//        return view('User::user.addbalance');
+//    }
+
+    public function expressCallback($amount, Request $request)
+    {
+//        dd($request);
+        $url = $this->apiurl . '/user/expressCallback';
+        $data['api_token'] = $this->API_TOKEN;
+        $data['id'] = Session::get('ig_user')['id'];
+        $data['amount'] = $amount;
+        $data['PayerID'] = $request['PayerID'];
+        $data['token'] = $request['token'];
+        $objCurlHandler = CurlRequestHandler::getInstance();
+        $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+//                        print_r($curlResponse);
+
+        if ($curlResponse->code == 200) {
+
+            $totalBalance = $curlResponse->data;
+            Session::put("ig_user.account_bal", $totalBalance);
+            Session::put('ig_user.notification', $curlResponse->message);
+            Session::put('ig_user.count', 1);
+
+            return redirect('/user/payment')->with(['message' => 'Your Account is successfully credited']);
+
+        } else if ($curlResponse->code == 007) {
+            return json_encode(array('status' => 0, 'successMessage' => $curlResponse->message));
+        } else {
+            return json_encode(array('status' => 0, 'errorMessage' => $curlResponse->message));
+        }
+    }
+
+//    public function expressCallback($amount, Request $request)
+//    {
+//
+//        $payerid = $request->input('PayerID');
+//        $token = $request->input('token');
+//
+//        $objpaypal = paypal::getInstance();
+//        $result = $objpaypal->ConfirmPayment($amount, $token, $payerid);
+//
+//        echo "<pre>";print_r($result);
+//        die;
+//        if ($result['ACK'] == "Success") {
+//            $data['transactionId'] = $result['PAYMENTINFO_0_TRANSACTIONID'];
+//            $data['acknowledgement'] = $result['ACK'];
+//            $data['amount'] = $amount;
+//            $data['paymentTime'] = date('Y-m-d H:i:s');
+//        }
+//        else{
+//            echo "<pre>";print_r($result);
+//            die;
+//        }
+//        echo "<pre>";print_r($data);
+//        die;
+//    }
+
+    public function cheapbulk(Request $request)
+    {
+
+        $url = $this->apiurl . '/user/order-status-cheapbulk';
+//            print_r($url);
+        $data['api_token'] = $this->API_TOKEN;
+        $data['oid'] = '216236171';
+        $objCurlHandler = CurlRequestHandler::getInstance();
+        $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+        print_r($curlResponse);
+
+//        return $curlResponse;
+
+//            if ($curlResponse->code == 200) {
+////                $token = $curlResponse->data;
+////                $token = json_decode($token);
+//////                return $curlResponse->data;
+////                return redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $token);
+//                return json_encode(array('status' => 1, 'successMessage' => $curlResponse->message));
+//            } else
+//                return json_encode(array('status' => 0, 'errorMessage' => $curlResponse->code));
+    }
+
+    public function paymentError()
+    {
+        return redirect('/user/payment')->with(['message' => 'SORRY!! At this time, we are unable to process your request. Please Try Again Later...']);
+    }
+
+        /*---------------for FAQ pages-------------------*/
+
+    public function faq(){
+        return view('User::faq.faq');
+    }
+
+
+
 }

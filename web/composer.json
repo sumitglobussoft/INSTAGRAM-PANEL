@@ -9,7 +9,10 @@
   "type": "project",
   "require": {
     "php": ">=5.5.9",
-    "laravel/framework": "5.2.*"
+    "laravel/framework": "5.2.*",
+    "yajra/laravel-datatables-oracle": "^6.3",
+    "paypal/rest-api-sdk-php": "*",
+    "omnipay/paypal": "~2.0"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

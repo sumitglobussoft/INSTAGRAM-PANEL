@@ -149,6 +149,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 //        InstagramAutobot\Http\Modules\UserServiceProvider::class,
+        Yajra\Datatables\DatatablesServiceProvider::class,
+
 
         /*
          * Application Service Providers...
@@ -174,7 +176,6 @@ return [
     */
 
     'aliases' => [
-
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,

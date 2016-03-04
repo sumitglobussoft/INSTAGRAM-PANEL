@@ -306,7 +306,7 @@
                             <select id="select-comment" name="select-comment" class="form-control">
                                @if(isset($commentListData))
                                     @foreach($commentListData as $list)
-                                        <option value="{{$list['comment_id']}}">{{$list['comment_group_name']}}</option>
+                                        <option value="{{$list['comment_id']}}">{{$list['comment_group_id']}}</option>
                                     @endforeach
                                 @endif
                                 <option value="NEW">Create New Comment Group</option>

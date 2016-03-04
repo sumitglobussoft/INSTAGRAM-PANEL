@@ -26,8 +26,17 @@ Route::group(array('module' => 'Supplier', 'namespace' => 'Supplier\Controllers'
         Route::resource('supplier/updatePassword', 'SupplierController@updatePassword');
         Route::resource('supplier/changeAvatar', 'SupplierController@changeAvatar');
 
-        Route::resource('supplier/addOrder', 'OrderController@addOrder');
-        Route::resource('supplier/orderHistory', 'OrderController@orderHistory');
+        Route::resource('supplier/addOrder', 'OrdersController@addOrder');
+        Route::resource('supplier/orderHistory', 'OrdersController@orderHistory');
+
+
+
+//        //Routes for ticket Controller-- Done by Saurabh
+//        Route::resource('user/create-ticket', 'TicketsController@createTicket');
+//        Route::resource('/user/show-tickets', 'TicketsController@showTickets');
+//        Route::resource('/user/show-tickets-datatables', 'TicketsController@showTicketsAjaxHandler');
+
+
 
     });
 

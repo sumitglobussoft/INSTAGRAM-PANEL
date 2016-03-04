@@ -29,6 +29,9 @@
 
     <section class="page-content">
         <h3>Welcome to User Dashboard</h3>
+        @if(Session::has('message'))
+            <div style="color: green;">{{Session('message')}}</div>
+        @endif
         {{--<div class="row">--}}
             {{--<div class="col-lg-12">--}}
                 {{--<div class="panel panel-default panel-divider">--}}
@@ -209,6 +212,7 @@
                 {{--</div>--}}
             {{--</div>--}}
         {{--</div>--}}
+
     </section>
     <!-- /#page-content -->
 </section>

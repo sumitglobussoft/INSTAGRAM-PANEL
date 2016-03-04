@@ -15,94 +15,41 @@
 <!-- Bemat Admin Scripts - Included with every page -->
 <script src="/assets/js/user-common.min.js"></script>
 
-<!-- DataTables -->
-<script src="/assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
 
-
-<!--DateTime Picker-->
- <script src="/assets/plugins/datetimepicker/js/moment-locales.js"></script>
- <script src='/assets/plugins/datetimepicker/js/datetimepicker.js'></script>
-
-
- <!--Jquery Validator-->
- <script src="/assets/plugins/js/jquery.validate.js"></script>
-
-
-{{---------------------------old one-------------------------------}}
-{{--<script src="/assets/plugins/js/jquery.js"></script>--}}
-{{--<script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>--}}
-{{--<script src="/assets/plugins/js/scrollup/jquery.scrollUp.js"></script>--}}
-
-{{--<!-- jQuery UI JS -->--}}
-{{--<script src="/assets/plugins/js/jqueryui/jquery-ui-v1.10.3.js"></script>--}}
-
-{{--<!-- Scroller -->--}}
-{{--<script src="/assets/plugins/js/scroller/tiny-scrollbar.js"></script>--}}
-
-{{--<!-- Custom JS -->--}}
-{{--<script src="/assets/plugins/js/custom/menu.js"></script>--}}
-{{--<script src="/assets/plugins/js/custom/custom.js"></script>--}}
-
-
-{{--<!-- Select2 -->--}}
-{{--<script src="/assets/js/select2.full.min.js"></script>--}}
 
 <script>
+    $(document).on('click', '.btn-reply', function (eve) {
+        eve.preventDefault();
+        $(this).parent().parent().siblings('.comment-footer').slideToggle();
+        eve.stopImmediatePropagation();
+        console.log($(this));
+    });
 
+    $(document).on('click', '.btn-send', function (eve) {
+        var targetObject = $(this).parent().parent().parent().parent().parent();
+        //console.log(targetObject);
+        var reply_text = $(this).parent().siblings('textarea').val();
+        var id = $('#getid').val();
+        console.log(id);
+        console.log(reply_text)
+        $.post('/user/conversations'.id, 'val=' + $(this).parent().siblings('textarea').val(), function (response) {
+//                alert(response);
+            location.reload();
 
-//    // For Navigating and Selecting Main Tab.
-//    $(document).ready(function () {
-//        var currentUrl = $(location).attr('href');
-//        var currentUrlPage = currentUrl.split('/');
-//        var currentPage = currentUrlPage[currentUrlPage.length - 1];
-//        console.log(currentPage);
-//        jQuery('.navbar-links').removeClass('active');
-//        jQuery('#' + currentPage).addClass('active');
-//
-//
-//        if(currentPage=='addOrder'){
-//            console.log('asdlasdk');
-//            jQuery('.navbar-links').removeClass('active');
-//            jQuery('#market').addClass('active');
-//        }
-//
-//    });
-//
-//    //ScrollUp
-//    $(function () {
-//        $.scrollUp({
-//            scrollName: 'scrollUp', // Element ID
-//            topDistance: '300', // Distance from top before showing element (px)
-//            topSpeed: 300, // Speed back to top (ms)
-//            animation: 'fade', // Fade, slide, none
-//            animationInSpeed: 400, // Animation in speed (ms)
-//            animationOutSpeed: 400, // Animation out speed (ms)
-//            scrollText: 'Top', // Text for element
-//            activeOverlay: false // Set CSS color to display scrollUp active point, e.g '#00FFFF'
-//        });
-//    });
-//
-//    //Tiny Scrollbar
-//    $('#scrollbar').tinyscrollbar();
-//
-//
-//
-//    //Select2
-//    $(".js-example-responsive").select2();
-//
-//    var tabsFn = (function () {
-//        function init() {
-//            setHeight();
-//        }
-//        function setHeight() {
-//            var $tabPane = $('.tab-pane'),
-//                    tabsHeight = $('.nav-tabs').height();
-//            $tabPane.css({
-//                height: tabsHeight
-//            });
-//        }
-//
-//        $(init);
-//    })();
+        });
+        $(this).parent().siblings('textarea').val(" ");
+        $(this).parent().parent().parent().slideUp("fast");
 
+        if ($.trim(reply_text) == " " || $.trim(reply_text) == "") {
+            alert("insert comment");
+        } else {
+            if ($(targetObject).hasClass("comment-main-level")) {
+                if ($(targetObject).siblings('.comments-list.reply-list')) {
+                    element_prepend = '<li> <div class="comment-avatar"><img alt="" src="http://dummyimage.com/60"></div><div class="comment-box"> <div class="comment-head"> <h6 class="comment-name"><a href="#">User</a></h6> <span class="posted-time">Posted on DD-MM-YYYY HH:MM</span> <i class="fa fa-reply"></i> <i class="fa fa-heart"></i> </div> <div class="comment-content">' + reply_text + '  </div></div></li>';
+                    $(targetObject).siblings('.comments-list.reply-list').prepend(element_prepend);
+                }
+            }
+        }
+    });
 </script>
+

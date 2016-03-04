@@ -36,7 +36,8 @@ class Order extends Model
         }
     }
 
-    public function updateOrder(){
+    public function updateOrder()
+    {
         try {
             $where = func_get_arg(0);
             $data = func_get_arg(1);
@@ -56,12 +57,15 @@ class Order extends Model
 
     public function getOrderHistory($where, $selectedColumns = ['*'])
     {
+        if (!isset($selectedColumns)) {
+            $selectedColumns = ['orders.*', 'plans.plan_name', 'plans.plan_name_code', 'plans.supplier_server_id'];
+        }
 
         try {
             $result = DB::table('orders')
                 ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
                 ->join('plans', 'plans.plan_id', '=', 'orders.plan_id')
-                ->select('orders.*', 'plans.plan_name','plans.plan_name_code','plans.supplier_server_id')
+                ->select($selectedColumns)
                 ->get();
             if ($result)
                 return $result;
@@ -71,10 +75,11 @@ class Order extends Model
             return $exc->getMessage();
         }
     }
+
     public function getOrderStatus($where, $selectedColumns = ['*'])
     {
-        if(!isset($selectedColumns)){
-            $selectedColumns=['orders.*', 'plans.plan_name','plans.supplier_server_id','supplier_servers.*'];
+        if (!isset($selectedColumns)) {
+            $selectedColumns = ['orders.*', 'plans.plan_name', 'plans.supplier_server_id', 'supplier_servers.*'];
         }
         try {
             $result = DB::table('orders')

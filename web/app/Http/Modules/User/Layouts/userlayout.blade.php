@@ -45,24 +45,18 @@
                                     <span class="menu-item-name menu-right">&nbsp; Over View</span>
                                 </a>
                             </li>
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-money"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">&nbsp; Add Balance</span>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-files-o"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">&nbsp; Deposit History</span>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
                             <li>
                                 <a href="/user/updateProfileInfo">
                                     <span class="menu-item-ico ico-right"><i class="fa fa-cog"></i></span>
                                     <span class="menu-item-name menu-right">&nbsp; Account Setting</span>
                                 </a>
                             </li>
+                            {{--<li>--}}
+                            {{--<a href="javascript:;">--}}
+                            {{--<span class="menu-item-ico ico-right"><i class="fa fa-files-o"></i></span>--}}
+                            {{--<span class="menu-item-name menu-right">&nbsp; Deposit History</span>--}}
+                            {{--</a>--}}
+                            {{--</li>--}}
                             <li>
                                 <a href="/user/changePassword">
                                     <span class="menu-item-ico ico-right"><i class="fa fa-unlock"></i></span>
@@ -75,32 +69,38 @@
                                     <span class="menu-item-name menu-right">&nbsp; Change Avatar</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="/user/payment">
+                                    <span class="menu-item-ico ico-right"><i class="fa fa-money"></i></span>
+                                    <span class="menu-item-name menu-right">&nbsp; Add Balance</span>
+                                </a>
+                            </li>
                             {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-instagram"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">&nbsp; Instagram Settings</span>--}}
-                                {{--</a>--}}
+                            {{--<a href="javascript:;">--}}
+                            {{--<span class="menu-item-ico ico-right"><i class="fa fa-instagram"></i></span>--}}
+                            {{--<span class="menu-item-name menu-right">&nbsp; Instagram Settings</span>--}}
+                            {{--</a>--}}
                             {{--</li>--}}
                             {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-bell"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">&nbsp; Notification</span>--}}
-                                {{--</a>--}}
+                            {{--<a href="javascript:;">--}}
+                            {{--<span class="menu-item-ico ico-right"><i class="fa fa-bell"></i></span>--}}
+                            {{--<span class="menu-item-name menu-right">&nbsp; Notification</span>--}}
+                            {{--</a>--}}
                             {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-archive"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">&nbsp; FAQ</span>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
+                            <li>
+                            <a href="/user/faq">
+                            <span class="menu-item-ico ico-right"><i class="fa fa-archive"></i></span>
+                            <span class="menu-item-name menu-right">&nbsp; FAQ</span>
+                            </a>
+                            </li>
                         </ul>
                     </li>
 
                     {{--<li>--}}
-                        {{--<a href="/user/myAccount">--}}
-                            {{--<span class="menu-item-ico"><i class="material-icons">perm_identity</i></span>--}}
-                            {{--<span class="menu-item-name">My Account</span>--}}
-                        {{--</a>--}}
+                    {{--<a href="/user/myAccount">--}}
+                    {{--<span class="menu-item-ico"><i class="material-icons">perm_identity</i></span>--}}
+                    {{--<span class="menu-item-name">My Account</span>--}}
+                    {{--</a>--}}
                     {{--</li>--}}
                     <li>
                         <a href="javascript:;">
@@ -121,111 +121,134 @@
                                 </a>
                             </li>
                             {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-history"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Automatic Orders</span>--}}
-                                {{--</a>--}}
+                            {{--<a href="javascript:;">--}}
+                            {{--<span class="menu-item-ico ico-right"><i class="fa fa-history"></i></span>--}}
+                            {{--<span class="menu-item-name menu-right">Automatic Orders</span>--}}
+                            {{--</a>--}}
                             {{--</li>--}}
                             {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-instagram"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Instagram Auto Likes</span>--}}
-                                {{--</a>--}}
+                            {{--<a href="javascript:;">--}}
+                            {{--<span class="menu-item-ico ico-right"><i class="fa fa-instagram"></i></span>--}}
+                            {{--<span class="menu-item-name menu-right">Instagram Auto Likes</span>--}}
+                            {{--</a>--}}
                             {{--</li>--}}
                             {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-history"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Pricing &amp; Information</span>--}}
-                                {{--</a>--}}
+                            {{--<a href="javascript:;">--}}
+                            {{--<span class="menu-item-ico ico-right"><i class="fa fa-history"></i></span>--}}
+                            {{--<span class="menu-item-name menu-right">Pricing &amp; Information</span>--}}
+                            {{--</a>--}}
                             {{--</li>--}}
                             {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-cubes"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">API Docs</span>--}}
-                                {{--</a>--}}
+                            {{--<a href="javascript:;">--}}
+                            {{--<span class="menu-item-ico ico-right"><i class="fa fa-cubes"></i></span>--}}
+                            {{--<span class="menu-item-name menu-right">API Docs</span>--}}
+                            {{--</a>--}}
                             {{--</li>--}}
                             {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-puzzle-piece"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Scripts</span>--}}
-                                {{--</a>--}}
+                            {{--<a href="javascript:;">--}}
+                            {{--<span class="menu-item-ico ico-right"><i class="fa fa-puzzle-piece"></i></span>--}}
+                            {{--<span class="menu-item-name menu-right">Scripts</span>--}}
+                            {{--</a>--}}
                             {{--</li>--}}
                         </ul>
                     </li>
+
+                    <li>
+                        <a href="javascript:;">
+                            <span class="menu-item-ico"><i class="material-icons">perm_identity</i></span>
+                            <span class="menu-item-name">Tickets</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/user/create-ticket">
+                                    <span class="menu-item-ico ico-right"><i class="fa fa-money"></i></span>
+                                    <span class="menu-item-name menu-right">&nbsp; Create Tickets</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/user/show-tickets">
+                                    <span class="menu-item-ico ico-right"><i class="fa fa-archive"></i></span>
+                                    <span class="menu-item-name menu-right">&nbsp; Show Tickets</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
                     {{--<li>--}}
-                        {{--<a href="javascript:;">--}}
-                            {{--<span class="menu-item-ico"><i class="fa fa-instagram"></i></span>--}}
-                            {{--<span class="menu-item-name">Instagram Tool</span>--}}
-                        {{--</a>--}}
-                        {{--<ul>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-users"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Accounts Manager</span>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-server"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Running Tasks</span>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-cog"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Tool Settings</span>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-wrench"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Tools</span>--}}
-                                {{--</a>--}}
-                                {{--<ul>--}}
-                                    {{--<li>--}}
-                                        {{--<a href="javascript:;"> Analytics </a>--}}
-                                    {{--</li>--}}
-                                    {{--<li>--}}
-                                        {{--<a href="javascript:;"> Scrapper </a>--}}
-                                    {{--</li>--}}
-                                    {{--<li>--}}
-                                        {{--<a href="javascript:;"> Bulk Actions </a>--}}
-                                    {{--</li>--}}
-                                {{--</ul>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-star"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Account Creator</span>--}}
-                                {{--</a>--}}
-                                {{--<ul>--}}
-                                    {{--<li>--}}
-                                        {{--<a href="javascript:;"> Bulk Creator </a>--}}
-                                    {{--</li>--}}
-                                    {{--<li>--}}
-                                        {{--<a href="javascript:;"> Single Creator </a>--}}
-                                    {{--</li>--}}
-                                {{--</ul>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-clock-o"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Purchase License</span>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-bug"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">Changelog</span>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="javascript:;">--}}
-                                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-share-alt-square"></i></span>--}}
-                                    {{--<span class="menu-item-name menu-right">API</span>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
-                        {{--</ul>--}}
+                    {{--<a href="javascript:;">--}}
+                    {{--<span class="menu-item-ico"><i class="fa fa-instagram"></i></span>--}}
+                    {{--<span class="menu-item-name">Instagram Tool</span>--}}
+                    {{--</a>--}}
+                    {{--<ul>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;">--}}
+                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-users"></i></span>--}}
+                    {{--<span class="menu-item-name menu-right">Accounts Manager</span>--}}
+                    {{--</a>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;">--}}
+                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-server"></i></span>--}}
+                    {{--<span class="menu-item-name menu-right">Running Tasks</span>--}}
+                    {{--</a>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;">--}}
+                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-cog"></i></span>--}}
+                    {{--<span class="menu-item-name menu-right">Tool Settings</span>--}}
+                    {{--</a>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;">--}}
+                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-wrench"></i></span>--}}
+                    {{--<span class="menu-item-name menu-right">Tools</span>--}}
+                    {{--</a>--}}
+                    {{--<ul>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;"> Analytics </a>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;"> Scrapper </a>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;"> Bulk Actions </a>--}}
+                    {{--</li>--}}
+                    {{--</ul>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;">--}}
+                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-star"></i></span>--}}
+                    {{--<span class="menu-item-name menu-right">Account Creator</span>--}}
+                    {{--</a>--}}
+                    {{--<ul>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;"> Bulk Creator </a>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;"> Single Creator </a>--}}
+                    {{--</li>--}}
+                    {{--</ul>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;">--}}
+                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-clock-o"></i></span>--}}
+                    {{--<span class="menu-item-name menu-right">Purchase License</span>--}}
+                    {{--</a>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;">--}}
+                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-bug"></i></span>--}}
+                    {{--<span class="menu-item-name menu-right">Changelog</span>--}}
+                    {{--</a>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                    {{--<a href="javascript:;">--}}
+                    {{--<span class="menu-item-ico ico-right"><i class="fa fa-share-alt-square"></i></span>--}}
+                    {{--<span class="menu-item-name menu-right">API</span>--}}
+                    {{--</a>--}}
+                    {{--</li>--}}
+                    {{--</ul>--}}
                     {{--</li>--}}
                 </ul>
             </nav>
@@ -248,10 +271,36 @@
                     </ul>
                     <!-- Start top navbar-right -->
                     <ul class="toolbar toolbar-right">
+                        <li class="dropdown">
+
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+
+                                @if(isset(Session::get('ig_user')['count']))
+                                    <span class="badge badge-danger">
+                                        {{Session::get('ig_user')['count']}}
+                                        </span>
+                                @endif
+
+                                <i class="material-icons">notifications</i></a>
+
+                            <ul class="dropdown-menu">
+                                @if(isset(Session::get('ig_user')['notification']))
+                                    <li><a href="/user/notification"><i class="fa fa-envelope"></i>You have a new
+                                            message.</a></li>
+                                    <li><a href="/user/notification">{{Session::get('ig_user')['notification']}}</a></li>
+                                @else
+                                    <li><a href="#"><i class="fa fa-envelope"></i>You Dont have any new
+                                            Notification.</a></li>
+                                @endif
+                                    <li><a href="/user/notification"><i class="fa fa-envelope"></i>Show all notifications.</a></li>
+                            </ul>
+                        </li>
+
                         <li class="list-box dropdown">
-                            <a id="account_bal" href="javascript:;">
+                            <a id="account_bal" href="/user/payment">
                                 BALANCE : &nbsp;
-                                <span class="label label-success" style="font-size: 16px; border-radius: 12px;"> <i class="fa fa-usd "></i>
+                                <span class="label label-success" style="font-size: 16px; border-radius: 12px;"> <i
+                                            class="fa fa-usd "></i>
                                     @if(isset(Session::get('ig_user')['account_bal']))
                                         {{Session::get('ig_user')['account_bal']}}
                                     @else
@@ -264,8 +313,8 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <div class="avatar">
                                     <img class="img-circle img-responsive"
-                                    src="@if(isset(Session::get('ig_user')['profile_pic'])) {{Session::get('ig_user')['profile_pic']}} @else /assets/uploads/useravatar/default-profile-pic.png @endif "
-                                    alt="user" />
+                                         src="@if(isset(Session::get('ig_user')['profile_pic'])) {{Session::get('ig_user')['profile_pic']}} @else /assets/uploads/useravatar/default-profile-pic.png @endif "
+                                         alt="user"/>
                                 </div>
                                 <div class="user">
                                     <span class="username">{{Session::get('ig_user')['name']}}</span>
@@ -297,7 +346,6 @@
     <!-- /#right-content-wrapper -->
 
 </div>
-
 
 
 @include('User/Layouts/usercommonfooterscripts')

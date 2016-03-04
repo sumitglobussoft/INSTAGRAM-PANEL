@@ -50,7 +50,7 @@ class Authenticate
 
     if(AuthUser::check()){
         if($module == 'admin'){
-            if(Session::has('ig_admin')){
+            if(Session::has('instagram_admin')){
                 $userRoleFlag=true;
             }
             if(!$userRoleFlag){

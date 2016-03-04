@@ -24,8 +24,8 @@ class ProfileController extends Controller
 
     public function  __construct()
     {
-//        $this->API_TOKEN = env('API_TOKEN');
-        $this->API_TOKEN = '9876543210'; //TODO REMOVE THIS LINE AND REMOVE ABOVE COMMENT
+        $this->API_TOKEN = env('API_TOKEN');
+//        $this->API_TOKEN = '9876543210'; //TODO REMOVE THIS LINE AND REMOVE ABOVE COMMENT
     }
 
     public function  showProfileDetails(Request $request)

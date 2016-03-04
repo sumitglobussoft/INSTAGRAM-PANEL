@@ -38,20 +38,18 @@ class Usersmeta extends Model implements AuthenticatableContract,
     public function updateUsermetaWhere()
     {
         if (func_num_args() > 0) {
-            $where = func_get_arg(0);
-            $data = func_get_arg(1);
+            $data = func_get_arg(0);
+            $where = func_get_arg(1);
             try {
                 $result = DB::table('usersmeta')
                     ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
                     ->update($data);
-                if ($result)
-                    return 1;
-                else
-                    return 0;
-
-            } catch (QueryException $e) {
-                return 0;
+                return $result;
+            } catch (\Exception $e) {
+                return $e->getMessage();
             }
+        } else {
+            throw new Exception('Argument Not Passed');
         }
     }
 
