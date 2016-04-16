@@ -1,32 +1,16 @@
-<meta charset="utf-8">
+<meta charset="utf-8" />
+<title>InstaPanel | Supplier</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta content="AllThatIsRam" name="author">
-<title>InstaPanel || @yield('title')</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta content="" name="description" />
+<meta content="AllThatIsRam" name="author" />
 
-<!-- Bootstrap Core CSS - Include with every page -->
-<link href="/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Include with every page -->
-<link href="/assets/css/user.min.css" rel="stylesheet" />
-<link href="/assets/plugins/css/font-awesome.min.css" rel="stylesheet" />
-
-<!-- Custom CSS -->
-<link href="/assets/css/custom.css" rel="stylesheet" />
-
-<!--Data Tables-->
-<link href="/assets/plugins/datatables/css/jquery.dataTables.min.css" rel="stylesheet"/>
-
-
-
-{{--<link href="https://fonts.googleapis.com/css?family=Exo" rel="stylesheet" />--}}
-{{--<link href="/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">--}}
-{{--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">--}}
-{{--<link href="/assets/css/new.css" rel="stylesheet">--}}
-{{--<link href="/assets/css/select2.min.css" rel="stylesheet" />--}}
-
-{{--<link href="/assets/plugins/fonts/font-awesome.min.css" rel="stylesheet">--}}
-
-
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" />
+<link href="/assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="/assets/css/simple-line-icons.min.css" rel="stylesheet" />
+<link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="/assets/css/uniform.default.min.css" rel="stylesheet" />
+<!-- END GLOBAL MANDATORY STYLES -->
 

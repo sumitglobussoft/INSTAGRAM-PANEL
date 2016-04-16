@@ -14,29 +14,22 @@ class Comment extends Model
             $result = DB::table('comments')
                 ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
                 ->select($selectedColumns)
-                ->get();
-
-            if ($result)
-                return $result;
-            else
-                return 0;
+                ->first();
+            return ($result) ? $result : 0;
         } catch (QueryException $exc) {
             return $exc->getMessage();
         }
 
     }
-public function insertComments($data){
-    try {
-        $id = DB::table('comments')
-            ->insertGetId($data);
 
-        if ($id)
-            return $id;
-        else
-            return 0;
-    } catch (QueryException $exc) {
-        return 0;
+    public function insertComments($data)
+    {
+        try {
+            $id = DB::table('comments')->insertGetId($data);
+            return ($id) ? $id : 0;
+        } catch (QueryException $exc) {
+            return $exc->getMessage();
+        }
     }
-}
 
 }//END OF CLASS ORDER

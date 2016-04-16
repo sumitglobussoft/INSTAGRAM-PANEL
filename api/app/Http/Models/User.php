@@ -19,7 +19,7 @@ class User extends Model implements AuthenticatableContract,
     CanResetPasswordContract
 {
     use Authenticatable, Authorizable, CanResetPassword;
-    protected $fillable = ['name', 'lastname', 'email', 'password', 'username', 'role', 'status'];
+    protected $fillable = ['name', 'lastname', 'email', 'password', 'username','skype_username', 'role', 'status','user_timezone'];
     protected $hidden = ['password', 'remember_token'];
 
     /**

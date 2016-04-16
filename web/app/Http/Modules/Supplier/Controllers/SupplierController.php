@@ -120,7 +120,7 @@ class SupplierController extends Controller
                 if ($curlResponse->code == 200) {
                     //TODO change this statement when ajax call used
 
-                    return view('Supplier::supplier.login')->with(['passwordChangeSuccessMessage'=> 'Please Login with your New Credential']);
+                    return view('Supplier::supplier.login')->with(['passwordChangeSuccessMessage' => 'Please Login with your New Credential']);
                 } else {
                     return view('Supplier::supplier.resetPassword')->withErrors($curlResponse->message);
                 }
@@ -201,7 +201,7 @@ class SupplierController extends Controller
             //echo '<pre>'; print_r($curlResponse);die;
 
             if ($curlResponse->code == 200)
-                return view('Supplier::supplier.login')->with(['registerSuccesMessage'=> 'You have succesfull sign up, please wait for Admin Approval']);
+                return view('Supplier::supplier.login')->with(['registerSuccesMessage' => 'You have succesfull sign up, please wait for Admin Approval']);
             else if ($curlResponse->code == 100)
                 return Redirect::back()->withErrors($curlResponse->message)->withInput();
             else

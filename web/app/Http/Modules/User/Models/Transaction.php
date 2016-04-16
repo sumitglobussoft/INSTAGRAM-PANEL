@@ -30,7 +30,7 @@ class Transaction extends Model
         return self::$_instance;
     }
 
-    public function getTicketById($ticketId)
+    public function getTransactionDetailsById($ticketId)
     {
         $result = Transaction::whereId($ticketId)->first();
         //first() function in sql returns the first value of the selected column
@@ -57,7 +57,7 @@ class Transaction extends Model
             }
         } else {
             return 1;
-            echo'reached here';
+//            echo'reached here';
 //            throw new Exception('Argument Not Passed');
         }
     }
@@ -158,8 +158,8 @@ class Transaction extends Model
     public function getAvaiableUsersDetails()
     {
         try {
-            $result = Ticket::join('users', function ($join) {
-                $join->on('tickets.user_id', '=', 'users.id');
+            $result = Transaction::join('users', function ($join) {
+                $join->on('transactions.user_id', '=', 'users.id');
             })
                 ->select()
                 ->get();
@@ -175,10 +175,11 @@ class Transaction extends Model
             $result = DB::table($this->table)
                 ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
                 ->join('users', function ($join) {
-                    $join->on('tickets.user_id', '=', 'users.id');
+                    $join->on('transactions.user_id', '=', 'users.id');
                 })
 //                ->join('ticket_reply', 'ticket_reply.ticketId', '=', 'tickets.ticket_id')
                 ->select($selectedColumns)
+//                ->paginate(10);
                 ->get();
 //            if(!$result){
 //                $result = Ticket::join('users', function ($join) {

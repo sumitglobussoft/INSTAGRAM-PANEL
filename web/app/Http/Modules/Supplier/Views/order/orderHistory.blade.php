@@ -116,7 +116,8 @@
                                             ?></td>
                                         <td>
                                             @if ($orderData['status']==2)
-                                                <span class="label label-info"> <i class="fa fa-clock-o"></i> Pending</span>
+                                                <span class="label label-info"> <i
+                                                            class="fa fa-clock-o"></i> Pending</span>
                                             @endif
                                         </td>
                                         <td>

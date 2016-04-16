@@ -30,7 +30,7 @@
         jQuery('#' + currentPage).addClass('active');
 
 
-        if(currentPage=='addOrder'){
+        if (currentPage == 'addOrder') {
             console.log('asdlasdk');
             jQuery('.navbar-links').removeClass('active');
             jQuery('#market').addClass('active');
@@ -57,9 +57,9 @@
 
     //DataTable
     $('#datatable').dataTable();
-//    $(window).load(function () {
-//        $('#datatable_filter input').addClass('form-control');
-//    });
+    //    $(window).load(function () {
+    //        $('#datatable_filter input').addClass('form-control');
+    //    });
 
     //Select2
     $(".js-example-responsive").select2();
@@ -68,6 +68,7 @@
         function init() {
             setHeight();
         }
+
         function setHeight() {
             var $tabPane = $('.tab-pane'),
                     tabsHeight = $('.nav-tabs').height();

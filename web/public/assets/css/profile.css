@@ -1,0 +1,170 @@
+#faq #tab1 .panel-heading,
+#faq #tab2 .panel-heading,
+#faq #tab3 .panel-heading {
+	padding: 10px 15px;
+}
+
+section.page-content {
+	padding: 14px;
+}
+
+.badge {
+	background-color: #777;
+}
+
+.tabs-left {
+	margin-top: 3rem;
+}
+
+.nav-tabs {
+	float: left;
+	border-bottom: 0;
+	border-bottom: 1px solid #ddd !important;
+}
+
+.nav-tabs li {
+	float: none;
+	margin: 0 0 8%;
+}
+
+.nav-tabs li a {
+	margin-right: 0;
+	border: 0;
+	background-image: linear-gradient(#2d85be, #3693cf 85%, #1f5a80);
+	background-color: #3187bf;
+	border-radius: 0;
+	color: #FFF;
+	font-size: 9px;
+	text-decoration: none;
+	transition: all 0.5s ease 0s;
+}
+
+#faq li a:hover span,
+#faq li a:hover .fa {
+	color: #ffffff;
+}
+
+.nav-tabs li a:hover {
+	background-color: #444;
+}
+
+.nav-tabs .glyphicon {
+	color: #fff;
+}
+
+.nav-tabs .active .glyphicon {
+	color: #FFF;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+	border: 0;
+	background-color: #1A1A1A;
+	color: #FFF;
+	background-image: none;
+	border-left: 5px solid #3187bf;
+	text-decoration: none;
+	transition: all 0.5s ease 0s;
+}
+
+.nav-tabs > li > a:hover,
+.nav-tabs > li > a:focus {
+	border: 0;
+	background-color: #1A1A1A;
+	color: #FFF;
+	background-image: none;
+	border-left: 5px solid #3187bf;
+}
+
+#faq li a {
+	margin-right: 0;
+	border: 0;
+	background-color: #00b9b0;
+	border-radius: 0;
+	color: #FFF !important;
+	font-size: 11px;
+	text-decoration: none;
+	transition: all 0.5s ease 0s;
+	background-image: none;
+	opacity: 1;
+}
+
+#faq .nav-tabs li a:hover {
+	background-color: #099688;
+	color: #ffffff;
+}
+
+#faq .nav-tabs .glyphicon {
+	color: #fff;
+}
+
+#faq .nav-tabs .active .glyphicon {
+	color: #FFF;
+}
+
+#faq .nav-tabs > li.active > a,
+#faq .nav-tabs > li.active > a:hover {
+	border: 0;
+	background-color: #009688;
+	color: #FFF;
+	background-image: none;
+	border-bottom: 3px solid #09dbcc;
+	text-decoration: none;
+	transition: all 0.3s ease-in-out 0s;
+}
+
+#faq .nav-tabs > li > a:hover,
+#faq .nav-tabs > li > a:focus {
+	border: 0;
+	background-color: #099688;
+	color: #FFF;
+	background-image: none;
+	border-bottom: 3px solid #09dbcc;
+}
+
+.tab-content {
+	/*			margin-left: 190px;*/
+}
+
+.tab-content .tab-pane {
+	display: none;
+	background-color: #fff;
+	padding: 1.6rem;
+	/*			overflow-y: auto;*/
+}
+
+.tab-content .active {
+	display: block;
+}
+
+.list-group {
+	width: 100%;
+}
+
+.list-group .list-group-item {
+	height: 50px;
+}
+
+.list-group .list-group-item h4,
+.list-group .list-group-item span {
+	line-height: 11px;
+}
+
+td {
+	font-family: segoe UI;
+	font-size: 14px;
+	padding: 1% !important;
+}
+
+.checkbox-list span {
+	font-family: segoe UI;
+	font-size: 14px;
+}
+
+.purchase {
+	font-family: segoe UI;
+	font-size: 14px;
+	list-style: circle;
+	margin-left: 3%;
+}

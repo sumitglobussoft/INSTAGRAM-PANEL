@@ -16,7 +16,7 @@
 <div class="login">
 
 
-    <form method="post" id="resetPasswordForm"  style="margin-bottom: 3%;">
+    <form method="post" id="resetPasswordForm" style="margin-bottom: 3%;">
         @if (count($errors) > 0)
             <div>
                 <ul>
@@ -28,7 +28,8 @@
         @endif
 
         <input type="password" name="newPassword" id="newPassword" placeholder="Enter New Password" required><br>
-        <input type="password" name="conformNewPassword" id="conformNewPassword" placeholder="Enter your conform Password" required >
+        <input type="password" name="conformNewPassword" id="conformNewPassword"
+               placeholder="Enter your conform Password" required>
         <button type="submit" class="btn btn-primary btn-block btn-large">Reset Password</button>
     </form>
 </div>

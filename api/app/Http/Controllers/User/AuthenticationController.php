@@ -28,14 +28,12 @@ class AuthenticationController extends Controller
         $this->API_TOKEN = env('API_TOKEN');
         $this->MANDRILL_KEY = env('MANDRILL_KEY');
         $this->HOST_URL = env('HOST_URL');
-//        $this->MANDRILL_KEY = 'lSqqGC9W5IZbmrOzyY60cA';
-//        $this->API_TOKEN = '9876543210';
-//        $this->HOST_URL = 'instagramautolike.localhost.com';//TODO REMOVE THIS LINE AND REMOVE ABOVE COMMENT
     }
 
     function signUp(Request $request)
     {
         $response = new stdClass();
+
         if ($request->isMethod("POST")) {
             $postData = $request->all();
             $objUsermeta = new Usersmeta();
@@ -78,90 +76,83 @@ class AuthenticationController extends Controller
                         'name' => $postData['firstname'],
                         'lastname' => $postData['lastname'],
                         'username' => $postData['username'],
+                        'skype_username' => (isset($postData['skypeUsername'])) ? $postData['skypeUsername'] : '',
                         'email' => $postData['email'],
                         'password' => bcrypt($password),
                         'status' => '0',
                         'role' => '1',
+                        'user_timezone' => $postData['user_timezone'],
                     ]);
 
-
-                    if ($user) {
-                        $userOriginalData = $user['original'];
-                        //$userOriginalData['account_bal'] = 0.0000;
-
-//                        $data['user_id'] = $userOriginalData['id'];
-//                        $data['account_bal'] = 0;
+//                    if ($user) {
+////                        $userOriginalData = $user['original'];
 //
-//                        $result = $objUsermeta->insertUsermeta($data);
-//                        if ($result) {
-                        $response->code = 200;
-                        $response->message = "Signup successful.";
-                        $response->data = $userOriginalData;
-                        echo json_encode($response);
-//                        }
-
-                    }
+//                        $response->code = 200;
+//                        $response->message = "Signup successful.";
+//                        $response->data = $userOriginalData;
+//                        echo json_encode($response);
+////                        }
+//
+//                    }
 
 
 //                TODO this code is used for sending conformation ,mail with random generated password
 
-//                if ($user) {
-//                    $mandrill= new Mandrill($this->MANDRILL_KEY);
-//                    $async = false;
-//                    $ip_pool = 'Main Pool';
-//                    $message = array(
-//                        'html' =>'<div>
-//                                    <h3>Registration Successful</h3><br>
-//                                    <span>please login with this credentials</span><br>
-//                                    <p>Username :'.$postData['username'].'<br>
-//                                        Password: '.$password.'
-//                                    </p>
-//                                  </div>',
-//                        'subject' => "Registration Successful",
-//                        'from_email' => "saurabh.kumar@globussoft.com",//"support@instagramautolikes.com",
-//                        'to' => array(
-//                            array(
-//                                'email' => 'chandrakarramkishan@globussoft.com,', //replace with $postData['email'],
-//                                'type' => 'to'
-//                            )
-//                        ),
-//                        'merge_vars' => array(
-//                            array(
-//                                "rcpt" => 'chandrakarramkishan@globussoft.com,', //replace with $postData['email'],
-//                                'vars' => array(
-//                                    array(
-//                                        "name" => "firstname",
-//                                        "content" => $postData['firstname']
-//                                    ),
-//                                    array(
-//                                        "name" => "password",
-//                                        "content" => $password
-//                                    )
-//                                )
-//                            )
-//                        ),
-//                    );
-//                    $mailRespons = $mandrill->messages->send($message, $async, $ip_pool);
-//
-//                    if ($mailRespons[0]['status'] == "sent") {
-//                        $response->code = 200;
-//                        $response->message = "Signup successful. Please check your email for Password";
-//                        $response->data = null;
-//                        echo json_encode($response);
-//                    }
-//                    else{
-//                        $objuser = new User();
-//                        $whereForUpdate = [
-//                            'rawQuery' => 'id =?',
-//                            'bindParams' => [$user->id]
-//                        ];
-//                        $deleteUser = $objuser->deleteUserDetails($whereForUpdate);//If mail sending fails then delete user details from db
-//                        $response->code = 400;
-//                        $response->message = "some Error occured try again";
-//                        echo json_encode($response);
-//                    }
-//                }
-                    else {
+                    if ($user) {
+                        $mandrill = new Mandrill($this->MANDRILL_KEY);
+                        $async = false;
+                        $ip_pool = 'Main Pool';
+                        $message = array(
+                            'html' => '<div>
+                                    <h3>Registration Successful</h3><br>
+                                    <span>You have succesfull sign up, please wait for Admin Approval and use this credentials for login.</span><br>
+                                    <p>Username :' . $postData['username'] . '<br>
+                                        Password: ' . $password . '
+                                    </p>
+                                  </div>',
+                            'subject' => "Registration Successful",
+                            'from_email' => "support@instagramautolikes.com",
+                            'to' => array(
+                                array(
+                                    'email' => $postData['email'],
+                                    'type' => 'to'
+                                )
+                            ),
+                            'merge_vars' => array(
+                                array(
+                                    "rcpt" => $postData['email'],
+                                    'vars' => array(
+                                        array(
+                                            "name" => "firstname",
+                                            "content" => $postData['firstname']
+                                        ),
+                                        array(
+                                            "name" => "password",
+                                            "content" => $password
+                                        )
+                                    )
+                                )
+                            ),
+                        );
+                        $mailRespons = $mandrill->messages->send($message, $async, $ip_pool);
+
+                        if ($mailRespons[0]['status'] == "sent") {
+                            $response->code = 200;
+                            $response->message = "Signup successful. Please check your email for Password";
+                            $response->data = null;
+                            echo json_encode($response);
+                        } else {
+                            $objuser = new User();
+                            $whereForUpdate = [
+                                'rawQuery' => 'id =?',
+                                'bindParams' => [$user->id]
+                            ];
+                            $deleteUser = $objuser->deleteUserDetails($whereForUpdate);//If mail sending fails then delete user details from db
+                            $response->code = 400;
+                            $response->message = "some Error occured try again";
+                            echo json_encode($response);
+                        }
+                    } else {
                         $response->code = 400;
                         $response->message = "some Error occured try again";
                         $response->data = null;
@@ -196,7 +187,6 @@ class AuthenticationController extends Controller
             if (isset($postData['api_token'])) {
                 $apiToken = $postData['api_token'];
             }
-
             if ($apiToken == $this->API_TOKEN) {
                 $rules = array(
                     'emailOrUsername' => 'required',
@@ -223,6 +213,7 @@ class AuthenticationController extends Controller
                             'rawQuery' => 'id =?',
                             'bindParams' => [Auth::id()]
                         ];
+
                         $userDetails = $objUserModel->getUsercredsWhere($whereForUser);
 
                         $whereForUsermeta = [
@@ -230,9 +221,16 @@ class AuthenticationController extends Controller
                             'bindParams' => [Auth::id()]
                         ];
 
-                        $accountBalance = $objUsermetaModel->getUsermetaWhere($whereForUsermeta, ['account_bal']);
-                        if ($accountBalance) {
-                            $userDetails->account_bal = $accountBalance->account_bal;
+                        //check if user id is exist in usersmeta if not then insert data in usersmeta table.
+                        $isUserAvailable = $objUsermetaModel->getUsermetaWhere($whereForUsermeta, ['account_bal', 'notify_bal', 'notify_profile_likes', 'notify_daily_subscription']);
+
+                        if (!isset($isUserAvailable->account_bal)) {
+                            $addUsermeta = $objUsermetaModel->addUsermeta(['user_id' => Auth::id(), 'account_bal' => 0]);
+                        } else {
+                            $userDetails->account_bal = $isUserAvailable->account_bal;
+                            $userDetails->notify_bal = $isUserAvailable->notify_bal;
+                            $userDetails->notify_profile_likes = $isUserAvailable->notify_profile_likes;
+                            $userDetails->notify_daily_subscription = $isUserAvailable->notify_daily_subscription;
                         }
 
                         if ($userDetails->status == 1) {
@@ -249,7 +247,20 @@ class AuthenticationController extends Controller
                                 $objUserModel->UpdateUserDetailsbyId($whereForUpdate, $data);
                                 $userDetails->login_token = $token;
                                 $userDetails->device_id = $postData['device_id'];
+
                             }
+//                            dd($userDetails);
+
+                            // update the user timezone in user table
+                            if(isset($postData['user_timezone'])){
+                                $whereForUpdate = [
+                                    'rawQuery' => 'id =?',
+                                    'bindParams' => [$userDetails->id]
+                                ];
+                                $data['user_timezone']=$postData['user_timezone'];
+                                $queryResult=$objUserModel->UpdateUserDetailsbyId($whereForUpdate, $data);
+                            }
+
                             $response->code = 200;
                             $response->message = "Login successful.";
                             $response->data = $userDetails;
@@ -476,7 +487,7 @@ class AuthenticationController extends Controller
                     } else {
                         $response->code = 400;
                         $response->message = $validator->messages();
-                        $response->data=$request->all();
+                        $response->data = $request->all();
                     }
                     echo json_encode($response, true);
                     break;

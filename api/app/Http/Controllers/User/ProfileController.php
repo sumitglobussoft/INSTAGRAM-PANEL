@@ -28,6 +28,74 @@ class ProfileController extends Controller
 //        $this->API_TOKEN = '9876543210'; //TODO REMOVE THIS LINE AND REMOVE ABOVE COMMENT
     }
 
+    public function getBalance(Request $request)
+    {
+        $response = new stdClass();
+        if ($request->isMethod('post')) {
+            $postData = $request->all();
+            $objUserModel = new User();
+            $objUsersmetaModel = new Usersmeta();
+
+            $userId = (isset($postData['user_id'])) ? $postData['user_id'] : '';
+
+            $authFlag = false;
+            if (isset($postData['api_token'])) {
+                $apiToken = $postData['api_token'];
+
+                if ($apiToken == $this->API_TOKEN) {
+                    $authFlag = true;
+                } else {
+                    if ($userId != '') {
+                        $where = [
+                            'rawQuery' => 'id=?',
+                            'bindParams' => [$userId]
+                        ];
+                        $selectColumn = array('login_token');
+                        $userCredentials = $objUserModel->getUsercredsWhere($where, $selectColumn);
+                        if ($apiToken == $userCredentials->login_token) {
+                            $authFlag = true;
+                        }
+                    }
+                }
+            }
+
+            if ($authFlag) {
+                $validator = Validator::make($postData, ['user_id' => 'required']);
+                if (!$validator->fails()) {
+                    $userAccountBalance = $objUsersmetaModel->getUsermetaWhere(['rawQuery' => 'user_id=?','bindParams' => [$postData['user_id']]],['account_bal']);
+
+                    if($userAccountBalance){
+                        $response->code = 200;
+                        $response->message = "Success";
+                        $response->data = $userAccountBalance;
+                        echo json_encode($response, true);
+                    }else{
+                        $response->code = 200;
+                        $response->message = "Something went wrong Please try again after sometime.";
+                        $response->data = null;;
+                        echo json_encode($response, true);
+                    }
+
+                } else {
+                    $response->code = 401;
+                    $response->message = $validator->messages();
+                    $response->data = null;
+                    echo json_encode($response, true);
+                }
+            } else {
+                $response->code = 401;
+                $response->message = "Access Denied";
+                $response->data = null;
+                echo json_encode($response, true);
+            }
+        } else {
+            $response->code = 400;
+            $response->message = "Request not allowed";
+            $response->data = null;
+            echo json_encode($response, true);
+        }
+    }
+
     public function  showProfileDetails(Request $request)
     {
         $response = new stdClass();
@@ -72,6 +140,7 @@ class ProfileController extends Controller
                         $response->code = 200;
                         $response->message = "Success";
                         $response->data = $userDetails;
+
                     } else {
                         $response->code = 400;
                         $response->message = "No user Details found.";
@@ -105,27 +174,14 @@ class ProfileController extends Controller
             $objUserModel = new User();
             $objUsermetaModel = new Usersmeta();
 
-            $userId = "";
-            if (isset($postData['user_id'])) {
-                $userId = $postData['user_id'];
-            }
-            $firstname = "";
-            if (isset($postData['firstname'])) {
-                $firstname = $postData['firstname'];
-            }
-            $lastname = "";
-            if (isset($postData['lastname'])) {
-                $lastname = $postData['lastname'];
-            }
+            $userId =(isset($postData['user_id']))?$postData['user_id']:'';
+            $firstname =(isset($postData['firstname']))?$postData['firstname']:'';
+            $lastname = (isset($postData['lastname']))?$postData['lastname']:'';
+            $email =(isset($postData['email']))?$postData['email']:'';
 
-            $email = "";
-            if (isset($postData['email'])) {
-                $email = $postData['email'];
-            }
-            $username = "";
-            if (isset($postData['username'])) {
-                $username = $postData['username'];
-            }
+            $username =(isset($postData['username'])) ?$postData['username']:'';
+            $skypeUsername =(isset($postData['skypeUsername']))?$postData['skypeUsername']:'';
+
             $addressline1 = "";
             if (isset($postData['addressline1'])) {
                 $addressline1 = $postData['addressline1'];
@@ -221,7 +277,7 @@ class ProfileController extends Controller
                             'rawQuery' => 'id =?',
                             'bindParams' => [$userId]
                         ];
-                        $data = array('name' => $firstname, 'lastname' => $lastname, 'username' => $username, 'email' => $email);
+                        $data = array('name' => $firstname, 'lastname' => $lastname, 'username' => $username,'skype_username'=>$skypeUsername, 'email' => $email);
                         $updategeneralinfo = $objUserModel->UpdateUserDetailsbyId($updateUserWhereId, $data);
 
                         $updateUsermetaWhereUserId = [

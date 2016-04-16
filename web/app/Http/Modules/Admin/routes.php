@@ -4,24 +4,25 @@
 Route::group(array('module' => 'Admin', 'namespace' => 'Admin\Controllers'), function () {
     //Your routes belong to this module.
 
-//    Route::any('admin/dashboard', function () {
-//        return view('Admin::dashboard');
+//    Route::get('/',function(){
+//       return redirect('/admin/login');
 //    });
+    Route::resource('/admin/login', 'AdminController@adminlogin');
+    Route::resource('/admin/logout', 'AdminController@adminLogout');
+    Route::resource('/admin/forgot', 'AdminController@resetPassword');
 
-//    Route::group(['middleware'=>'auth:admin'],function(){
-//        Route::resource('admin/dashboard', 'AdminController@dashboard');
-//    });
-//    Route::get('admin/login','AdminController@getadminlogin');
-//    Route::post('admin/login','AdminController@postadminlogin');
-    Route::get('/',function(){
-       return redirect('/admin/login');
-    });
+    Route::get('/resetpassword/{token}', 'AdminController@checkToken');
+    Route::post('/resetpassword/{token}', 'AdminController@checkToken');
+
+
+
+
     Route::get('/admin/adminsample', 'PlansController@adminsample');
 
     Route::group(['middleware' => 'auth:admin'], function () {
         Route::resource('admin/dashboard', 'AdminController@dashboard');
         //  Route::resource('admin/forgotpassword','AdminController@forgotPassword');
-        Route::resource('/admin/logout', 'AdminController@adminLogout');
+
         Route::resource('/admin/edit-profile', 'AdminController@editProfile');
         Route::resource('/admin/update-password', 'AdminController@updatePassword');
         Route::resource('/admin/users-list', 'UserController@pendingUsers');
@@ -126,13 +127,6 @@ Route::group(array('module' => 'Admin', 'namespace' => 'Admin\Controllers'), fun
 
 //    Route::resource('/admin/suppliers-lists', 'SupplierController');
     });
-
-    Route::resource('/admin/login', 'AdminController@adminlogin');
-    Route::resource('/admin/forgot', 'AdminController@resetPassword');
-
-
-    Route::get('/resetpassword/{token}', 'AdminController@checkToken');
-    Route::post('/resetpassword/{token}', 'AdminController@checkToken');
 
 
 

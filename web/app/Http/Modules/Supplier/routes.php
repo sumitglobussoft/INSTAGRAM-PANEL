@@ -16,7 +16,6 @@ Route::group(array('module' => 'Supplier', 'namespace' => 'Supplier\Controllers'
     Route::post('supplier/verifyResetCode/{resetCode}', 'SupplierController@verifyResetCode');
 
 
-
     Route::group(['middleware' => 'auth:supplier'], function () {
         Route::resource('supplier/dashboard', 'SupplierController@dashboard');
         Route::resource('supplier/myAccount', 'SupplierController@myAccount');

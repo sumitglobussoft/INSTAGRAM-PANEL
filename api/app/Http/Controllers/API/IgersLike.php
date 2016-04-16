@@ -21,26 +21,29 @@ class IgersLike
      * @param $options
      * @return mixed
      */
-    public function order_add($link, $type, $amount, $options = [])
+    public function order_add($link, $type, $amount, $comments = '')
     {
         $post_data = [];
-        /** Auth and Action */
         $post_data['action'] = 'order_add';
         $post_data['key'] = $this->api_key;
-        /** Basic Order Fields */
-        $post_data['link'] = trim(strip_tags($link)); // The order Link Here
-        $post_data['type'] = trim(strtolower($type)); // The order type or service type string
-        $post_data['amount'] = (int)trim(strtolower($amount)); // The order amount
-        /** Advanced Order Fields */
+        $post_data['link'] = trim(strip_tags($link));
+        $post_data['type'] = trim(strtolower($type));
+        $post_data['amount'] = (int)trim(strtolower($amount));
 
-//        $post_data['order_mentions_data_tags'] = $options['order_mentions_data_tags']; // Here should arrived the RAW $_POST from the text box of MENTIONS
-//        $post_data['order_mentions_data_usernames'] = $options['order_mentions_data_usernames']; // Here should arrived the RAW $_POST from the text box of MENTIONS
-//        $post_data['order_mentions_data_usernames_custom'] = $options['order_mentions_data_usernames_custom']; // Here should arrived the RAW $_POST from the text box of MENTIONS
-//        $post_data['comments_data'] = $options['comments_data']; // Here should arrived the RAW $_POST from the text box of COMMENTS, new lines with \\r\\n
-       // $response = $this->http_post($this->api_url, $post_data);
+        if (isset($comments) && $comments != '') {
+            $post_data['comments_data'] = $comments; // Here should arrived the RAW $_POST from the text box of COMMENTS, new lines with \\r\\n
+        }
+
+//        dd($post_data);
+//        echo "<pre>";
+//        print_r($post_data); die;
+//        dd($post_data);
+//        $response = $this->http_post($this->api_url, $post_data);
+//        dd($response);
+
 //        return $response;
 
-        return json_encode(["status"=>"ok","message"=>"Order Added","order"=>123],true);
+        return json_encode(["status" => "ok", "message" => "Order Added", "order" => 2614165], true);
 //        return json_encode(["status"=>"fail","message"=>"Error Message : Error in add order"],true);
     }
 
@@ -57,6 +60,7 @@ class IgersLike
         $post_data['key'] = $this->api_key;
         /** Basic Order Fields */
         $post_data['order_id'] = (int)trim(strip_tags($order_id)); // The order Link Here
+//        $post_data['order_id'] = 34; // The order Link Here
         $response = $this->http_post($this->api_url, $post_data);
         return $response;
     }
@@ -321,8 +325,8 @@ class IgersLike
             $fields_string .= $key . '=' . $value . '&';
         }
 
-
         $fields_string = rtrim($fields_string, '&');
+
         $ch = curl_init();
         //set the url, number of POST vars, POST data
         curl_setopt($ch, CURLOPT_URL, $url);

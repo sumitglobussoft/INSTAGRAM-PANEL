@@ -247,7 +247,7 @@
                         if (isset($_COOKIE['profile_pic_url'])) {
                             Session::put('ig_supplier.profile_pic' , $_COOKIE['profile_pic_url']);
                         }?>
-                        window.location.reload(true );
+                        window.location.reload(true);
                     }
                 },
                 error: function (response) {

@@ -23,33 +23,51 @@ class Usersmeta extends Model implements AuthenticatableContract,
 
     public function getUsermetaWhere($where, $selectedColumns = ['*'])
     {
-        $result = DB::table("usersmeta")
-            ->select($selectedColumns)
-            ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
-            ->first();
-
-        if ($result)
-            return $result;
-        else
+        try {
+            $result = DB::table("usersmeta")
+                ->select($selectedColumns)
+                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                ->first();
+            return ($result) ? $result : 0;
+        } catch (QueryException $e) {
             return 0;
+        }
+    }
 
+    public function getUsermetaDetails($where, $selectedColumns = ['*'])
+    {
+        try {
+            $result = DB::table("usersmeta")
+                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                ->leftjoin('users', 'usersmeta.user_id', '=', 'users.id')
+                ->select($selectedColumns)
+                ->get();
+            return ($result) ? $result : 0;
+        } catch (QueryException $e) {
+            return 0;
+        }
     }
 
     public function updateUsermetaWhere()
     {
         if (func_num_args() > 0) {
-            $data = func_get_arg(0);
-            $where = func_get_arg(1);
+            $where = func_get_arg(0);
+            $data = func_get_arg(1);
             try {
                 $result = DB::table('usersmeta')
                     ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
                     ->update($data);
-                return $result;
+                if ($result) {
+                    return $result;
+                } else {
+                    return 0;
+                }
             } catch (\Exception $e) {
-                return $e->getMessage();
+                return 2;
+//                return $e->getMessage();
             }
         } else {
-            throw new Exception('Argument Not Passed');
+            throw new \Exception('Argument Not Passed');
         }
     }
 

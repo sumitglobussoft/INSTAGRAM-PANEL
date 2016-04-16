@@ -48,33 +48,31 @@ class Authenticate
 //        die;
 
 
-    if(AuthUser::check()){
-        if($module == 'admin'){
-            if(Session::has('instagram_admin')){
-                $userRoleFlag=true;
-            }
-            if(!$userRoleFlag){
-                return redirect('/admin/login');
+        if (AuthUser::check()) {
+            if ($module == 'admin') {
+                if (Session::has('instagram_admin')) {
+                    $userRoleFlag = true;
+                }
+                if (!$userRoleFlag) {
+                    return redirect('/admin/login');
+                }
+            } else if ($module == 'supplier') {
+                if (Session::has('ig_supplier')) {
+                    $userRoleFlag = true;
+                }
+                if (!$userRoleFlag) {
+                    return redirect('/supplier/login');
+                }
+            } else if ($module == 'user') {
+                if (Session::has('ig_user')) {
+                    $userRoleFlag = true;
+                }
+                if (!$userRoleFlag) {
+                    return redirect('/user/login');
+                }
             }
         }
-        else if($module =='supplier'){
-            if(Session::has('ig_supplier')){
-                $userRoleFlag=true;
-            }
-            if(!$userRoleFlag){
-                return redirect('/supplier/login');
-            }
-        }
-        else if($module == 'User'){
-            if(Session::has('ig_user')){
-                $userRoleFlag=true;
-            }
-            if(!$userRoleFlag){
-                return redirect('/user/login');
-            }
-        }
-    }
 
-    return $next($request);
+        return $next($request);
     }
 }

@@ -2316,14 +2316,14 @@
         dayViewHeaderFormat: 'MMMM YYYY',
         extraFormats: false,
         stepping: 1,
-        minDate: false,
+        minDate: 0,
         maxDate: false,
         useCurrent: true,
         collapse: true,
         locale: moment.locale(),
         defaultDate: false,
-        disabledDates: false,
-        enabledDates: false,
+        disabledDates: true,
+        enabledDates: true,
         icons: {
             time: 'glyphicon glyphicon-time',
             date: 'glyphicon glyphicon-calendar',
@@ -2358,8 +2358,8 @@
         viewMode: 'days',
         toolbarPlacement: 'default',
         showTodayButton: false,
-        showClear: false,
-        showClose: false,
+        showClear: true,
+        showClose: true,
         widgetPositioning: {
             horizontal: 'auto',
             vertical: 'auto'

@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\App;
 use InstagramAutobot\Http\Modules\User\Models\Usersmeta;
 use vendor\Payment\Paypal\Paypal;
 
+//addded by saurabh
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Collection;
+use stdClass;
+
 include public_path() . "/../vendor/Payment/Paypal/Paypal.php";
 
 //include public_path() . "/../vendor/curl/CurlRequestHandler.php";
@@ -42,14 +47,15 @@ class UserController extends Controller
         }
         if ($request->isMethod('post')) {
             $url = $this->apiurl . '/login';
+            $data['user_timezone'] = $request['user_timezone'];
             $data['emailOrUsername'] = $request['emailOrUsername'];
             $data['password'] = $request['password'];
             $data['api_token'] = $this->API_TOKEN;
-            //$data['rememberMe']=$request['rememberMe'] == 'on' ? true : false;
-            $objCurlHandler = CurlRequestHandler::getInstance();
+//            $data['rememberMe']=$request['rememberMe'] == 'on' ? true : false;
 
+            $objCurlHandler = CurlRequestHandler::getInstance();
             $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
-//            dd($curlResponse);
+//dd($curlResponse);
             $field = 'username';
             if (strpos($data['emailOrUsername'], '@') !== false) {
                 $field = 'email';
@@ -63,7 +69,7 @@ class UserController extends Controller
 
                         return redirect('/user/dashboard');
                     } else
-                        return Redirect::back()->with('errMsg', 'Invalid credentials.')->withInput();
+                        return Redirect::back()->with('errMsg','Invalid credentials.')->withInput();
                     // return view('User::user.login')->withErrors(['errMsg' => 'Invalid credentials.']);
                 } else
                     return Redirect::back()->with('errMsg', 'Invalid credentials.')->withInput();
@@ -196,9 +202,11 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), $rules, $messages);
 //            if (!$validator->fails()) {
             $url = $this->apiurl . '/signUp';
+            $data['user_timezone'] = $request['user_timezone'];
             $data['firstname'] = $request['firstname'];
             $data['lastname'] = $request['lastname'];
             $data['username'] = $request['username'];
+            $data['skypeUsername'] = (isset($request['skypeUsername']))?$request['skypeUsername']:'';
             $data['email'] = $request['email'];
             $data['password'] = $request['password'];
             $data['conform_password'] = $request['conform_password'];
@@ -206,7 +214,7 @@ class UserController extends Controller
             $data['api_token'] = $this->API_TOKEN;
             $objCurlHandler = CurlRequestHandler::getInstance();
             $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
-            //echo '<pre>'; print_r($curlResponse);die;
+//            echo '<pre>'; print_r($curlResponse);die;
 
             if ($curlResponse->code == 200)
                 return view('User::user.login')->with(['registerSuccesMessage' => 'You have succesfull sign up, please wait for Admin Approval']);
@@ -227,6 +235,22 @@ class UserController extends Controller
     public function dashboard()
     {
         return view('User::user.dashboard');
+    }
+
+    public function getBalance(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $url = $this->apiurl . '/user/getBalance';
+            $data['user_id'] = Session::get('ig_user')['id'];
+            $data['api_token'] = $this->API_TOKEN;
+            $objCurlHandler = CurlRequestHandler::getInstance();
+            $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+            if ($curlResponse->code == 200) {
+                echo json_encode(['status' => 'success', 'data' => $curlResponse->data], true);
+            } else {
+                echo json_encode(['status' => 'fails', 'data' => $curlResponse->message], true);
+            }
+        }
     }
 
     public function myAccount()
@@ -284,6 +308,7 @@ class UserController extends Controller
             $data['firstname'] = $request['firstname'];
             $data['lastname'] = $request['lastname'];
             $data['username'] = $request['username'];
+            $data['skypeUsername'] = (isset($request['skypeUsername']))?$request['skypeUsername']:'';
             $data['email'] = $request['email'];
             $data['addressline1'] = $request['addressline1'];
             $data['addressline2'] = $request['addressline2'];
@@ -291,13 +316,15 @@ class UserController extends Controller
             $data['state'] = $request['state'];
             $data['country_id'] = $request['country_id'];
             $data['contact_no'] = $request['contact_no'];
-
+//dd($data);
             $objCurlHandler = CurlRequestHandler::getInstance();
             $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+
+            dd($data);
             if ($curlResponse->code == 200) {
-                echo json_encode(array('status' => 1, 'successMessage' => $curlResponse->message));
+                echo json_encode(['status' => 'success', 'successMessage' => $curlResponse->message],true);
             } else {
-                echo json_encode(array('status' => 0, 'errorMessage' => $curlResponse->message));
+                echo json_encode(['status' => 'fail', 'errorMessage' => $curlResponse->message],true);
             }
         }
 
@@ -314,6 +341,37 @@ class UserController extends Controller
     {
         return view('User::user.changeAvatar');
     }
+
+    public function emailNotifications(Request $request)
+    {
+        if($request->isMethod('post')){
+            $url = $this->apiurl . '/user/emailNotifications';
+
+            $data=$request->all();
+            $data['user_id'] = Session::get('ig_user')['id'];
+            $data['api_token'] = $this->API_TOKEN;
+
+            $objCurlHandler = CurlRequestHandler::getInstance();
+            $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+//            dd($curlResponse);
+
+            if($curlResponse->code==200){
+                Session::put("ig_user.notify_bal", intval($curlResponse->data['notify_bal']));
+                Session::put("ig_user.notify_profile_likes", intval($curlResponse->data['notify_profile_likes']));
+                Session::put("ig_user.notify_daily_subscription", intval($curlResponse->data['notify_daily_subscription']));
+
+                return Redirect::back()->with(['successMessage' => $curlResponse->message]);
+            }else if ($curlResponse->code == 204) {
+                return Redirect::back()->withErrors($curlResponse->message)->withInput();
+            } else {
+                return Redirect::back()->with(['errorMessage' => $curlResponse->message])->withInput();
+            }
+
+        }else{
+            return view('User::user.emailNotification');
+        }
+    }
+
     /*-------------------function created by saurabh------------------------------*/
     //PAYPAL Integration
     public function payment(Request $request)
@@ -470,12 +528,79 @@ class UserController extends Controller
         return redirect('/user/payment')->with(['message' => 'SORRY!! At this time, we are unable to process your request. Please Try Again Later...']);
     }
 
-        /*---------------for FAQ pages-------------------*/
+    /*---------------for FAQ pages-------------------*/
 
-    public function faq(){
+    public function faq()
+    {
         return view('User::faq.faq');
     }
 
+    public function transactionHistory()
+    {
+        return view('User::user.depositHistory');
+    }
 
+    public function showTransactionHistory()
+    {
+        $id = Session::get('ig_user')['id'];
+        $modelTransactions = Transaction::getInstance();
+        $where = array(
+            'rawQuery' => 'user_id=?',
+            'bindParams' => [$id]
+        );
+        $selectedColumns = ['transactions.*', 'users.email'];
+        $txDetails = $modelTransactions->getUserInfoByUserId($where, $selectedColumns);
+//        echo'<pre>';
+//        print_r($txDetails);die;
 
+        $trans = new Collection();
+        $txDetails = json_decode(json_encode($txDetails), true);
+        foreach ($txDetails as $txd) {
+
+            $trans->push([
+                'tx_id' => $txd['tx_id'],
+                'date' => $this->convertUT($txd['payment_time']),
+                'amount' => $txd['amount'],
+                'email' => $txd['email'],
+                'transaction_id' => $txd['transaction_id'],
+                'status' => 'completed',
+//                'view' => '<button data-original-title="Information" data-html="true" data-content="Payment Completed using PayPal! Thanks for your deposit" data-placement="top" data-trigger="hover" data-container="body" class="btn popovers btn-circle btn-default btn-xs">
+//        <i class="fa fa-eye"></i> Details
+//    </button>'
+            ]);
+        }
+        return Datatables::of($trans)->make(true);
+    }
+
+    public function convertUT($ptime)
+    {
+        $difftime = time() - $ptime;
+
+        if ($difftime < 1) {
+            return '0 seconds';
+        }
+
+        $a = array(365* 24 * 60 * 60 => 'year',
+            30 * 24 * 60 * 60 => 'month',
+            24 * 60 * 60 => 'day',
+            60 * 60 => 'hour',
+            60 => 'minute',
+            1 => 'second'
+        );
+        $a_plural = array('year' => 'years',
+            'month' => 'months',
+            'day' => 'days',
+            'hour' => 'hours',
+            'minute' => 'minutes',
+            'second' => 'seconds'
+        );
+
+        foreach ($a as $secs => $str) {
+            $d = $difftime / $secs;
+            if ($d >= 1) {
+                $r = round($d);
+                return $r . ' ' . ($r > 1 ? $a_plural[$str] : $str) . ' ago';
+            }
+        }
+    }
 }

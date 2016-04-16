@@ -43,9 +43,9 @@ class PaymentController extends Controller
                 }
             }
             if ($authFlag) {
-                $result = paypal::getInstance();
-//                print_r($result);
-//                $result = 1;
+                $result = Paypal::getInstance();
+                print_r($result);
+                $result = 1;
                 if ($result) {
                     $response->code = 200;
                     $response->message = "Payment model created successfully.";
@@ -112,7 +112,7 @@ class PaymentController extends Controller
                     $custom = "";
                     $subscription_type = "";
 
-                    $objpaypal = paypal::getInstance();
+                    $objpaypal = Paypal::getInstance();
 
                     $result = $objpaypal->CallShortcutExpressCheckout($paymentAmount, $returnURL, $cancelURL, $payment_request_quantity, $description, $payment_request_number, $payment_type, $custom, $subscription_type);
 //                    return json_encode($result['TOKEN']);
@@ -216,7 +216,7 @@ class PaymentController extends Controller
             }
         }
         if ($authFlag) {
-            $objpaypal = paypal::getInstance();
+            $objpaypal = Paypal::getInstance();
             $result = $objpaypal->ConfirmPayment($amount, $token, $payerid);
 //                echo"<pre>";print_r($result);die;
 //            echo json_encode($result, true);
@@ -268,7 +268,7 @@ class PaymentController extends Controller
                         $totalBalance = $accountBal + $amount;
                         $dataForUpdateUser = array('account_bal' => $totalBalance);
 //                        return $dataForUpdateUser;
-                        $updated = $objModelUsermeta->updateUsermetaWhere($dataForUpdateUser, $whereForUpdateUser);
+                        $updated = $objModelUsermeta->updateUsermetaWhere($whereForUpdateUser,$dataForUpdateUser);
 
                     } else {
                         $accountBal = 0;

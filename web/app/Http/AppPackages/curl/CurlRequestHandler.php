@@ -1,29 +1,35 @@
 <?php
 namespace Curl;
+
 use stdClass;
 use Input;
 
-class CurlRequestHandler {
+class CurlRequestHandler
+{
 
     private static $_instance = null;
 
     //Prevent any oustide instantiation of this class
-    private function __construct() {
+    private function __construct()
+    {
 
     }
 
-    private function __clone() {
+    private function __clone()
+    {
 
     }
 
 //Prevent any copy of this object
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!is_object(self::$_instance))  //or if( is_null(self::$_instance) ) or if( self::$_instance == null )
             self::$_instance = new self();
         return self::$_instance;
     }
 
-    public function serveRequest() {
+    public function serveRequest()
+    {
 
         if (func_num_args() > 0) {
             $url = func_get_arg(0);
@@ -44,7 +50,8 @@ class CurlRequestHandler {
         }
     }
 
-    public function curlUsingPost($url, $data) {
+    public function curlUsingPost($url, $data)
+    {
 //        echo '<pre>';print_r($url);die;
         $response = new stdClass();
         if (empty($url) || empty($data)) {
@@ -87,9 +94,10 @@ class CurlRequestHandler {
         }
     }
 
-    public function curlUsingGet($url) {
+    public function curlUsingGet($url)
+    {
         $response = new stdClass();
-       // echo "<pre>";print_r($url);die();
+        // echo "<pre>";print_r($url);die();
         if (empty($url)) {
             $response->code = 198;
             $response->message = 'Parameter not Passed';
@@ -122,7 +130,6 @@ class CurlRequestHandler {
             return $response;
         }
     }
-
 
 
 }

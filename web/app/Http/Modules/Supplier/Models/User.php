@@ -3,6 +3,7 @@
 namespace InstagramAutobot\Http\Modules\Supplier\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
 //use Illuminate\Auth\Authenticatable;
 //use Illuminate\Auth\Passwords\CanResetPassword;
 //use Illuminate\Foundation\Auth\Access\Authorizable;
@@ -15,7 +16,7 @@ class User extends Model //implements AuthorizableContract
 {
     public static $_instance = null;
     protected $table = 'users';
-    protected $fillable = ['firstname','lastname','email', 'password', 'role'];
+    protected $fillable = ['firstname', 'lastname', 'email', 'password', 'role'];
     protected $hidden = ['password', 'remember_token'];
 
     public static function getInstance()

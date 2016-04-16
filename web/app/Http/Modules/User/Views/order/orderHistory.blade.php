@@ -1,610 +1,520 @@
 @extends('User/Layouts/userlayout')
 
-@section('title','Dashboard')
+@section('title','Order History')
 
 
 @section('headcontent')
-    {{--OPTIONAL--}}
-    {{--PAGE STYLES OR SCRIPTS LINKS--}}
-    <style>
-        @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
-        .tooltip.top.fade.in {
-            color: #fff !important;
-            background-color: #000;
-        }
+        <!-- BEGIN PAGE LEVEL STYLES -->
+<link rel="stylesheet" href="/assets/css/select2.css"/>
+<link rel="stylesheet" href="/assets/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" href="/assets/css/dataTables.bootstrap.css"/>
+<link rel="stylesheet" href="/assets/css/toastr/toastr.css"/>
+<!-- END PAGE LEVEL STYLES -->
 
-        .filter > td {
-            vertical-align: middle !Important;
-        }
+<!-- BEGIN THEME STYLES -->
+<link href="/assets/css/components-md.css" rel="stylesheet" id="style_components"/>
+<link href="/assets/css/plugins-md.css" rel="stylesheet"/>
+<link href="/assets/css/layout.css" rel="stylesheet"/>
+<link href="/assets/css/light.css" rel="stylesheet" id="style_color"/>
+<link href="/assets/css/custom.css" rel="stylesheet"/>
+<!-- END THEME STYLES -->
 
-        .seperator-n {
-            padding: 0 2px;
-        }
+<style>
+    #myPopoverContent {
+        display: none;
+        float: right;
+    }
 
-        b {
-            font-weight: 700;
-        }
+    .popover-content > span {
+        font-family: segoe UI;
+        font-size: 13px;
+    }
 
-        .input-inline {
-            display: inline-block;
-            vertical-align: middle;
-            width: auto;
-        }
+    .popover {
+        width: 700px;
+    }
 
-        select.input-sm {
-            height: 28px;
-            line-height: 28px;
-            padding: 2px 10px;
-            display: inline-block;
-            transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-            vertical-align: middle;
-            width: 45px !important;
-            color: #333333;
-            border: 1px solid #e5e5e5;
-            vertical-align: middle;
-            width: 75px !important;
-        }
+    .modal-dialog {
+        z-index: 9999 !important;
+    }
 
-        .dataTables_length {
-            display: inline-block;
-            float: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            position: static !important;
-            font-family: "Open Sans", sans-serif;
-            font-size: 13px;
-        }
+    #datatable_length {
+        margin-top: 2%;
+    }
 
-        .input-sm {
-            font-size: 13px;
-            height: 28px;
-            padding: 5px 10px;
-            display: inline-block;
-            vertical-align: middle;
-            width: 45px !important;
-            background-color: white;
-            border: 1px solid #e5e5e5;
-            box-shadow: none;
-            color: #333333;
-            font-size: 14px;
-            font-weight: normal;
-            transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-        }
+    #datatable_length label {
+        display: inline-flex;
+    }
+</style>
 
-        .btn-sm {
-            font-size: 13px;
-            line-height: 1.5;
-            padding: 4px 10px 5px;
-            background-color: #e5e5e5;
-            color: #333333;
-        }
+<link rel="shortcut icon" href="favicon.ico"/>
 
-        .table.table-striped.table-borderless.table-hover.table-responsive .table .btn {
-            margin-left: 0;
-            margin-top: 0;
-        }
+@endsection
 
-        .table.table-striped.table-borderless.table-hover.table-responsive input[type="text"] {
-            border: .5px solid #CCC;
-        }
-
-        .table.table-striped.table-borderless.table-hover.table-responsive input[type="text"]:hover, .table.table-striped.table-borderless.table-hover.table-responsive input[type="text"]:focus {
-            border-color: #999999;
-        }
-
-        .table.table-striped.table-borderless.table-hover.table-responsive .red.btn {
-            background-color: #d84a38;
-            color: white;
-        }
-
-        .btn-xs, .btn.btn-sm.default.table-group-action-submit {
-            padding: 0px 1px !important;
-            font-size: 9px;
-            line-height: 1.5;
-            background-color: #e5e5e5;
-            color: #333333;
-            border-width: 0;
-            box-shadow: none;
-            filter: none;
-            outline: medium none !important;
-            text-shadow: none;
-            border-radius: 3px;
-            margin: 3px;
-            outline: medium none !important;
-            padding: 0 3px !important;
-        }
-
-        .table * {
-            line-height: 24px;
-        }
-
-        .table.table-striped.table-borderless.table-hover.table-responsive td {
-            line-height: 3px;
-        }
-
-        .table.table-striped.table-borderless.table-hover.table-responsive small {
-            color: rgba(0, 0, 0, 0.54);
-            font-size: 11px;
-            letter-spacing: 0;
-        }
-
-        .table.table-striped.table-borderless.table-hover.table-responsive td.insta {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .table.table-striped.table-borderless.table-hover.table-responsive td.insta-link {
-            max-width: 100px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .table.table-striped.table-borderless.table-hover.table-responsive button, a {
-            min-width: 5px;
-        }
-
-    </style>
-    @endsection
-
-    @section('content')
-    {{--PAGE CONTENT GOES HERE--}}
-
-            <!-- Right-Page-content Start-->
-    <section id="right-content-wrapper">
-        <section class="page-header alternative-header">
-            <ol class="breadcrumb">
-                <li>IP Admin</li>
-                <li>Social Market</li>
-                <li>Order History</li>
-            </ol>
-        </section>
-
-        <section class="page-content">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="panel panel-default panel-divider">
-                        <div class="panel-heading">
-                            <header>
-                                <div style="float: left">Orders History</div>
-                                {{--<div style="float: right">Add Order</div>--}}
-                            </header>
+@section('content')
+{{--PAGE CONTENT GOES HERE--}}
+        <!-- BEGIN CONTENT -->
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <!-- BEGIN PAGE HEADER-->
+        <!-- BEGIN PAGE HEAD -->
+        <div class="page-head">
+            <!-- BEGIN PAGE TITLE -->
+            <div class="page-title">
+                <h1>Order History</h1>
+            </div>
+            <!-- END PAGE TITLE -->
+        </div>
+        <!-- END PAGE HEAD -->
+        <!-- BEGIN PAGE BREADCRUMB -->
+        <ul class="page-breadcrumb breadcrumb">
+            <li>
+                <a href="/user/dashboard">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="javascript:;">Market</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="/user/orderHistory">Order History</a>
+            </li>
+        </ul>
+        <!-- END PAGE BREADCRUMB -->
+        <!-- END PAGE HEADER-->
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Begin: life time stats -->
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-gift font-green-sharp"></i>
+                            <span class="caption-subject font-green-sharp bold uppercase">Record Listing</span>
+                            <span class="caption-helper">manage records...</span>
                         </div>
-                        <div class="panel-body" style="padding-top: 0;">
+                    </div>
 
-                            <div class="row">
-                                <div class="col-md-8 col-sm-12">
-                                    <span style="color:red;" id="errorMessage"></span>
-                                    <span style="color:green;" id="successMessage"></span>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-success" class="alert-message-window" hidden>
+                                <a class="close" data-dismiss="alert" href="#" aria-hidden="true">×</a>
+                                <span class="alert-message">order</span></div>
+                        </div>
+
+
+                        <div class="alert alert-success " id="messageArea" hidden>
+                            <button class="close" data-close="alert"></button>
+                            <span class="alert-message-content" style="text-align: center;"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="portlet-body">
+                        <div class="table-container">
+                            <div class="table-actions-wrapper">
+										<span>
+									</span>
+                                <select class="table-group-action-input form-control input-inline input-small input-sm">
+                                    <option value="">Select Action</option>
+                                    <option value="cancel_order">Cancel selected Order(s)</option>
+                                    <option value="reAdd_order">Re-Add selected Order(s)</option>
+                                </select>
+                                <button class="btn btn-sm yellow table-group-action-submit"><i
+                                            class="fa fa-check"></i> Submit
+                                </button>
                             </div>
-                            <div class="row">
-                                <div class="col-md-8 col-sm-12">
-                                    <div class='dataTables_length'>
-                                        Page
-                                        <a title="Prev" class="btn-sm default prev" href="#">
-                                            <i class="fa fa-angle-left"></i>
-                                        </a>
-                                        <input type="text" class="form-control input-sm">
-                                        <a title="Next" class="btn-sm default next" href="#"><i
-                                                    class="fa fa-angle-right"></i></a> of <span
-                                                class="pagination-panel-total">14318</span>
-                                    </div>
-                                    <div class="dataTables_length">
-                                        <label>
-                                            <span class="seperator-n">|</span>View
-                                            <select class="form-control input-sm ">
-                                                <option value="5">5</option>
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                                <option value="150">150</option>
-                                                <option value="200">200</option>
-                                                <option value="300">300</option>
-                                                <option value="400">400</option>
-                                                <option value="500">500</option>
-                                            </select>
-                                            records
-                                        </label>
-                                    </div>
-                                    <div class="dataTables_length">
-                                        <span class="seperator-n">|</span>Found total <b> 71,590 </b> records
-                                    </div>
-                                </div>
 
-                                <div class="col-md-4 col-sm-12">
-                                    <div class="table-group-actions pull-right">
-                                        <span id="displaySelectedRecord"></span>
-                                        <select class="table-group-action-input form-control input-inline input-small input-sm"
-                                                id="selectAction">
-                                            <option value="">Select Action</option>
-                                            <option value="order_cancel">Cancel selected Order(s)</option>
-                                            <option value="order_reAdd">Re-Add selected Order(s)</option>
-                                            <option value="order_changeService">Change Service</option>
+                            <div id="myPopoverContent">
+                                <label>Product :</label> <span>Instagram - Followers (Normal)</span>
+                                <br/>
+                                <label>Amount Limit :</label> <span>1000</span>
+                                <br/>
+                                <label>Amount Done :</label> <span>1000</span>
+                                <br/>
+                                <label>Amount per Run :</label> <span>100</span>
+                                <br/>
+                                <label>Message :</label> <span>This area is for some messages which has to be shown for the orders.</span>
+                            </div>
+
+                            <table class="table table-striped table-bordered table-hover" id="datatable_ajax">
+                                <thead>
+                                <tr role="row" class="heading">
+                                    <th width="1%"><input type="checkbox" class="group-checkable"></th>
+                                    <th width="3%">#ID</th>
+                                    <th width="25%">Service</th>
+                                    <th width="25%">Link</th>
+                                    <th width="5%">Amount</th>
+                                    <th width="5%">Price</th>
+                                    <th width="3%">Added</th>
+                                    <th width="3%">Updated</th>
+                                    <th width="10%">Status</th>
+                                    <th width="20%">Details</th>
+                                </tr>
+                                <tr role="row" class="filter">
+                                    <td></td>
+                                    <td><input type="text" class="form-control form-filter input-sm"
+                                               name="search_order_id"></td>
+                                    <td class='insta-link'>
+
+                                        <select name="search_service_type"
+                                                class="form-control form-filter input-sm">
+                                            <option value="">Select...</option>
+                                            @if(isset($plansList))
+                                                @foreach($plansList as $plan)
+                                                    <option value="{{$plan['plan_name']}}">{{$plan['plan_name']}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
-                                        <button name="actionSubmit" id="actionSubmit"
-                                                class="btn btn-sm default table-group-action-submit"
-                                                data-original-title="" title=""><i class="fa fa-check"></i> Submit
+                                    </td>
+                                    <td><input type="text" class="form-control form-filter input-sm"
+                                               name="search_link"></td>
+                                    <td><input type="text" class="form-control form-filter input-sm"
+                                               name="search_amount"></td>
+                                    <td><input type="text" class="form-control form-filter input-sm"
+                                               name="search_price" disabled="disabled"></td>
+                                    <td><input type="text" class="form-control form-filter input-sm"
+                                               name="search_time_added" disabled="disabled"></td>
+                                    <td><input type="text" class="form-control form-filter input-sm"
+                                               name="search_time_updated" disabled="disabled"></td>
+                                    <td><select name="search_status" class="form-control form-filter input-sm">
+                                            <option value="">Select...</option>
+                                            <option value="0">Pending</option>
+                                            <option value="1">Queue</option>
+                                            <option value="2">Processing</option>
+                                            <option value="3">Completed</option>
+                                            <option value="5">Refunded</option>
+                                            <option value="6">Canceled</option>
+                                        </select></td>
+                                    <td class=''>
+                                        <button class="btn btn-xs default filter-submit margin-bottom"><i
+                                                    class="fa fa-search"></i> Search
                                         </button>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-striped table-borderless table-hover table-responsive"
-                                           id="dataTableHeadData">
-                                        <thead>
-                                        <tr role="row" class="heading">
-                                            <th width="1%"><input type="checkbox" id="groupCheckBox"></th>
-                                            <th width="3%">#ID</th>
-                                            <th width="25%">Service</th>
-                                            <th width="25%">Link</th>
-                                            <th width="5%">Amount</th>
-                                            <th width="5%">Price</th>
-                                            <th width="3%">Added</th>
-                                            <th width="3%">Updated</th>
-                                            <th width="10%">Status</th>
-                                            <th width="20%">Details</th>
-                                        </tr>
-                                        </thead>
-                                    </table>
-                                    <table class="table table-striped table-borderless table-hover table-responsive"
-                                           id="dataTableBodyData">
-                                        <tbody>
-                                        <tr role="row" class="filter">
-                                            <td></td>
-                                            <td><input type="text" class="form-control form-filter input-sm"
-                                                       name="search_id" id="search_id"></td>
-                                            <td class='insta-link'>
-                                                <select name="search_service_type" id="search_service_type"
-                                                        class="form-control form-filter input-sm">
-                                                    <option value="" disabled>Select...</option>
-                                                    @if(isset($orders))
-                                                        @foreach($orders as $orderData)
-                                                            <option value="{{$orderData['plan_name']}}">{{$orderData['plan_name']}}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                                </select>
-                                            </td>
-                                            <td><input type="text" class="form-control form-filter input-sm"
-                                                       name="search_link" id="search_link"></td>
-                                            <td><input type="text" class="form-control form-filter input-sm"
-                                                       name="search_amount" id="search_amount"></td>
-                                            <td><input type="text" class="form-control form-filter input-sm"
-                                                       name="search_price" id="search_price" disabled="disabled"></td>
-                                            <td><input type="text" class="form-control form-filter input-sm"
-                                                       name="search_time_added" disabled="disabled"></td>
-                                            <td><input type="text" class="form-control form-filter input-sm"
-                                                       name="search_time_updated" disabled="disabled"></td>
-                                            <td><select name="search_status" id="search_status"
-                                                        class="form-control form-filter input-sm">
-                                                    <option value="">Select...</option>
-                                                    <option value="Pending">Pending</option>
-                                                    <option value="">Pending but added to server</option>
-                                                    <option value="">Processing</option>
-                                                    <option value="Completed">Completed</option>
-                                                    <option value="Partial Refunded">Error</option>
-                                                    <option value="Refunded">Refunded</option>
-                                                </select></td>
-                                            <td class=''>
-                                                <button class="btn btn-xs default filter-submit margin-bottom"
-                                                        id="searchButton"><i
-                                                            class="fa fa-search"></i> Search
-                                                </button>
-                                                <button class="btn btn-xs red filter-cancel" id="resetButton"><i
-                                                            class="fa fa-times"></i>
-                                                    Reset
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        @if(isset($orders))
-                                            @foreach($orders as $orderData)
-                                                <tr role="row">
-                                                    <td>
-                                                        <div class="checker"><span><input type="checkbox"
-                                                                                          class="orderCheckBox"
-                                                                                          value="{{$orderData['order_id']}}"
-                                                                                          name="orderId[]"></span></div>
-                                                    </td>
-
-                                                    <td class="sorting_1">
-                                                        <small>{{$orderData['order_id']}}</small>
-                                                    </td>
-                                                    <td class='insta'>
-                                                        <small><i style="font-size:10px"
-                                                                  class="fa fa-instagram"></i> {{$orderData['plan_name']}}
-                                                        </small>
-                                                    </td>
-
-                                                    <td class='insta-link'>
-                                                        <small><a target="_blank"
-                                                                  href="{{$orderData['ins_url']}}">{{$orderData['ins_url']}}</a>
-                                                        </small>
-                                                    </td>
-                                                    <td>
-                                                        <small>{{$orderData['quantity_total']}}</small>
-                                                    </td>
-                                                    <td>
-                                                        <small>$ {{$orderData['price']}}</small>
-                                                    </td>
-
-                                                    <td>
-                                                        <small>
-                                                            <?php
-                                                            $dateTime = new \DateTime();
-                                                            $dateTime->setTimestamp(intval($orderData['added_time']));
-                                                            echo $dateTime->format('Y-m-d H:i:s ');
-                                                            ?>
-                                                        </small>
-                                                    </td>
-                                                    <td>
-                                                        <small>9 mins</small>
-                                                    </td>
-
-                                                    <td>
-                                                        <small>
-                                                            <small>
-                                                                @if ($orderData['status']==0)
-                                                                    <span class="label label-info"> <i
-                                                                                class="fa fa-clock-o"></i> Pending</span>
-                                                                @elseif($orderData['status']==1)
-                                                                    <span class="label label-info"> <i
-                                                                                class="fa fa-clock-o"></i> Queue</span>
-                                                                @elseif($orderData['status']==2)
-                                                                    <span class="label label-info"> <i
-                                                                                class="fa fa-clock-o"></i> Processing</span>
-                                                                @elseif($orderData['status']==3)
-                                                                    <span class="label label-info"> <i
-                                                                                class="fa fa-clock-o"></i> Completed</span>
-                                                                @elseif($orderData['status']==4)
-                                                                    <span class="label label-warning"><i
-                                                                                class="fa fa-dollar"></i> Refunded</span>
-                                                                @endif
-                                                            </small>
-                                                        </small>
-                                                    </td>
-
-                                                    <td>
-                                                        <button data-toggle="tooltip" title='popover'
-                                                                class="btn popovers btn-default btn-xs"><i
-                                                                    class="fa fa-info-circle"></i> Details
-                                                        </button>
-                                                    </td>
-
-
-                                                </tr>
-                                            @endforeach
-                                        @endif
-
-                                        {{--<tr role="row" class="even">--}}
-                                        {{--<td>--}}
-                                        {{--<div class="checker"><span><input type="checkbox" value="2569509"--}}
-                                        {{--name="id[]"></span></div>--}}
-                                        {{--</td>--}}
-                                        {{--<td class="sorting_1">--}}
-                                        {{--<small>2569509</small>--}}
-                                        {{--</td>--}}
-                                        {{--<td class='insta'>--}}
-                                        {{--<small><i style="font-size:10px" class="fa fa-instagram"></i> Instagram--}}
-                                        {{--- Likes .--}}
-                                        {{--</small>--}}
-                                        {{--</td>--}}
-                                        {{--<td>--}}
-                                        {{--<small>103</small>--}}
-                                        {{--</td>--}}
-                                        {{--<td>--}}
-                                        {{--<small>0.08 €</small>--}}
-                                        {{--</td>--}}
-                                        {{--<td class='insta-link'>--}}
-                                        {{--<small><a target="_blank" href="#">https://www.instagram.com</a></small>--}}
-                                        {{--</td>--}}
-                                        {{--<td>--}}
-                                        {{--<small>17 mins</small>--}}
-                                        {{--</td>--}}
-                                        {{--<td>--}}
-                                        {{--<small>17 mins</small>--}}
-                                        {{--</td>--}}
-                                        {{--<td>--}}
-                                        {{--<small>--}}
-                                        {{--<small><span class="label label-info"><i class="fa fa-clock-o"></i> Pending</span>--}}
-                                        {{--</small>--}}
-                                        {{--</small>--}}
-                                        {{--</td>--}}
-                                        {{--<td class='btn-group'>--}}
-                                        {{--<button data-toggle="tooltip" title='popover'--}}
-                                        {{--class="btn popovers btn-default btn-xs"><i--}}
-                                        {{--class="fa fa-info-circle"></i> Details--}}
-                                        {{--</button>--}}
-                                        {{--<button class="btn btn-default btn-xs" href="#"><i--}}
-                                        {{--class="fa fa-pencil"></i> Edit--}}
-                                        {{--</button>--}}
-                                        {{--</td>--}}
-                                        {{--</tr>--}}
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-8 col-sm-12">
-                                    <div class='dataTables_length'>
-                                        Page
-                                        <a title="Prev" class="btn-sm default prev" href="#">
-                                            <i class="fa fa-angle-left"></i>
-                                        </a>
-                                        <input type="text" class="form-control input-sm">
-                                        <a title="Next" class="btn-sm default next" href="#"><i
-                                                    class="fa fa-angle-right"></i></a> of <span
-                                                class="pagination-panel-total">14318</span>
-                                    </div>
-                                    <div class="dataTables_length">
-                                        <label>
-                                            <span class="seperator-n">|</span>View
-                                            <select class="form-control input-sm ">
-                                                <option value="5">5</option>
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                                <option value="150">150</option>
-                                                <option value="200">200</option>
-                                                <option value="300">300</option>
-                                                <option value="400">400</option>
-                                                <option value="500">500</option>
-                                            </select>
-                                            records
-                                        </label>
-                                    </div>
-                                    <div class="dataTables_length">
-                                        <span class="seperator-n">|</span>Found total <b> 71,590 </b> records
-                                    </div>
-                                </div>
-                            </div>
+                                        <button class="btn btn-xs red filter-cancel"><i class="fa fa-times"></i>
+                                            Reset
+                                        </button>
+                                    </td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
+                <!-- End: life time stats -->
             </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
+</div>
+
+<!--Modal for edit order-->
+<div id="editOrder" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="caption">
+                    <h4 class="modal-title"><i class="fa fa-pencil font-green-sharp"></i>
+                        <span class="caption-subject font-green-sharp bold uppercase">EDIT YOUR ORDER</span>
+                        <span class="caption-helper">&nbsp;Editing order with order ID #<span
+                                    id="edit_orderID"></span> </span>
+                    </h4>
+                </div>
 
 
-        </section>
-    </section>
+            </div>
+            <div class="modal-body">
+                <form class="form" role="form" id="edit_addAutoOrderForm">
+                    <div class="form-group floating-label">
+                        <input type="text" class="form-control " name="edit_orderLink" id="edit_orderLink"
+                               placeholder=""/>
+                    </div>
+
+                    <p>If you wish you cancel this order you should select it on the checkbox , click "Select
+                        Actions" , choose the option "Cancel" & Click "Submit" :)</p>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-flat btn-ripple" data-dismiss="modal"
+                                id="edit_cancelButton"> Close
+                        </button>
+                        <button type="submit" class="btn btn-success btn-flat btn-ripple" id="edit_submitButton">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal for details-->
+<div id="showDetails" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Order Information</h4>
+            </div>
+            <div class="modal-body">
+                <label><b>Service :</b></label>&nbsp; <span id="details-planName"></span>
+                <br/>
+                <label><b>Start / Current Count :</b></label>&nbsp; <span id="details-start-count">1000</span>/<span
+                        id="details-current-count">1000</span>
+                <br/>
+                <label><b>Remain / Finish Count :</b></label>&nbsp; <span id="details-remain-count"> 1000</span>/<span
+                        id="details-finish-count"> 1000</span>
+                <br/>
+                <label><b>Message :</b></label>&nbsp; <span id="details-message">This area is for some messages which has to be shown for the orders.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="details-close-btn" class="btn btn-danger btn-flat btn-ripple"
+                        data-dismiss="modal">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- END CONTENT -->
 
 @endsection
 
 @section('pagejavascripts')
-    {{--PAGE SCRIPTS GO HERE--}}
-    {{--<script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>--}}
 
-    <script src="/assets/js/tooltip.js"></script>
-    <script src="/assets/js/popover.js"></script>
 
-    <script type="text/javascript">
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="/assets/js/select2.min.js"></script>
+<script src="/assets/js/jquery.dataTables.min.js"></script>
+<script src="/assets/js/dataTables.bootstrap.js"></script>
+<script src="/assets/js/bootstrap-datepicker.js"></script>
+<script src="/assets/js/toastr/toastr.js"></script>
+<!-- END PAGE LEVEL PLUGINS -->
 
-        $(document).ready(function () {
-//            alert("thrtu");
-            console.log('yes i got it');
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/assets/js/instapanel.js"></script>
+<script src="/assets/js/layout.js"></script>
+<script src="/assets/js/demo.js"></script>
+<script src="/assets/js/datatable.js"></script>
+<script src="/assets/js/table-ajax.js"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
 
-            var tableSel = $('#dataTableBodyData');
-            tableSel.dataTable({
-                'sDom': '' // Hiding the datatables ui
+<script>
+    jQuery(document).ready(function () {
+        InstaPanel.init(); // init InstaPanel core components
+        Layout.init(); // init current layout
+        Demo.init(); // init demo features
+        TableAjax.init();
+    });
+</script>
+
+<script>
+    $(function () {
+        console.log("data2");
+        //DataTable
+        $('#datatable').dataTable();
+        $('#datatable_filter input, #datatable_length select').addClass('form-control');
+        $('#datatable_length').addClass('form-group');
+    });
+</script>
+<script>
+    $(function () {
+        console.log("data3");
+        $('.text').popover({
+            content: $('#myPopoverContent').html(),
+            html: true
+        }).mouseover(function () {
+//            alert("mouse over");
+            $(this).popover('show');
+        }).mouseleave(function () {
+//            alert("mouse leaves");
+            $(this).popover('hide');
+        });
+    });
+</script>
+
+<!--BEGIN CUSTOM PAGE LEVEL SCRIPT-->
+<script type="text/javascript">
+    toastr.options.positionClass = "toast-top-center";
+    toastr.options.preventDuplicates = true;
+    toastr.options.closeButton = true;
+
+
+    var TableAjax = function () {
+        var handleRecords = function () {
+
+            var grid = new Datatable();
+            grid.init({
+                src: $("#datatable_ajax"),
+                onSuccess: function (grid) {
+                    // execute some code after table records loaded
+                },
+                onError: function (grid) {
+                    // execute some code on network or other general error
+                },
+                onDataLoad: function (grid) {
+                    // execute some code on ajax data load
+                },
+                loadingMessage: 'Loading...',
+                dataTable: { // here you can define a typical datatable settings from http://datatables.net/usage/options
+
+                    // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
+                    // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/scripts/datatable.js).
+                    // So when dropdowns used the scrollable div should be removed.
+                    //"dom": "<'row'<'col-md-8 col-sm-12'pli><'col-md-4 col-sm-12'<'table-group-actions pull-right'>>r>t<'row'<'col-md-8 col-sm-12'pli><'col-md-4 col-sm-12'>>",
+
+                    "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
+
+                    "lengthMenu": [
+                        [10, 20, 50, 100, 150, -1],
+                        [10, 20, 50, 100, 150, "All"] // change per page values here
+                    ],
+                    "pageLength": 10, // default record count per page
+                    "ajax": {
+                        "url": "/user/orderHistoryAjax" // ajax source
+                    },
+                    "order": [
+                        [1, "asc"]
+                    ]// set first column as a default sort by asc
+                }
             });
 
-
-        });
-
-
-        // add multiple select / deselect functionality
-        $('#groupCheckBox').click(function (event) {
-
-            //$(".orderCheckBox").prop('checked', $(this).prop("checked"));
-
-            if (this.checked) {
-                console.log('group box checked');
-                $('.orderCheckBox').each(function () {
-                    this.checked = true;
-                });
-                var recordCount = $(".orderCheckBox").length;
-                $('#displaySelectedRecord').text(recordCount + " records selected ");
-            } else {
-                console.log('group box un checked');
-                $('.orderCheckBox').each(function () {
-                    this.checked = false;
-                });
-                $('#displaySelectedRecord').text("");
-            }
-        });
-
-        // if all checkbox are selected, check the selectall checkbox
-        // and viceversa
-        $(".orderCheckBox").click(function () {
-            if ($(".orderCheckBox").length == $(".orderCheckBox:checked").length) {
-                $("#groupCheckBox").attr("checked", "checked");
-            } else {
-                var recordCount = $(".orderCheckBox:checked").length;
-                if (recordCount != 0)
-                    $('#displaySelectedRecord').text(recordCount + " records selected ");
-                else
-                    $('#displaySelectedRecord').text("");
-
-                $("#groupCheckBox").removeAttr("checked");
-            }
-        });
-
-
-        $('#actionSubmit').click(function () {
-            if ($('#selectAction option:selected').attr('value') == '') {
-                $('#errorMessage').text("please select an action");
-            } else {
-                var orderId = new Array();
-                $("#dataTableBodyData input:checked").each(function (index) {
-                    orderId[index] = $(this).attr('value');
-                });
-
-                console.log(orderId);
-                if (orderId.length != 0) {
-                    if ($('#selectAction option:selected').attr('value') == 'order_cancel') {
-                        var x = confirm("Are You sure you want to cancel selected order(s)");
-                        if (x) {
-                            $.ajax({
-                                url: "/user/cancelOrder",
-                                type: "POST",
-                                dataType: "json",
-                                data: {orderId: orderId},
-                                success: function (response) {
-                                    console.log(response);
-                                    if (response['status'] == 'success') {
-
-                                        $('#errorMessage').text("");
-                                        $('#successMessage').text(response['message']);
-                                    }
-                                },
-                                error: function (xhr, status, error) {
-                                    console.log(error);
-                                }
-                            });
-                        }
-                    }
-                    else if ($('#selectAction option:selected').attr('value') == 'order_reAdd') {
-                        var x = confirm("Are You sure you want to Re - ADD selected order(s)");
-                        if (x) {
-                            $.ajax({
-                                url: "/user/reAddOrder",
-                                type: "POST",
-                                dataType: "json",
-                                data: {orderId: orderId},
-                                success: function (response) {
-                                    console.log(response);
-                                    if (response['status'] == 'success') {
-
-                                        $('#errorMessage').text("");
-                                        $('#successMessage').text(response['message']);
-                                    }
-                                },
-                                error: function (xhr, status, error) {
-                                    console.log(error);
-                                }
-                            });
-                        }
-                    }
-                } else {
-                    $('#errorMessage').text("please select an Order ID");
+            // handle group actionsubmit button click
+            grid.getTableWrapper().on('click', '.table-group-action-submit', function (e) {
+                e.preventDefault();
+                var action = $(".table-group-action-input", grid.getTableWrapper());
+                if (action.val() != "" && grid.getSelectedRowsCount() > 0) {
+                    grid.setAjaxParam("customActionType", "group_action");
+                    grid.setAjaxParam("customActionName", action.val());
+                    grid.setAjaxParam("orderId", grid.getSelectedRows());
+                    grid.getDataTable().ajax.reload();
+                    grid.clearAjaxParams();
+                } else if (action.val() == "") {
+                    InstaPanel.alert({
+                        type: 'danger',
+                        icon: 'warning',
+                        message: 'Please select an action',
+                        container: grid.getTableWrapper(),
+                        place: 'prepend'
+                    });
+                } else if (grid.getSelectedRowsCount() === 0) {
+                    InstaPanel.alert({
+                        type: 'danger',
+                        icon: 'warning',
+                        message: 'No record selected',
+                        container: grid.getTableWrapper(),
+                        place: 'prepend'
+                    });
                 }
-
-
+            });
+        };
+        return {
+            //main function to initiate the module
+            init: function () {
+                handleRecords();
             }
+        };
+    }();
 
 
+    var orderId = '';
+    $(document.body).on('click', '.edit-order', function (e) {
+        e.preventDefault();
+        var orderLink = $(this).closest("tr").find('td:eq(3)').text();
+        $('#edit_orderLink').val(orderLink);
+        $('#edit_orderID').text($(this).closest("tr").find('td:eq(1)').text());
+        orderId = $(this).closest("tr").find('td:eq(1)').text();
+    });
+
+    $(document.body).on('click', '#edit_submitButton', function (e) {
+        e.preventDefault();
+        var orderLink = $('#edit_orderLink').val();
+        var order_id = orderId;
+
+        if (orderLink == null || orderLink == '') {
+            toastr.error('Please enter valid Instagram Url', {timeOut: 4000});
+            $('#edit_orderLink').focus();
+            return false;
+        }
+        $.ajax({
+            url: "/user/editOrder",
+            type: "POST",
+            dataType: "json",
+            data: {
+                orderId: order_id,
+                orderLink: orderLink
+            },
+            success: function (response) {
+                console.log(response);
+                if (response['status'] == 'success') {
+                    toastr.success(response['message'], {timeOut: 4000});
+                    $("#edit_cancelButton").trigger("click");
+//                        $('.alert-message').text(response['message']);
+//                        $('.alert-message-window').show();
+
+//                        location.reload();
+                } else if (response['status'] == 'fail') {
+                    toastr.error(response['message'], {timeOut: 4000});
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
         });
 
+    });
 
-    </script>
+    $(document.body).on('click', '.show-details', function (e) {
+        e.preventDefault();
+        orderId = $(this).closest("tr").find('td:eq(1)').text();
+        console.log(orderId);
+        $.ajax({
+            url: "/user/getMoreOrderDetails",
+            type: "POST",
+            dataType: "json",
+            data: {
+                orderId: orderId
+            },
+            success: function (response) {
+                console.log(response);
+
+                if (response['status'] == 'success') {
+                    $('#details-planName').text('');
+                    $('#details-start-count').text('');
+                    $('#details-current-count').text('');
+                    $('#details-remain-count').text('');
+                    $('#details-finishCount-count').text('');
+                    $('#details-message').text('');
+
+
+                    $('#details-planName').text(response['data']['planName']);
+                    $('#details-start-count').text(response['data']['startCount']);
+                    $('#details-current-count').text(response['data']['currentCount']);
+                    $('#details-remain-count').text(response['data']['remainCount']);
+                    $('#details-finish-count').text(response['data']['finishCount']);
+                    $('#details-message').text(response['data']['message']);
+                }
+                else {
+                    $('#details-planName').text('');
+                    $('#details-start-count').text('');
+                    $('#details-current-count').text('');
+                    $('#details-remain-count').text('');
+                    $('#details-finishCount-count').text('');
+                    $('#details-message').text('');
+                    $('#messageArea').show();
+                    $('.alert-message-content').text(response['message']);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    });
+
+</script>
+<!--END CUSTOM PAGE LEVEL SCRIPT-->
+
+
 @endsection
 
 

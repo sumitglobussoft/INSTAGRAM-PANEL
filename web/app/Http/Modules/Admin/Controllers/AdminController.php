@@ -78,7 +78,7 @@ class AdminController extends Controller
             'refunded_orders' => $countRefundedOrders, 'cancelled_orders' => $countCancelledOrders,'todays_orders'=>$countTodaysOrders]);
     }
 
-    public function adminlogin(Request $data)
+    public function adminlogin(Request $request)
     {
 
 ////        $objUser = new User();
@@ -97,14 +97,15 @@ class AdminController extends Controller
 ////            $result = $objUser->addNewUser($data);
 
         if (Session::has('instagram_admin')) {
+
             return redirect('admin/dashboard');
         }
 
-        if ($data->isMethod('post')) {
-            $email = $data->input('email');
-            $password = $data->input('password');
+        if ($request->isMethod('post')) {
+            $email = $request->input('email');
+            $password = $request->input('password');
 
-            $this->validate($data, [
+            $this->validate($request, [
                 'email' => 'required|email',
                 'password' => 'required',
             ], ['email.required' => 'Please enter email address or username',
@@ -113,7 +114,6 @@ class AdminController extends Controller
             );
 
             if (Auth::attempt(['email' => $email, 'password' => $password])) {
-
                 $objModelUsers = User::getInstance();
                 $userDetails = $objModelUsers->getUserById(Auth::id());
 //                dd($userDetails);

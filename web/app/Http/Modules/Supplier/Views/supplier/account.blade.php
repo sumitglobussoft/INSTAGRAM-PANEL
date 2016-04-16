@@ -739,10 +739,11 @@
                                         <div class="clearfix"></div>
                                         <div class="form-group col-md-6 ">
                                             <?php if (isset($_COOKIE['profile_pic_url'])) {
-                                               Session::put('ig_supplier.profile_pic' , $_COOKIE['profile_pic_url']);
+                                                Session::put('ig_supplier.profile_pic', $_COOKIE['profile_pic_url']);
                                             }?>
-                                            <img class="img-thumbnail col-md-6 " alt="user Avatar" width="304" height="236"
-                                                    src="@if(isset(Session::get('ig_supplier')['profile_pic'])) {{Session::get('ig_supplier')['profile_pic']}} @else /assets/uploads/useravatar/default-profile-pic.png @endif " >
+                                            <img class="img-thumbnail col-md-6 " alt="user Avatar" width="304"
+                                                 height="236"
+                                                 src="@if(isset(Session::get('ig_supplier')['profile_pic'])) {{Session::get('ig_supplier')['profile_pic']}} @else /assets/uploads/useravatar/default-profile-pic.png @endif ">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <input type="file" name="profilepic" accept="image/*"><br>
