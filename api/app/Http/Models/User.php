@@ -54,7 +54,7 @@ class User extends Model implements AuthenticatableContract,
             $result = DB::table('users')
                 ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
                 ->leftjoin('usersmeta', 'users.id', '=', 'usersmeta.user_id')
-                ->select('users.id', 'users.name', 'users.lastname', 'users.username', 'users.email', 'users.profile_pic', 'usersmeta.addressline1', 'usersmeta.addressline2', 'usersmeta.city', 'usersmeta.state', 'usersmeta.country_id', 'usersmeta.contact_no')
+                ->select('users.id', 'users.name', 'users.lastname', 'users.username','users.skype_username','users.email', 'users.profile_pic', 'usersmeta.addressline1', 'usersmeta.addressline2', 'usersmeta.city', 'usersmeta.state', 'usersmeta.country_id', 'usersmeta.contact_no')
                 ->first();
             if ($result)
                 return $result;

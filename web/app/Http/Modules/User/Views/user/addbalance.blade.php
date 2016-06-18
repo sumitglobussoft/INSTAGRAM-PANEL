@@ -1,22 +1,26 @@
 @extends('User/Layouts/userlayout')
 
-@section('title','Order History')
+@section('title','Add Balance')
 
 
 @section('headcontent')
+        <!-- BEGIN PAGE LEVEL STYLES -->
+
+<!-- END PAGE LEVEL STYLES -->
 <!-- BEGIN THEME STYLES -->
-<link href="/assets/css/components-md.css" rel="stylesheet" id="style_components" />
-<link href="/assets/css/plugins-md.css" rel="stylesheet" />
-<link href="/assets/css/layout.css" rel="stylesheet" />
-<link href="/assets/css/light.css" rel="stylesheet" id="style_color" />
-<link href="/assets/css/profile.css" rel="stylesheet" />
-<link href="/assets/css/custom.css" rel="stylesheet" />
+<link href="/assets/css/components-md.css" rel="stylesheet" id="style_components"/>
+<link href="/assets/css/plugins-md.css" rel="stylesheet"/>
+<link href="/assets/css/layout.css" rel="stylesheet"/>
+<link href="/assets/css/default.css" rel="stylesheet" id="style_color"/>
+<link href="/assets/css/profile.css" rel="stylesheet"/>
+<link href="/assets/css/custom.css" rel="stylesheet"/>
 <!-- END THEME STYLES -->
 
-<link rel="shortcut icon" href="favicon.ico" />
+<link rel="shortcut icon" href="favicon.ico"/>
 
 @endsection
-
+@section('classMyAccount','active')
+@section('classMyAccount2','active')
 @section('content')
 {{--PAGE CONTENT GOES HERE--}}
         <!-- BEGIN CONTENT -->
@@ -60,9 +64,9 @@
                 <div class="portlet light">
                     <div class="portlet-title">
                         <div class="caption">
-                            <i class="fa fa-gift font-green-sharp"></i>
-                            <span class="caption-subject font-green-sharp bold uppercase">Purchase Coinz with Paypal</span>
-                            <span class="caption-helper">manage your current balance ...</span>
+                            <i class="fa fa-money font-green-sharp"></i>
+                            <span class="caption-subject font-green-sharp bold uppercase">Add Balance with Paypal</span>
+                            <span class="caption-helper">charge your wallet..</span>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -80,7 +84,8 @@
                                     @if(Session::has('message'))
                                         <div class="row" style="margin-top:3%;">
                                             <div class="col-md-12">
-                                                <div class="alert alert-success"><a class="close" data-dismiss="alert" href="#"
+                                                <div class="alert alert-success"><a class="close" data-dismiss="alert"
+                                                                                    href="#"
                                                                                     aria-hidden="true">×</a>
                                                     {{Session::get('message')}}
                                                 </div>
@@ -88,15 +93,15 @@
                                         </div>
                                     @endif
                                     {{--<div class="row" style="margin-top:3%;">--}}
-                                        {{--<div class="col-md-12">--}}
-                                            {{--<div class="alert alert-success"><a class="close" data-dismiss="alert" href="#"--}}
-                                                                             {{--aria-hidden="true">×</a>We are having--}}
-                                                {{--issues with Payments, if you wish to deposit and Paypal is not enable--}}
-                                                {{--for your account please talk with Live chat, or send directly to--}}
-                                                {{--zeusgram@gmail.com as Friends and Family and let us know the Transaction--}}
-                                                {{--ID--}}
-                                            {{--</div>--}}
-                                        {{--</div>--}}
+                                    {{--<div class="col-md-12">--}}
+                                    {{--<div class="alert alert-success"><a class="close" data-dismiss="alert" href="#"--}}
+                                    {{--aria-hidden="true">×</a>We are having--}}
+                                    {{--issues with Payments, if you wish to deposit and Paypal is not enable--}}
+                                    {{--for your account please talk with Live chat, or send directly to--}}
+                                    {{--zeusgram@gmail.com as Friends and Family and let us know the Transaction--}}
+                                    {{--ID--}}
+                                    {{--</div>--}}
+                                    {{--</div>--}}
                                     {{--</div>--}}
                                     <div class="row">
                                         <div class="col-md-12">
@@ -178,7 +183,7 @@
 @endsection
 
 @section('pagejavascripts')
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="/assets/js/instapanel.js"></script>
 <script src="/assets/js/layout.js"></script>
 <script src="/assets/js/demo.js"></script>

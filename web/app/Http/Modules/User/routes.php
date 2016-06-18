@@ -1,10 +1,11 @@
 <?php
 
+//Route::resource('/temp-user-design', function(){
+//    return view();
+//});
 
 Route::group(array('module' => 'User', 'namespace' => 'User\Controllers'), function () {
 //Your routes belong to this module.
-
-
 
 
     Route::get('/', function () {
@@ -13,6 +14,7 @@ Route::group(array('module' => 'User', 'namespace' => 'User\Controllers'), funct
 
     Route::resource('/user/login', 'UserController@login');
     Route::resource('/user/register', 'UserController@register');
+    Route::resource('/user/checkUsername', 'UserController@checkUsername');
     Route::resource('/user/logout', 'UserController@logout');
     Route::resource('/user/forgotPassword', 'UserController@forgotPassword');
     Route::get('/user/verifyResetCode/{resetCode}', 'UserController@verifyResetCode');
@@ -21,8 +23,8 @@ Route::group(array('module' => 'User', 'namespace' => 'User\Controllers'), funct
 
     Route::group(['middleware' => 'auth:user'], function () {
         Route::resource('/user/dashboard', 'UserController@dashboard');
-
-        Route::post('/user/getBalance','UserController@getBalance');
+        Route::resource('/user/checkUserStatus', 'UserController@checkUserStatus');
+        Route::post('/user/getBalance', 'UserController@getBalance');
         Route::resource('/user/accountOverview', 'UserController@accountOverview');
 
 //        Route::resource('user/profileView', 'UserController@profileView');
@@ -33,6 +35,8 @@ Route::group(array('module' => 'User', 'namespace' => 'User\Controllers'), funct
         Route::get('user/changeAvatar', 'UserController@changeAvatar');
 
         Route::resource('/user/addOrder', 'OrderController@addOrder');
+        Route::resource('/user/URLinfo', 'OrderController@URLinfo');
+
         Route::resource('/user/getFilterPlanList', 'OrderController@getFilterPlanList');
 
         Route::resource('/user/orderHistory', 'OrderController@orderHistory');
@@ -41,14 +45,10 @@ Route::group(array('module' => 'User', 'namespace' => 'User\Controllers'), funct
         Route::post('/user/editOrder', 'OrderController@editOrder');
         Route::post('/user/getMoreOrderDetails', 'OrderController@getMoreOrderDetails');
 
-
         Route::resource('user/orderHistoryAjax', 'OrderController@orderHistoryAjax');
         Route::post('user/getPreviousOrderDetails', 'OrderController@getPreviousOrderDetails');
 
         Route::get('user/pricingInformation', 'OrderController@pricingInformation');
-
-
-
 
         //Routes for ticket Controller-- Done by Saurabh
         Route::resource('user/create-ticket', 'TicketsController@createTicket');
@@ -65,7 +65,18 @@ Route::group(array('module' => 'User', 'namespace' => 'User\Controllers'), funct
         //routes for paypal-- Done by Saurabh
         Route::resource('/user/payment', 'UserController@payment');
         Route::resource('/user/depositHistory', 'UserController@transactionHistory');
-        Route::resource('/user/depositHistory-ajaxDatatables','UserController@showTransactionHistory');
+        Route::resource('/user/depositHistory-ajaxDatatables', 'UserController@showTransactionHistory');
+
+        //Routes for Comment Controller-- Done by Saurabh
+        Route::resource('/user/show-comments', 'CommentController@showComments');
+        Route::resource('/user/show-comments-datatables', 'CommentController@showCommentsAjaxHandler');
+        Route::get('/user/edit-comments/{id}', 'CommentController@editComments');
+        Route::post('/user/edit-comments/{id}', 'CommentController@editComments');
+        Route::post('/user/delete-commentGroup', 'CommentController@deleteCommentGroup');
+        Route::resource('/user/comments-add-ajax-handler', 'CommentController@addCommentsAjaxHandler');
+
+        //Routes for 2CO payment-- Done by Saurabh
+        Route::resource('/user/twoCO_payment', 'UserController@TwoCOpayment');
 
         Route::resource('/user/cheapbulk', 'UserController@cheapbulk');
 
@@ -76,10 +87,14 @@ Route::group(array('module' => 'User', 'namespace' => 'User\Controllers'), funct
 //        Route::post('/paymentError/196/{token}', 'UserController@paymentError');
 
         //Routes for Notifications-- Done by Saurabh
-        Route::resource('/user/notification','NotificationsController@notificationLog');
+        Route::resource('/user/notification', 'NotificationsController@notificationLog');
 
-        //Routes for FAQ-- Done by Saurabh
-        Route::resource('/user/faq','UserController@faq');
+        //Routes for Support(static FAQ page)-- Done by Saurabh
+        Route::resource('/user/faq', 'UserController@faq');
+        Route::resource('/user/contactPage', 'UserController@contactPage');
+        Route::resource('/user/paymentPage', 'UserController@paymentPage');
+        Route::resource('/user/refundsPage', 'UserController@refundsPage');
+        Route::resource('/user/termsOfServicePage', 'UserController@termsOfServicePage');
 
         //Route for automatic orders
         Route::resource('user/addAutoOrder', 'OrderController@addAutoOrder');

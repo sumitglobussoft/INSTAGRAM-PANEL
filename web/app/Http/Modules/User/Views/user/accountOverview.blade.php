@@ -7,7 +7,7 @@
 <link href="/assets/css/components-md.css" rel="stylesheet" id="style_components" />
 <link href="/assets/css/plugins-md.css" rel="stylesheet" />
 <link href="/assets/css/layout.css" rel="stylesheet" />
-<link href="/assets/css/light.css" rel="stylesheet" id="style_color" />
+<link href="/assets/css/default.css" rel="stylesheet" id="style_color" />
 <link href="/assets/css/profile.css" rel="stylesheet" />
 <link href="/assets/css/custom.css" rel="stylesheet" />
 <!-- END THEME STYLES -->
@@ -15,6 +15,8 @@
 <link rel="shortcut icon" href="favicon.ico" />
 
 @endsection
+@section('classMyAccount','active')
+@section('classMyAccount1','active')
 
 @section('content')
 <!-- BEGIN CONTENT -->
@@ -77,14 +79,12 @@
                                                     <td> {{Session::get('ig_user')['username']}}
                                                     </td>
                                                 </tr>
-
                                                 <tr>
                                                     <td><i class="fa fa-skype"></i></td>
                                                     <td> Skype Username</td>
                                                     <td> {{Session::get('ig_user')['skype_username']}}
                                                     </td>
                                                 </tr>
-
                                                 <tr>
                                                     <td><i class="fa fa fa-euro"></i></td>
                                                     <td> Account Balance</td>
@@ -99,26 +99,26 @@
                                                     <td> E-Mail</td>
                                                     <td> {{Session::get('ig_user')['email']}}</td>
                                                 </tr>
-                                                <tr>
-                                                    <td><i class="fa fa fa-credit-card"></i></td>
-                                                    <td> Paypal / 2Checkout Payments</td>
-                                                    <td>
-                                                        <span class="label label-success">Enable</span> /
-                                                        <span class="label label-danger">Disable</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><i class="fa fa fa-server"></i></td>
-                                                    <td> Shop API Key</td>
-                                                    <td> 0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><i class="fa fa fa-external-link"></i></td>
-                                                    <td> Affiliated Link</td>
-                                                    <td><a target="_blank"
-                                                           href="javascript:;">https://www.instapanel.com/?a=1181</a>
-                                                    </td>
-                                                </tr>
+                                                {{--<tr>--}}
+                                                    {{--<td><i class="fa fa fa-credit-card"></i></td>--}}
+                                                    {{--<td> Paypal / 2Checkout Payments</td>--}}
+                                                    {{--<td>--}}
+                                                        {{--<span class="label label-success">Enable</span> /--}}
+                                                        {{--<span class="label label-danger">Disable</span>--}}
+                                                    {{--</td>--}}
+                                                {{--</tr>--}}
+                                                {{--<tr>--}}
+                                                    {{--<td><i class="fa fa fa-server"></i></td>--}}
+                                                    {{--<td> Shop API Key</td>--}}
+                                                    {{--<td> 0</td>--}}
+                                                {{--</tr>--}}
+                                                {{--<tr>--}}
+                                                    {{--<td><i class="fa fa fa-external-link"></i></td>--}}
+                                                    {{--<td> Affiliated Link</td>--}}
+                                                    {{--<td><a target="_blank"--}}
+                                                           {{--href="javascript:;">https://www.instapanel.com/?a=1181</a>--}}
+                                                    {{--</td>--}}
+                                                {{--</tr>--}}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -140,7 +140,9 @@
 @endsection
 
 @section('pagejavascripts')
+<!-- BEGIN PAGE LEVEL PLUGINS -->
 
+<!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="/assets/js/instapanel.js"></script>
 <script src="/assets/js/layout.js"></script>
@@ -154,6 +156,7 @@
         Demo.init(); // init demo features
     });
 </script>
+<!-- END JAVASCRIPTS -->
 
 @endsection
 

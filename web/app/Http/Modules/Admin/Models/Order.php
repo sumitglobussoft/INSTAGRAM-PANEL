@@ -20,8 +20,8 @@ class Order extends Model
      * @var array
      */
     protected $fillable = ['order_id', 'transaction_id', 'by_user_id', 'plan_id', 'for_user_id', 'ins_url',
-        'quantity_total', 'quantity_done','start_time','end_time','time_interval','status','parent_order_id',
-           'added_time','updated_time'
+        'quantity_total', 'quantity_done', 'start_time', 'end_time', 'time_interval', 'status', 'parent_order_id',
+        'added_time', 'updated_time'
     ];
 
     /**
@@ -158,7 +158,7 @@ class Order extends Model
             $result = Order::join('users', function ($join) {
                 $join->on('orders.by_user_id', '=', 'users.id');
             })
-                ->join('plans','orders.plan_id', '=', 'plans.plan_id')
+                ->join('plans', 'orders.plan_id', '=', 'plans.plan_id')
 //                ->leftJoin('location', function ($join) {
 //                    $join->on('location.location_id', '=', 'usersmeta.city');
 //                })
@@ -175,7 +175,8 @@ class Order extends Model
             echo $e;
         }
     }
-    public function getUsersInfoFromOrdersByUserId($where,$selectedColumns = ['*'])
+
+    public function getUsersInfoFromOrdersByUserId($where, $selectedColumns = ['*'])
     {
         try {
             $result = DB::table($this->table)
@@ -183,7 +184,7 @@ class Order extends Model
                 ->join('users', function ($join) {
                     $join->on('orders.by_user_id', '=', 'users.id');
                 })
-                ->join('plans','orders.plan_id', '=', 'plans.plan_id')
+                ->join('plans', 'orders.plan_id', '=', 'plans.plan_id')
                 ->select($selectedColumns)
                 ->get();
             return $result;
@@ -192,4 +193,19 @@ class Order extends Model
         }
     }
 
+    public function getOrderWithUsersmetaInfo($where, $selectedCols = ['*'])
+    {
+        try {
+            $result = DB::table($this->table)
+                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                ->join('usersmeta', function ($join) {
+                    $join->on('orders.by_user_id', '=', 'usersmeta.user_id');
+                })
+                ->select($selectedCols)
+                ->get();
+            return $result;
+        } catch (QueryException $e) {
+            echo $e;
+        }
+    }
 }

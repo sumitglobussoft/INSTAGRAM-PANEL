@@ -85,17 +85,26 @@ class Order extends Model
             'orders.order_id', 'orders.server_order_id', 'orders.ins_url', 'orders.quantity_total', 'orders.price',
             'orders.quantity_done', 'orders.status', 'orders.added_time', 'orders.updated_time',
             'orders.initial_likes_count', 'orders.initial_followers_count', 'orders.initial_comments_count',
-            'plans.plan_name', 'plans.supplier_server_id','plans.plan_type'
+            'plans.plan_name', 'plans.supplier_server_id', 'plans.plan_type'
         ];
 
         try {
-            $result = DB::table('orders')
-                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
-                ->join('plans', 'plans.plan_id', '=', 'orders.plan_id')
-                ->orderBy($sortingOrder[0], $sortingOrder[1])
-                ->skip($iDisplayStart)->take($iDisplayLength)
-                ->select($selectedColumns)
-                ->get();
+            if ($iDisplayLength < 0) {
+                $result = DB::table('orders')
+                    ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                    ->join('plans', 'plans.plan_id', '=', 'orders.plan_id')
+                    ->orderBy($sortingOrder[0], $sortingOrder[1])
+                    ->select($selectedColumns)
+                    ->get();
+            } else {
+                $result = DB::table('orders')
+                    ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                    ->join('plans', 'plans.plan_id', '=', 'orders.plan_id')
+                    ->orderBy($sortingOrder[0], $sortingOrder[1])
+                    ->skip($iDisplayStart)->take($iDisplayLength)
+                    ->select($selectedColumns)
+                    ->get();
+            }
             if ($result)
                 return $result;
             else
@@ -127,15 +136,35 @@ class Order extends Model
 
         }
     }
-
+    //copied from server// testing purpose
     public function getAutolikesOrderStatus($where, $selectedColumns = ['*'])
+    {
+        try {
+            $result = DB::table('orders')
+                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                ->join('instagram_users', 'instagram_users.ins_user_id', '=', 'orders.for_user_id')
+                ->join('plans', 'plans.plan_id', '=', 'orders.plan_id')
+                ->select($selectedColumns)
+                ->get();
+
+            if ($result)
+                return $result;
+            else
+                return 0;
+        } catch (QueryException $exc) {
+            return $exc->getMessage();
+
+        }
+    }
+    //end here
+    public function getAutolikesOrderStatus1($where, $selectedColumns = ['*'])
     {
 
         try {
             $result = DB::table('orders')
                 ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
                 ->join('instagram_users', 'instagram_users.ins_user_id', '=', 'orders.for_user_id')
-                ->join('plans', 'plans.plan_id', '=','orders.plan_id')
+                ->join('plans', 'plans.plan_id', '=', 'orders.plan_id')
                 ->select($selectedColumns)
                 ->get();
 
@@ -167,5 +196,27 @@ class Order extends Model
             return $exc->getMessage();
         }
     }
+
+    /** This code is for showing orders details and the payment details of the user @ dashboard //by Saurabh
+     * @param array : $where, $selColms
+     * @return array
+     * @throws "Argument Not Passed"
+     * @author Saurabh Kumar
+     * @uses
+     */
+    public function getOrderAndPaymentDetailsByUserId($where, $selectedColumns = ['*'])
+    {
+        if (func_num_args() > 0) {
+            $where = func_get_arg(0);
+            $result = DB::table('orders')
+                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                ->select()
+                ->get();
+            return $result;
+        } else {
+            throw new Exception('Argument Not Passed');
+        }
+    }
+
 
 }//END OF CLASS ORDER

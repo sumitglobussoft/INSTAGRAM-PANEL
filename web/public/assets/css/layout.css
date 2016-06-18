@@ -57,8 +57,8 @@ Page Header
   border: 0px;
   padding: 0px;
   box-shadow: none;
-  height: 75px;
-  min-height: 75px;
+  height: 64px;
+  min-height: 64px;
   filter: none;
   background-image: none;
   /* Fixed header */
@@ -78,7 +78,7 @@ Page Header
   float: left;
   display: block;
   width: 265px;
-  height: 75px;
+  height: 64px;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -99,7 +99,7 @@ Page Header
   padding-top: 12px;
 }
 .page-header.navbar .page-top {
-  height: 75px;
+  height: 64px;
   float: right;
 }
 .page-header.navbar .search-form {
@@ -160,7 +160,7 @@ Page Header
 }
 .page-header.navbar .menu-toggler.sidebar-toggler {
   float: right;
-  margin: 30px 0 0 0;
+  margin: 25px 0 0 0;
 }
 .page-sidebar-closed.page-sidebar-closed-hide-logo .page-header.navbar .menu-toggler.sidebar-toggler {
   margin-right: 17px;
@@ -198,7 +198,7 @@ Page Header
 .page-header.navbar .top-menu .navbar-nav > li.dropdown {
   margin: 0px;
   padding: 0px;
-  height: 75px;
+  height: 64px;
   display: inline-block;
 }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown:last-child {
@@ -206,7 +206,7 @@ Page Header
 }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown > .dropdown-toggle {
   margin: 0px;
-  padding: 29px 12px 24px 12px;
+  padding: 22px 12px 22px;
 }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown > .dropdown-toggle:last-child {
   padding-right: 0;
@@ -416,7 +416,7 @@ Page Header
   padding: 0 0 0 10px;
 }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-user .dropdown-toggle {
-  padding: 25px 10px 18px 10px;
+  padding: 21px 10px 12px;
 }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-user .dropdown-toggle > .username {
   display: inline-block;

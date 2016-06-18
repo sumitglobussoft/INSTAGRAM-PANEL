@@ -2,6 +2,7 @@
 
 @section('pageheadcontent')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="/css/toastr.css">
 
 @endsection
 
@@ -45,6 +46,8 @@
 @section('pagescripts')
 
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>
+    <script src="/js/toastr.js"></script>
+
 
 
     <script>
@@ -63,6 +66,46 @@
                     {data: 'created_at', name: 'created_at'},
                     {data: 'reply', name: 'reply'}
                 ]
+            });
+            $(document.body).on('click', '.btn', function () {
+                toastr.options.positionClass = "toast-top-center";
+                toastr.options.preventDuplicates = true;
+                toastr.options.closeButton = true;
+                var obj = $(this);
+                var status = $(this).attr('data-status');
+                console.log(status);
+                var ticketId = $(this).attr('data-id');
+                var msg = (status == 0) ? 'Open' : 'Close';
+                var x = confirm('Are you sure to ' + msg + ' this ticket');
+                if (x) {
+                    $.ajax({
+                        url: '/admin/changeTicketStatus-AjaxHandler',
+                        type: 'post',
+                        datatype: 'json',
+                        data: {
+                            ticketId: ticketId,
+                            status: status
+                        },
+                        success: function (response) {
+                            response = $.parseJSON(response);
+                            if (response['status'] == '200') {
+                                if (obj.hasClass('btn-success')) {
+                                    obj.removeClass('btn-success');
+                                    obj.addClass('btn-danger');
+                                    obj.text('Closed');
+                                } else if (obj.hasClass('btn-danger')) {
+                                    obj.removeClass('btn-danger');
+                                    obj.addClass('btn-success');
+                                    obj.text('Opened');
+                                }
+                                toastr.success(response.message, {timeOut: 4000});
+                            } else if (response['status'] == '400') {
+                                toastr.error(response.message);
+                            }
+                        }
+                    });
+                }
+
             });
         });
     </script>

@@ -4,22 +4,23 @@
 
 
 @section('headcontent')
-        <!-- BEGIN PAGE LEVEL STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.css">
 <!-- END PAGE LEVEL STYLES -->
 <!-- BEGIN THEME STYLES -->
-<link href="/assets/css/components-md.css" rel="stylesheet" id="style_components"/>
-<link href="/assets/css/plugins-md.css" rel="stylesheet"/>
-<link href="/assets/css/layout.css" rel="stylesheet"/>
-<link href="/assets/css/light.css" rel="stylesheet" id="style_color"/>
-<link href="/assets/css/profile.css" rel="stylesheet"/>
-<link href="/assets/css/custom.css" rel="stylesheet"/>
+<link href="/assets/css/components-md.css" rel="stylesheet" id="style_components" />
+<link href="/assets/css/plugins-md.css" rel="stylesheet" />
+<link href="/assets/css/layout.css" rel="stylesheet" />
+<link href="/assets/css/default.css" rel="stylesheet" id="style_color" />
+<link href="/assets/css/profile.css" rel="stylesheet" />
+<link href="/assets/css/custom.css" rel="stylesheet" />
 <!-- END THEME STYLES -->
 
-<link rel="shortcut icon" href="favicon.ico"/>
+<link rel="shortcut icon" href="favicon.ico" />
 
 @endsection
-
+@section('classMyAccount','active')
+@section('classMyAccount3','active')
 @section('content')
 {{--PAGE CONTENT GOES HERE--}}
         <!-- BEGIN CONTENT -->

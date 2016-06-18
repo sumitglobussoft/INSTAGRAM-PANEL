@@ -2,6 +2,7 @@
 
 @section('pageheadcontent')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="/css/toastr.css"/>
 
 @endsection
 
@@ -22,18 +23,40 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <h1>Order Details</h1>
+                    <h1>Order History</h1>
                     <hr>
+                    <div class="col-sm-12">
+                        <div class="table-group-actions pull-right col-sm-6">
+                            <span class="col-sm-4" id="displaySelectedRecord"></span>
+
+                            <div class="col-sm-4">
+                                <select class="table-group-action-input form-control input-inline input-small input-sm"
+                                        id="selectAction">
+                                    <option value="0">Select Action</option>
+                                    <option value="1">Cancel selected Order(s)</option>
+                                    <option value="2">Re-Add selected Order(s)</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4 pull-right">
+                                <button name="actionSubmit" id="actionSubmit"
+                                        class="btn btn-sm btn-default table-group-action-submit pull-right"
+                                        data-original-title="" title=""><i class="fa fa-check"></i> Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <table id="table_id" class="details-control">
                         <thead>
                         <tr class="bg-info">
+                            <th><input type="checkbox" id="groupCheckBox"></th>
                             <th>OrderId</th>
                             <th>Name</th>
                             <th>Plan Type</th>
                             <th>Instagram Link</th>
                             <th>Quantity Total</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Details</th>
+                            {{--<th>Action</th>--}}
                         </tr>
                         </thead>
                     </table>
@@ -101,20 +124,20 @@
                                                 <strong id="quantityDone"></strong>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                Start time:
-                                            </td>
-                                            <td>
-                                                <strong id="startTime"></strong>
-                                            </td>
-                                            <td>
-                                                End Time:
-                                            </td>
-                                            <td>
-                                                <strong id="endTime"></strong>
-                                            </td>
-                                        </tr>
+                                        {{--<tr>--}}
+                                        {{--<td>--}}
+                                        {{--Start time:--}}
+                                        {{--</td>--}}
+                                        {{--<td>--}}
+                                        {{--<strong id="startTime"></strong>--}}
+                                        {{--</td>--}}
+                                        {{--<td>--}}
+                                        {{--End Time:--}}
+                                        {{--</td>--}}
+                                        {{--<td>--}}
+                                        {{--<strong id="endTime"></strong>--}}
+                                        {{--</td>--}}
+                                        {{--</tr>--}}
                                         <tr>
                                             <td>
                                                 Status:
@@ -165,20 +188,24 @@
     {{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>--}}
     <script type="text/javascript" charset="utf8"
             src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>
+    <script src="/js/toastr.js"></script>
     <script>
         $(document).ready(function () {
             $('#table_id').DataTable({
                 processing: true,
                 serverSide: true,
+                order: [1, 'desc'],
                 ajax: '/admin/orders-list-ajax',
                 columns: [
+                    {data: 'chck', name: 'chck', orderable: false, searchable: false},
                     {data: 'order_id', name: 'order_id'},
                     {data: 'by_user_id', name: 'by_user_id'},
                     {data: 'plan_id', name: 'plan_id'},
                     {data: 'ins_url', name: 'ins_url'},
                     {data: 'quantity_total', name: 'quantity_total'},
                     {data: 'status', name: 'status'},
-                    {data: 'view', name: 'view'}
+                    {data: 'view', name: 'view'},
+//                    {data: 'reAdd', name: 'reAdd'}
 
                 ]
             });
@@ -219,7 +246,7 @@
                             if (o.status == 0)
                                 status = "pending";
                             else if (o.status == 1)
-                                status = "Queue";
+                                status = "Processing";
                             else if (o.status == 2)
                                 status = "Processing";
                             else if (o.status == 3)
@@ -259,74 +286,111 @@
                             $('#addedTime').html(addedTime);
                             $('#updatedTime').html(updatedTime);
                         });
-
                     }
                 });
-
-
             });
+
+            $(document.body).on('click', '#actionSubmit', function () {
+                toastr.options.positionClass = "toast-top-center";
+                toastr.options.preventDuplicates = true;
+                toastr.options.closeButton = true;
+                var id = [];
+                var count = 0;
+                $.each($("input[name='checkbox']:checked"), function () {
+                    count++;
+                    id.push($(this).val());
+//                    console.log(value);
+                });
+                console.log(count);
+                $('#displaySelectedRecord').html(count + " records selected");
+                if (count == 0) {
+                    toastr.options.positionClass = "toast-top-center";
+                    toastr.error("No order has selected");
+                } else {
+                    console.log(id);
+
+//                var id = $(this).attr('data-id');
+                    var value = $("#selectAction option:selected").val();
+                    if (value == 0) {
+//                    alert('Please select an action');
+                        toastr.options.positionClass = "toast-top-right";
+                        toastr.error("Please select an action");
+                    } else {
+                        var msg = (value == 1) ? 'Cancel' : 'Restart';
+                        console.log(value);
+                        if (value == 1 || value == 2) {
+                            console.log(id);
+                            var msg1 = (count == 1) ? 'this order' : 'these ' + count + ' orders'
+                            var x = confirm("Are you sure you want to " + msg + " " + msg1 + " ");
+                            if (x) {
+                                $.ajax({
+                                    url: '/admin/cancelOrderAjaxHandler',
+                                    type: 'post',
+                                    datatype: 'json',
+                                    data: {
+                                        orderId: id,
+                                        method: msg
+                                    },
+                                    success: function (response) {
+//                                response = $.parseJSON(response);
+//                                if (response['status'] == '200') {
+//                                    toastr.success('Order has successfully cancelled and amount has been refunded to the account.', {timeOut: 5000});
+//                                    location.reload();
+//                                }
+                                        response = $.parseJSON(response);
+                                        if (response['status'] == '200') {
+                                            for (var i = 0; i < count; i++) {
+                                                if (response.message[i].charAt(0) == 'O') {
+                                                    toastr.success(response.message[i]);
+                                                } else
+                                                    toastr.error(response.message[i], {timeOut: 9000});
+                                            }
+//                                                alert(response.message);
+                                            setTimeout(function () {
+                                                location.reload();
+                                            }, 7000);
+                                        }
+//                                else if (response['status'] == '600') {
+//                                    toastr.success(response.message);
+//                                    location.reload();
+//
+//                                }
+                                        else if (response['status'] == '400') {
+                                            toastr.error(response.message);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+
+        // add multiple select / deselect functionality
+        $('#groupCheckBox').click(function (event) {
+
+            //$(".orderCheckBox").prop('checked', $(this).prop("checked"));
+
+            if (this.checked) {
+                console.log('group box checked');
+                $('.orderCheckBox').each(function () {
+                    this.checked = true;
+                });
+                var recordCount = $(".orderCheckBox").length;
+                $('#displaySelectedRecord').html(recordCount + " records selected ");
+            } else {
+                console.log('group box un checked');
+                $('.orderCheckBox').each(function () {
+                    this.checked = false;
+                });
+                $('#displaySelectedRecord').html("");
+            }
         });
     </script>
 
 @endsection
-
-
-{{--<script>--}}
-
-{{--var template = Handlebars.compile($("#details-template").html());--}}
-
-{{--var table = $('#table_id').DataTable({--}}
-{{--processing: true,--}}
-{{--serverSide: true,--}}
-{{--ajax: '/admin/orders-list-ajax',--}}
-{{--columns: [--}}
-{{--{--}}
-{{--"className": 'details-control',--}}
-{{--"orderable": false,--}}
-{{--"data": null,--}}
-{{--"defaultContent": ''--}}
-{{--},--}}
-{{--{data: 'order_id', name: 'order_id'},--}}
-{{--{data: 'by_user_id', name: 'by_user_id'},--}}
-{{--{data: 'plan_id', name: 'plan_id'},--}}
-{{--{data: 'for_user_id', name: 'for_user_id'},--}}
-{{--{data: 'ins_url', name: 'ins_url'},--}}
-{{--{data: 'quantity_total', name: 'quantity_total'},--}}
-{{--{data: 'status', name: 'status'}--}}
-{{--],--}}
-{{--order: [[1, 'asc']]--}}
-{{--});--}}
-
-{{--// Add event listener for opening and closing details--}}
-{{--$('#table_id.tbody').on('click', 'td.details-control', function () {--}}
-{{--var tr = $(this).closest('tr');--}}
-{{--var row = table.row(tr);--}}
-
-{{--if (row.child.isShown()) {--}}
-{{--// This row is already open - close it--}}
-{{--row.child.hide();--}}
-{{--tr.removeClass('shown');--}}
-{{--}--}}
-{{--else {--}}
-{{--// Open this row--}}
-{{--row.child(template(row.data())).show();--}}
-{{--tr.addClass('shown');--}}
-{{--}--}}
-{{--});--}}
-{{--</script>--}}
-{{--<script id="details-template" type="text/x-handlebars-template">--}}
-{{--<table class="table">--}}
-{{--<tr>--}}
-{{--<td>order_id:</td>--}}
-{{--<td>helllo</td>--}}
-{{--</tr>--}}
-{{--<tr>--}}
-{{--<td>ins_url:</td>--}}
-{{--<td>hiii</td>--}}
-{{--</tr>--}}
-{{--<tr>--}}
-{{--<td>Extra info:</td>--}}
-{{--<td>And any further details here (images etc)...</td>--}}
-{{--</tr>--}}
-{{--</table>--}}
-{{--</script>--}}

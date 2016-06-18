@@ -44,6 +44,48 @@ class Comment_group extends Model
             throw new Exception('Argument Not Passed');
         }
     }
+    public function getCommentGroupWhere($where, $selectedColumns = ['*'])
+    {
+        $result = DB::table($this->table)
+            ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+            ->select($selectedColumns)
+            ->first();
+        return $result;
+    }
+
+    public function updateCommentGroupWhere()
+    {
+        if (func_num_args() > 0) {
+            $data = func_get_arg(0);
+            $where = func_get_arg(1);
+            try {
+                $result = DB::table($this->table)
+                    ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                    ->update($data);
+                return $result;
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+        } else {
+            throw new Exception('Argument Not Passed');
+        }
+    }
+    public function deleteCommentGroupWhere()
+    {
+        if (func_num_args() > 0) {
+            $where = func_get_arg(0);
+            try {
+                $result = DB::table($this->table)
+                    ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                    ->delete();
+                return $result;
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+        } else {
+            throw new Exception('Argument Not Passed');
+        }
+    }
 //    public function getCommentById($commentId)
 //    {
 //        $result = Comment::whereId($commentId)->first();

@@ -41,7 +41,13 @@
                     </div>
                     <span>Sign in to your account</span>
                 </div>
-                @if(Session::has('message')) <div class="alert alert-info" style="color:red;"><b>{{session('status')}}</b>{{Session::get('message')}} </div> @endif
+                @if(Session::has('message'))
+                    @if(session('status')=='Success')
+                        <div class="alert alert-info" style="color:green;">{{Session::get('message')}} </div>
+                    @else
+                        <div class="alert alert-info" style="color:red;">{{Session::get('message')}} </div>
+                    @endif
+                @endif
                 <div class="authentication-body">
                     <form class="form" role="form" method="post">
                         <div class="form-group floating-label">
@@ -93,32 +99,3 @@
 </body>
 
 </html>
-
-
-{{--<!DOCTYPE html>--}}
-{{--<html>--}}
-{{--<head>--}}
-
-{{--</head>--}}
-
-{{--<body>--}}
-{{--@if(Session::has('message')) <div class="alert alert-info" style="color:red;"><b>{{session('status')}}</b> {{Session::get('message')}} </div> @endif--}}
-{{--<form class="m-t-md" method="post">--}}
-
-{{--<div class="form-group">--}}
-{{--<input class="form-control" placeholder="Your Email" name="email" type="email">--}}
-
-{{--</div>--}}
-{{--<div class="form-group">--}}
-{{--<input type="password" class="form-control" placeholder="*********" name="password">--}}
-
-{{--</div>--}}
-{{--<button type="submit" class="btn btn-success btn-block">Login</button>--}}
-{{--<a href="forgot">forgotten password click here!!!</a>--}}
-
-{{--</form>--}}
-
-{{--</body>--}}
-{{--</html>--}}
-
-

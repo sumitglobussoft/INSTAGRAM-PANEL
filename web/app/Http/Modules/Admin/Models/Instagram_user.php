@@ -8,9 +8,9 @@ class Instagram_user extends Model
 
     public static $_instance = null;
     protected $table = 'instagram_users';
-    protected $fillable = ['ins_user_id', 'by_user_id', 'ins_username','plan_id','pics_done','daily_post_limit','pics_limit',
-        'likes_per_pic','plan_id_for_auto_comment','custom_comment_group_id','comments_amount','last_check','last_delivery','status',
-        'message','last_delivery_link','cronjob_status'];
+    protected $fillable = ['ins_user_id', 'by_user_id', 'ins_username', 'plan_id', 'pics_done', 'daily_post_limit', 'pics_limit',
+        'likes_per_pic', 'plan_id_for_auto_comment', 'custom_comment_group_id', 'comments_amount', 'last_check', 'last_delivery', 'status',
+        'message', 'last_delivery_link', 'cronjob_status'];
 
     public static function getInstance()
     {
@@ -72,11 +72,11 @@ class Instagram_user extends Model
 
     public function getAllInstagramUsers()
     {
-            $result = DB::table($this->table)
+        $result = DB::table($this->table)
 //                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
-                ->select()
-                ->get();
-            return $result;
+            ->select()
+            ->get();
+        return $result;
 
     }
 
@@ -144,4 +144,74 @@ class Instagram_user extends Model
             throw new Exception('Argument Not Passed');
         }
     }
+
+    /**
+     * Joining instagram_users , users, and Plans tables
+     * @return string
+     * @throws Exception
+     * @since 13-05-2016
+     * @author Saurabh Kumar <saurabh.kumar@globussoft.com>
+     */
+    public function getInstagramUsersDetailsWithUsersInfo()
+    {
+        $selectedCols = ['instagram_users.*', 'users.username', 'plans.plan_name'];
+        $result = DB::table($this->table)
+            ->join('users', 'users.id', '=', 'instagram_users.by_user_id')
+            ->join('plans', 'plans.plan_id', '=', 'instagram_users.plan_id')
+            ->select($selectedCols)
+            ->get();
+        return $result;
+    }
+
+    /**
+     * Joining instagram_users , users, and Orders tables
+     * @return string
+     * @throws Exception
+     * @since 14-05-2016
+     * @author Saurabh Kumar <saurabh.kumar@globussoft.com>
+     */
+    public function getInstagramUsersDetailsWithOrdersAndUsersInfo($where)
+    {
+        $selCols = ['instagram_users.*', 'users.username', 'users.email', 'users.profile_pic'];
+        $result = DB::table($this->table)
+            ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+            ->join('users', 'users.id', '=', 'instagram_users.by_user_id')
+//            ->join('orders', 'orders.for_user_id', '=', 'instagram_users.ins_user_id')
+            ->select($selCols)
+            ->get();
+        return $result;
+
+    }
+
+    /**
+     * Joining instagram_users , and plans table joining
+     * @return string
+     * @throws Exception
+     * @since 20-05-2016
+     * @author Saurabh Kumar <saurabh.kumar@globussoft.com>
+     */
+    public function getInstagramUsersDetailsWithPlans($where)
+    {
+        $selCols = ['instagram_users.*', 'plans.plan_name', 'users.username'];
+        $result = DB::table($this->table)
+            ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+            ->join('users', 'users.id', '=', 'instagram_users.by_user_id')
+            ->join('plans', 'plans.plan_id', '=', 'instagram_users.plan_id')
+//            ->join('orders', 'orders.for_user_id', '=', 'instagram_users.ins_user_id')
+            ->select($selCols)
+            ->get();
+        return $result;
+
+    }
+
+    public function getAllOrdersDetails($where)
+    {
+        $select = ['orders.ins_url', 'orders.status'];
+        $res = DB::table('orders')
+            ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+            ->select($select)
+            ->get();
+        return $res;
+    }
+
 }

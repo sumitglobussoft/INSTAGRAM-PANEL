@@ -123,8 +123,8 @@ class AdminController extends Controller
 //                       dd(Session::all());
                     return redirect('admin/dashboard');
                 } else {
-                    return redirect('admin/login')->withErrors([
-                        'errMsg' => 'You are not an ADMIN. Please do user Sign In.'
+                    return redirect('admin/login')->with([
+                        'message' => 'You are not an ADMIN. Please do user Sign In.'
                     ])->withInput();
                 }
                 // return redirect('admin/dashboard');
@@ -242,7 +242,7 @@ class AdminController extends Controller
                     'newname' => 'required',
                     'newlastname' => 'required',
                     'newusername' => 'required',
-                    'newemail' => 'required|email',  //unique:users,email// unique email validation I will do later
+                    'newemail' => 'required|email|unique:users,email,'.$id,  //unique:users,email// unique email validation I will do later
                 ], ['newname.required' => 'Please enter a name',
                         'newlastname.required' => 'Please enter your lastname',
                         'newusername.required' => 'Please enter a username',
@@ -534,7 +534,7 @@ class AdminController extends Controller
     /*--------------this is bond shit---------------------*/
 
 // 1. Autoload the SDK Package. This will include all the files and classes to your autoloader
-    public function shit()
+    public function paypalApi()
     {
         require __DIR__ . '/PayPal-PHP-SDK/autoload.php';
 // 2. Provide your Secret Key. Replace the given one with your app clientId, and Secret
@@ -602,12 +602,12 @@ class AdminController extends Controller
 
     public function cancelurl()
     {
-        echo 'vicco bajradanti';
+        echo 'cancel Url';
     }
 
     public function returnurl()
     {
-        echo 'pepsodent';
+        echo 'return Url';
     }
 
 }

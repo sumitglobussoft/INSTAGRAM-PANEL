@@ -1,11 +1,20 @@
 @extends('User/Layouts/userlayout')
 
-@section('title','Conversation')
+@section('title','Tickets')
+
 
 @section('headcontent')
-    {{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">--}}
-    {{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">--}}
-    {{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">--}}
+<!-- BEGIN THEME STYLES -->
+<link href="/assets/css/components-md.css" rel="stylesheet" id="style_components" />
+<link href="/assets/css/plugins-md.css" rel="stylesheet" />
+<link href="/assets/css/layout.css" rel="stylesheet" />
+<link href="/assets/css/default.css" rel="stylesheet" id="style_color" />
+<link href="/assets/css/profile.css" rel="stylesheet" />
+<link href="/assets/css/custom.css" rel="stylesheet" />
+<!-- END THEME STYLES -->
+
+<link rel="shortcut icon" href="favicon.ico" />
+
     <style>
         .comments-container {
             margin: 60px auto 15px;
@@ -286,144 +295,208 @@
             }
         }
     </style>
+
 @endsection
-
+@section('classTickets','active')
+@section('classTickets2','active')
 @section('content')
-    <section id="right-content-wrapper">
-        <section class="page-header alternative-header">
-            <ol class="breadcrumb">
-                <li>IP Admin</li>
-                <li>Tickets</li>
-                <li>Reply</li>
-            </ol>
-        </section>
+{{--PAGE CONTENT GOES HERE--}}
+        <!-- BEGIN CONTENT -->
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <!-- BEGIN PAGE HEADER-->
+        <!-- BEGIN PAGE HEAD -->
+        <div class="page-head">
+            <!-- BEGIN PAGE TITLE -->
+            <div class="page-title">
+                <h1>Tickets</h1>
+            </div>
+            <!-- END PAGE TITLE -->
+        </div>
+        <!-- END PAGE HEAD -->
+        <!-- BEGIN PAGE BREADCRUMB -->
+        <ul class="page-breadcrumb breadcrumb">
+            <li>
+                <a href="/user/dashboard">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="/user/show-tickets">Show Tickets</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="/user/orderHistory">Reply on Tickets</a>
+            </li>
+        </ul>
+        <!-- END PAGE BREADCRUMB -->
+        <!-- END PAGE HEADER-->
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row">
+            <div class="col-md-12">
+                {{--<div class="note note-danger note-shadow">--}}
+                {{--<p>--}}
+                {{--NOTE: The below datatable is not connected to a real database so the filter and sorting is just simulated for demo purposes only.--}}
+                {{--</p>--}}
+                {{--</div>--}}
+                <!-- Begin: life time stats -->
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-gift font-green-sharp"></i>
+                            <span class="caption-subject font-green-sharp bold uppercase">Reply on Ticket</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
 
-        <div class="comments-container">
-            <h1>Users Queries</h1>
-            @foreach($ticketdetails as $td)
-                @if($td->ticket_status==1)
-                    <h2 style="color: red">This ticket is closed. So, you wont be able to reply on this.</h2>
-                @endif
-                <ul id="comments-list" class="comments-list">
-                    <li>
-                        <div class="comment-main-level">
-                            <!-- Avatar -->
-                            <div class="comment-avatar"><img src="http://dummyimage.com/60" alt=""></div>
-                            <!-- Contenedor del Comentario -->
-                            <div class="comment-box">
-                                <div class="comment-head">
-                                    <h6 class="comment-name by-author"><a href="#">{{$td->username}}</a></h6>
-                                    <span class="posted-time">{{$td->created_at}}</span>
-                                    <i class="fa fa-heart"></i>
-                                </div>
-                                <div class="comment-content">
-                                    {{$td->descriptions}}
-                                    {{--<form method="post" action="/admin/postreply">--}}
-                                    @if($td->ticket_status==0)
-                                    <div class="comment-open" name="reply">
-                                        <a class="btn-reply">
-                                            <i class="fa fa-reply"></i>
-                                        </a>
-                                    </div>
-                                        @endif
-                                </div>
-                                <div class="comment-footer">
-                                    <div class="comment-form">
+                        <div class="comments-container">
+                            <h1>Users Queries</h1>
+                            @foreach($ticketdetails as $td)
+                                @if($td->ticket_status==1)
+                                    <h2 style="color: red">This ticket is closed. So, you wont be able to reply on this.</h2>
+                                @endif
+                                <ul id="comments-list" class="comments-list">
+                                    <li>
+                                        <div class="comment-main-level">
+                                            <!-- Avatar -->
+                                            <div class="comment-avatar"><img src="{{$td->profile_pic}}" alt=""></div>
+                                            <!-- Contenedor del Comentario -->
+                                            <div class="comment-box">
+                                                <div class="comment-head">
+                                                    <h6 class="comment-name by-author"><a href="#">{{$td->username}}</a></h6>
+                                                    <span class="posted-time">{{$td->created_at}}</span>
+                                                    <i class="fa fa-heart"></i>
+                                                </div>
+                                                <div class="comment-content">
+                                                    {{$td->descriptions}}
+                                                    {{--<form method="post" action="/admin/postreply">--}}
+                                                    @if($td->ticket_status==0)
+                                                        <div class="comment-open" name="reply">
+                                                            <a class="btn-reply">
+                                                                <i class="fa fa-reply"></i>
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="comment-footer">
+                                                    <div class="comment-form">
                                     <textarea class="form-control" name="" id="getid"
                                               value="{{$td->ticket_id}}"></textarea>
 
-                                        <div class="pull-right send-button">
-                                            <a class="btn-send" name="send">send</a>
+                                                        <div class="pull-right send-button">
+                                                            <a class="btn-send" name="send">send</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {{--</form>--}}
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                {{--</form>--}}
-                            </div>
+
+                                        @if(isset($td->reply_text))
+                                            @foreach($ticketdetails as $reply)
+                                                <ul class="comments-list reply-list">
+                                                    <li>
+
+                                                        <div class="comment-avatar"><img src="@if($reply->replied_by==1)
+                                                                    http://dummyimage.com/60 @else {{$reply->profile_pic}} @endif" alt=""></div>
+
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name"><a href="#">@if($reply->replied_by==1)
+                                                                            Admin @else {{$reply->username}} @endif</a></h6>
+                                                                <span class="posted-time">Posted on {{$reply->created_at}}</span>
+                                                                <i class="fa fa-heart"></i>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                {{$reply->reply_text}}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+                                                    {{--<li>--}}
+
+                                                    {{--<div class="comment-avatar"><img src="http://dummyimage.com/60" alt=""></div>--}}
+
+                                                    {{--<div class="comment-box">--}}
+                                                    {{--<div class="comment-head">--}}
+                                                    {{--<h6 class="comment-name by-author"><a href="#">User Name</a></h6>--}}
+                                                    {{--<span class="posted-time">Posted on DD-MM-YYYY HH:MM</span>--}}
+                                                    {{--<i class="fa fa-heart"></i>--}}
+                                                    {{--</div>--}}
+                                                    {{--<div class="comment-content">--}}
+                                                    {{--Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?--}}
+                                                    {{--</div>--}}
+                                                    {{--</div>--}}
+                                                    {{--</li>--}}
+                                                </ul>
+                                            @endforeach
+                                        @endif
+                                    </li>
+                                </ul>
+                                @break
+                            @endforeach
                         </div>
 
-                        @if(isset($td->reply_text))
-                            @foreach($ticketdetails as $reply)
-                                <ul class="comments-list reply-list">
-                                    <li>
 
-                                        <div class="comment-avatar"><img src="@if($reply->replied_by==19)
-                                                    http://dummyimage.com/60 @else {{$reply->profile_pic}} @endif" alt=""></div>
 
-                                        <div class="comment-box">
-                                            <div class="comment-head">
-                                                <h6 class="comment-name"><a href="#">@if($reply->replied_by==19)
-                                                            Saurabh @else {{$reply->username}} @endif</a></h6>
-                                                <span class="posted-time">Posted on {{$reply->created_at}}</span>
-                                                <i class="fa fa-heart"></i>
-                                            </div>
-                                            <div class="comment-content">
-                                                {{$reply->reply_text}}
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    {{--<li>--}}
-
-                                    {{--<div class="comment-avatar"><img src="http://dummyimage.com/60" alt=""></div>--}}
-
-                                    {{--<div class="comment-box">--}}
-                                    {{--<div class="comment-head">--}}
-                                    {{--<h6 class="comment-name by-author"><a href="#">User Name</a></h6>--}}
-                                    {{--<span class="posted-time">Posted on DD-MM-YYYY HH:MM</span>--}}
-                                    {{--<i class="fa fa-heart"></i>--}}
-                                    {{--</div>--}}
-                                    {{--<div class="comment-content">--}}
-                                    {{--Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?--}}
-                                    {{--</div>--}}
-                                    {{--</div>--}}
-                                    {{--</li>--}}
-                                </ul>
-                            @endforeach
-                        @endif
-                    </li>
-                </ul>
-                @break
-            @endforeach
+                    </div>
+                </div>
+                <!-- End: life time stats -->
+            </div>
         </div>
-    </section>
+        <!-- END PAGE CONTENT-->
+    </div>
+</div>
+<!-- END CONTENT -->
+
 @endsection
 
-@section('pagescripts')
-    {{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>--}}
-    {{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>--}}
-    {{--<script>--}}
-    {{--$(document).on('click', '.btn-reply', function (eve) {--}}
-    {{--eve.preventDefault();--}}
-    {{--$(this).parent().parent().siblings('.comment-footer').slideToggle();--}}
-    {{--eve.stopImmediatePropagation();--}}
-    {{--console.log($(this));--}}
-    {{--});--}}
+@section('pagejavascripts')
+    <script src="/assets/js/instapanel.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/demo.js"></script>
+    <!-- END PAGE LEVEL SCRIPTS -->
 
-    {{--$(document).on('click', '.btn-send', function (eve) {--}}
-    {{--var targetObject = $(this).parent().parent().parent().parent().parent();--}}
-    {{--//console.log(targetObject);--}}
-    {{--var reply_text = $(this).parent().siblings('textarea').val();--}}
-    {{--var id = $('#getid').val();--}}
-    {{--console.log(id);--}}
-    {{--console.log(reply_text)--}}
-    {{--$.post('/admin/view-queries/'.id, 'val=' + $(this).parent().siblings('textarea').val(), function (response) {--}}
-    {{--//                alert(response);--}}
-    {{--location.reload();--}}
+    <script>
+        jQuery(document).ready(function () {
+            InstaPanel.init(); // init InstaPanel core components
+            Layout.init(); // init current layout
+            Demo.init(); // init demo features
+        });
+    </script>
+    <script>
+        $(document).on('click', '.btn-reply', function (eve) {
+            eve.preventDefault();
+            $(this).parent().parent().siblings('.comment-footer').slideToggle();
+            eve.stopImmediatePropagation();
+            console.log($(this));
+        });
 
-    {{--});--}}
-    {{--$(this).parent().siblings('textarea').val(" ");--}}
-    {{--$(this).parent().parent().parent().slideUp("fast");--}}
+        $(document).on('click', '.btn-send', function (eve) {
+            var targetObject = $(this).parent().parent().parent().parent().parent();
+            //console.log(targetObject);
+            var reply_text = $(this).parent().siblings('textarea').val();
+            var id = $('#getid').val();
+            console.log(id);
+            console.log(reply_text)
+            $.post('/user/conversations'.id, 'val=' + $(this).parent().siblings('textarea').val(), function (response) {
+//                alert(response);
+                location.reload();
 
-    {{--if ($.trim(reply_text) == " " || $.trim(reply_text) == "") {--}}
-    {{--alert("insert comment");--}}
-    {{--} else {--}}
-    {{--if ($(targetObject).hasClass("comment-main-level")) {--}}
-    {{--if ($(targetObject).siblings('.comments-list.reply-list')) {--}}
-    {{--element_prepend = '<li> <div class="comment-avatar"><img alt="" src="http://dummyimage.com/60"></div><div class="comment-box"> <div class="comment-head"> <h6 class="comment-name"><a href="#">Saurabh</a></h6> <span class="posted-time">Posted on DD-MM-YYYY HH:MM</span> <i class="fa fa-reply"></i> <i class="fa fa-heart"></i> </div> <div class="comment-content">' + reply_text + '  </div></div></li>';--}}
-    {{--$(targetObject).siblings('.comments-list.reply-list').prepend(element_prepend);--}}
-    {{--}--}}
-    {{--}--}}
-    {{--}--}}
-    {{--});--}}
-    {{--</script>--}}
+            });
+            $(this).parent().siblings('textarea').val(" ");
+            $(this).parent().parent().parent().slideUp("fast");
+
+            if ($.trim(reply_text) == " " || $.trim(reply_text) == "") {
+                alert("insert comment");
+            } else {
+                if ($(targetObject).hasClass("comment-main-level")) {
+                    if ($(targetObject).siblings('.comments-list.reply-list')) {
+                        element_prepend = '<li> <div class="comment-avatar"><img alt="" src="http://dummyimage.com/60"></div><div class="comment-box"> <div class="comment-head"> <h6 class="comment-name"><a href="#">User</a></h6> <span class="posted-time">Posted on DD-MM-YYYY HH:MM</span> <i class="fa fa-reply"></i> <i class="fa fa-heart"></i> </div> <div class="comment-content">' + reply_text + '  </div></div></li>';
+                        $(targetObject).siblings('.comments-list.reply-list').prepend(element_prepend);
+                    }
+                }
+            }
+        });
+    </script>
+
 @endsection

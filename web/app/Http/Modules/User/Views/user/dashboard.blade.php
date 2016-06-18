@@ -12,13 +12,19 @@
 <link href="/assets/css/components-md.css" rel="stylesheet" id="style_components" />
 <link href="/assets/css/plugins-md.css" rel="stylesheet" />
 <link href="/assets/css/layout.css" rel="stylesheet" />
-<link href="/assets/css/light.css" rel="stylesheet" id="style_color" />
+<link href="/assets/css/default.css" rel="stylesheet" id="style_color" />
 <link href="/assets/css/custom.css" rel="stylesheet" />
-
-<link rel="shortcut icon" href="favicon.ico" />
 <!-- END THEME STYLES -->
 
+<style>
+
+</style>
+
+<link rel="shortcut icon" href="favicon.ico" />
+
+
 @endsection
+@section('classDashboard','active')
 
 @section('content')
 {{--PAGE CONTENT GOES HERE--}}
@@ -38,7 +44,7 @@
         <!-- BEGIN PAGE BREADCRUMB -->
         <ul class="page-breadcrumb breadcrumb">
             <li>
-                <a href="index.html">Home</a>
+                <a href="javascript:;">Home</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -49,123 +55,18 @@
         <!-- END PAGE HEADER-->
         <!-- BEGIN PAGE CONTENT-->
         <div class="row margin-top-10">
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="dashboard-stat2">
-                    <div class="display">
-                        <div class="number">
-                            <h3 class="font-green-sharp">7800<small class="font-green-sharp"></small></h3>
-                            <small>TOTAL Order</small>
-                        </div>
-                        <div class="icon">
-                            <i class="icon-pie-chart"></i>
-                        </div>
-                    </div>
-                    <div class="progress-info">
-                        <div class="progress">
-									<span class="progress-bar progress-bar-success green-sharp" style="width: 76%;">
-								<span class="sr-only">76% progress</span>
-									</span>
-                        </div>
-                        <div class="status">
-                            <div class="status-title">
-                                progress
-                            </div>
-                            <div class="status-number">
-                                76%
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="dashboard-stat2">
-                    <div class="display">
-                        <div class="number">
-                            <h3 class="font-red-haze">1349</h3>
-                            <small>NEW FEEDBACKS</small>
-                        </div>
-                        <div class="icon">
-                            <i class="icon-like"></i>
-                        </div>
-                    </div>
-                    <div class="progress-info">
-                        <div class="progress">
-									<span class="progress-bar progress-bar-success red-haze" style="width: 85%;">
-								<span class="sr-only">85% change</span>
-									</span>
-                        </div>
-                        <div class="status">
-                            <div class="status-title">
-                                change
-                            </div>
-                            <div class="status-number">
-                                85%
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="dashboard-stat2">
-                    <div class="display">
-                        <div class="number">
-                            <h3 class="font-blue-sharp">567</h3>
-                            <small>NEW ORDERS</small>
-                        </div>
-                        <div class="icon">
-                            <i class="icon-basket"></i>
-                        </div>
-                    </div>
-                    <div class="progress-info">
-                        <div class="progress">
-									<span class="progress-bar progress-bar-success blue-sharp" style="width: 45%;">
-								<span class="sr-only">45% grow</span>
-									</span>
-                        </div>
-                        <div class="status">
-                            <div class="status-title">
-                                grow
-                            </div>
-                            <div class="status-number">
-                                45%
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="dashboard-stat2">
-                    <div class="display">
-                        <div class="number">
-                            <h3 class="font-purple-soft">276</h3>
-                            <small>NEW USERS</small>
-                        </div>
-                        <div class="icon">
-                            <i class="icon-user"></i>
-                        </div>
-                    </div>
-                    <div class="progress-info">
-                        <div class="progress">
-									<span class="progress-bar progress-bar-success purple-soft" style="width: 57%;">
-								<span class="sr-only">56% change</span>
-									</span>
-                        </div>
-                        <div class="status">
-                            <div class="status-title">
-                                change
-                            </div>
-                            <div class="status-number">
-                                57%
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
             <!-- BEGIN SLIDER -->
-            <div class="col-md-12">
+            <div class="col-md-6">
+                <div>
+                    <div id="clock" class="light">
+                        <div class="display">
+                            <div class="weekdays"></div>
+                            <div class="ampm"></div>
+                            <div class="alarm"></div>
+                            <div class="digits"></div>
+                        </div>
+                    </div>
+                </div>
                 <!-- BEGIN SAMPLE FORM PORTLET-->
                 <div class="portlet light bordered">
                     <div class="portlet-title">
@@ -174,7 +75,7 @@
                     </div>
                     <div class="portlet-body">
                         <div class="tabbable tabbable-custom">
-                            <div class="scroller" style="height: 300px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                            <div class="scroller" style="height: 200px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
                                 <ul class="feeds">
                                     <!--ITEM TABS-->
                                     <li>
@@ -272,231 +173,6 @@
                                             <div class="date">1 week</div>
                                         </div>
                                     </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-danger"><i class="fa fa-instagram"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">There is a small downtime with Instagram Normal Likes &amp; Medium , if you wish any IDS canceled in the meanwhile please write on skype or send ticket. </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">2 weeks</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-success"><i class="fa fa-wifi"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">System Proxys updated! Enjoy :) All accounts using the old proxys was updated with the new proxys instead.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-success"><i class="fa fa-instagram"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Instagram Bot updates done , public proxys still not working, please update to private proxys if you dont want to wait. We estimate maximum 24-48 hours to replace the system proxys with new ones.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-danger"><i class="fa fa-instagram"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Instagram Bot : Performance Cleanup , please estimate 1-2hours downtime.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-warning"><i class="fa fa-wifi"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">We will update instagram public proxies, anyone using public proxies provided by IGERSLIKE should update the accounts with the new system proxys that will come tomorow. We strongly recommend to use your own private proxies, we dont gurantee that public proxies are working 100% of the time.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-success"><i class="fa fa-at"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Mentions enable for test, who wish to use please write on skype : zeus.gram</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-success"><i class="fa fa-instagram"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Instagram Bot : Picture uploader is finally fixed , and should show the hashtags correctly and wont flag anymore! Thanks for everyone that was patiente waiting more then 1 year for this fix :) </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-danger"><i class="fa fa-at"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Mentions will be disable for a longer period tonight. Please dont submit tickets about it. Once its possible we will enable them again. </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-danger"><i class="fa fa-phone"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Instagram SMS numbers are not working , we estimate the same service to be back in 20 days maximum. In the meanwhile you can google and search for other SMS verification services.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-success"><i class="fa fa-instagram"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Instagram Followers Fast - Maximum raised to 30.000! Thanks for the trust using our services , soon new web-site with new features :)</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-success"><i class="fa fa-at"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Mentions enable again , please order lower amounts and dont abuse the service , or we might disabled it again if its abused. Use with responsability and dont spam a lot.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-success"><i class="fa fa-instagram"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Instagram Followers Fast base 25k, Instagram Mentions &amp; Mentions Custom new price 2,1? per 1000. Enjoy :) </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-success"><i class="fa fa-instagram"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">Followers Fast is enable. Maximum per photo raised to 20.000 per photo.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">1 month</div>
-                                        </div>
-                                    </li>
-                                    <!--ITEM TABS-->
-                                    <li>
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-danger"><i class="fa fa-instagram"></i></div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc">We had a small delay with instagram mentions and HQ service , now its all back online and working.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date">2 months</div>
-                                        </div>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -504,48 +180,67 @@
                 </div>
             </div>
             <!--  END SLIDER -->
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                {{--<div class="widget widget-stat" style="background-image:url('/assets/images/messazon_rio_bridge.png');background-size: cover;min-height:515px;padding:0;">--}}
+                    {{--<div class="img-txt">--}}
+                        {{--<p>Messazon.com - Bridge to your Success.</p>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                <img src="/assets/images/messazon_rio_bridge.png" class="img-responsive dash-pic" />
+                <div class="img-txt">
+                    <p>Messazon.com - Bridge to your Success</p>
+                </div>
+            </div>
+        </div>
 
-            <div class="col-md-12">
-                <div class="portlet light bordered">
-                    <div class="portlet-title">
-                        <div class="caption font-green-sharp"><i class="fa fa-child  font-green-sharp"></i><span class="caption-subject bold uppercase">Invite your friends!</span>
-                            <span class="caption-helper"> Invite your friends to InstaPanel</span></div>
+        <div class="row margin-top-10">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="widget widget-stat">
+                    <div class="widget-stat-header bg-theme1">
+                        <h3 class="text-center text-white m-t-0 m-b-0">Orders : <b>{{$totalOrders}}</b></h3>
                     </div>
-                    <div class="portlet-body">
-
-                        <a href="#" class="list-group-item">
-                            <h4 class="list-group-item-heading">Time to Invite!</h4>
-                            <p class="list-group-item-text">
-                                InstaPanel is now a private community. We will still open the public registry sometimes but our main concept will be invited based. Each user will have 10-20 Invites to send. Use the form bellow to invite your friend directly with a unique link!
-                            </p>
-                        </a>
-                        <br>
-
-                        <form aaction="" method="post" role="form">
-                            <div class="form-body">
-                                <div class="form-group">
-                                    <div class="input-group"><span class="input-group-addon input-circle-left"><i class="fa fa-envelope"></i></span>
-                                        <input type="text" required="required" id="email" name="email" placeholder="yourfriend@domain.com" class="form-control input-circle-right">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="input-group"><span class="input-group-addon input-circle-left">Remaining Invites</span>
-                                        <input type="text" disabled="disabled" value="10" id="x" name="x" class="form-control input-circle-right">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group"><span class="input-group-addon input-circle-left">Invites Accepted</span>
-                                        <input type="text" disabled="disabled" value="0" id="x" name="x" class="form-control input-circle-right">
-                                    </div>
-                                </div>
-
+                    <div class="widget-stat-content">
+                        <div class="row text-center">
+                            <div class="col-xs-4">
+                                <h2 class="text-muted text-ellipsis m-t-0"><b>{{$completed}}</b></h2>
+                                <small class="m-b-0">Completed</small>
                             </div>
-                            <div class="form-actions">
-                                <button class="btn bg-green-haze" name="submit" type="submit">Invite</button>
+                            <div class="col-xs-4">
+                                <h2 class="text-muted text-ellipsis m-t-0"><b>{{$processing}}</b></h2>
+                                <small class="m-b-0">Processing</small>
                             </div>
-                        </form>
-
+                            <div class="col-xs-4">
+                                <h2 class="text-muted text-ellipsis m-t-0"><a href="/user/addOrder" class="label label-sm label-warning">
+                                        <i class="icon-basket"></i></a></h2>
+                                {{--<h2 class="fa  "><a href="/user/addOrder"></a> </h2>--}}
+                                <small class="m-b-0"><b>Add Order</b></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="widget widget-stat">
+                    <div class="widget-stat-header bg-theme2">
+                        <h3 class="text-center text-white m-t-0 m-b-0">Balance : <b><small class="text-white">$</small>{{Session::get('ig_user')['account_bal']}}</b></h3>
+                    </div>
+                    <div class="widget-stat-content">
+                        <div class="row text-center">
+                            <div class="col-xs-4">
+                                <h2 class="text-muted text-ellipsis m-t-0"><b><small>$</small>{{$payment}}</b></h2>
+                                <small class="m-b-0">Payments</small>
+                            </div>
+                            <div class="col-xs-4">
+                                <h2 class="text-muted text-ellipsis m-t-0"><a href="/user/payment" class="label label-sm label-warning">
+                                        <i class="fa fa-paypal"></i></a></h2>
+                                <small class="m-b-0"><b>Charge Wallet</b></small>
+                            </div>
+                            <div class="col-xs-4">
+                                <h2 class="text-muted text-ellipsis m-t-0"><a href="/user/depositHistory" class="label label-sm label-warning">
+                                        <i class="fa fa-dollar"></i></a></h2>
+                                <small class="m-b-0">Transaction Details</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -557,8 +252,7 @@
 @endsection
 
 @section('pagejavascripts')
-
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
 
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
@@ -568,13 +262,80 @@
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <script>
-    jQuery(document).ready(function () {
+    jQuery(document).ready(function() {
         InstaPanel.init(); // init InstaPanel core components
         Layout.init(); // init current layout
         Demo.init(); // init demo features
     });
 </script>
-<!-- END JAVASCRIPTS -->
+<script>
+    $(function() {
+        var clock = $('#clock'),
+                alarm = clock.find('.alarm'),
+                ampm = clock.find('.ampm');
+
+        var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
+
+        var digits = {};
+
+        var positions = [
+            'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'
+        ];
+
+        var digit_holder = clock.find('.digits');
+
+        $.each(positions, function() {
+
+            if (this == ':') {
+                digit_holder.append('<div class="dots">');
+            } else {
+
+                var pos = $('<div>');
+
+                for (var i = 1; i < 8; i++) {
+                    pos.append('<span class="d' + i + '">');
+                }
+                digits[this] = pos;
+                digit_holder.append(pos);
+            }
+
+        });
+
+        var weekday_names = 'MON TUE WED THU FRI SAT SUN'.split(' '),
+                weekday_holder = clock.find('.weekdays');
+
+        $.each(weekday_names, function() {
+            weekday_holder.append('<span>' + this + '</span>');
+        });
+
+        var weekdays = clock.find('.weekdays span');
+
+        (function update_time() {
+
+            var now = moment().format("hhmmssdA");
+
+            digits.h1.attr('class', digit_to_name[now[0]]);
+            digits.h2.attr('class', digit_to_name[now[1]]);
+            digits.m1.attr('class', digit_to_name[now[2]]);
+            digits.m2.attr('class', digit_to_name[now[3]]);
+            digits.s1.attr('class', digit_to_name[now[4]]);
+            digits.s2.attr('class', digit_to_name[now[5]]);
+
+            var dow = now[6];
+            dow--;
+
+            if (dow < 0) {
+                // Make it last
+                dow = 6;
+            }
+
+            weekdays.removeClass('active').eq(dow).addClass('active');
+
+            ampm.text(now[7] + now[8]);
+
+            setTimeout(update_time, 1000);
+        })();
+    });
+</script>
+
 @endsection
-
-

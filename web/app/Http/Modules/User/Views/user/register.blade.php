@@ -26,7 +26,6 @@
 
 <!-- BEGIN BODY -->
 
-
 {{--<div class="login">--}}
 {{--<form method="post" action="/user/login" style="margin-bottom: 3%;">--}}
 {{--<div class="">--}}
@@ -77,7 +76,8 @@
     <form class="" role="form" method="post" action="/user/register">
 
         <div class="form-group">
-            <input class="form-control placeholder-no-fix" type="hidden" id="user_timezone" name="user_timezone" value="">
+            <input class="form-control placeholder-no-fix" type="hidden" id="user_timezone" name="user_timezone"
+                   value="">
         </div>
 
         <h3>Sign Up</h3>
@@ -131,7 +131,9 @@
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Username</label>
             <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Choose Username"
-                   name="username" value="{{old('username')}}" required="required"/>
+                   id="username" name="username" value="{{old('username')}}" required="required"/>
+            <span style="color:red" id="usernameOk"></span>
+            <span style="color:green" id="usernameErr"></span>
             <span class="error" style="color: red;">{!! $errors->first('username') !!}</span>
         </div>
         <div class="form-group">
@@ -193,6 +195,43 @@
     console.log('Your timezone is: ' + timezone.name());
     $('#user_timezone').val(timezone.name());
 
+</script>
+<script>
+    $(document).ready(function () {
+        $("#username").keyup(function () {
+            var userName = $(this).val();
+            userName = $.trim(userName);
+            $.ajax({
+                url: '/user/checkUsername',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    userName: userName
+                },
+                success: function (response) {
+                    if(response['status']=='100'){
+                        $('#usernameOk').html(response.message);
+                        $('#usernameErr').html("");
+                    }
+                    else if (response['status'] == '200') {
+                        $('#usernameOk').html(response.message);
+                        $('#usernameErr').html("");
+
+                    }
+                    else if (response['status'] == '400') {
+                        if (userName.length == 0) {
+                            $('#usernameOk').html("");
+                            $('#usernameErr').html("");
+                        } else {
+                            $('#usernameOk').html("");
+                            $('#usernameErr').html(response.message);
+                        }
+                    }
+                }
+            });
+        });
+
+    });
 </script>
 <!-- END JAVASCRIPTS -->
 

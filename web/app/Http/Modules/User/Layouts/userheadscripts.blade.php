@@ -1,5 +1,5 @@
 <meta charset="utf-8" />
-<title>InstaPanel | Supplier</title>
+<title>InstaPanel | User</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -13,4 +13,6 @@
 <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
 <link href="/assets/css/uniform.default.min.css" rel="stylesheet" />
 <!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
 
+<!-- END PAGE LEVEL STYLES -->

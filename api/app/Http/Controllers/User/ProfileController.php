@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Models\Order;
 use App\Http\Models\User;
 use App\Http\Models\Usersmeta;
 use Illuminate\Http\Request;
@@ -62,14 +63,14 @@ class ProfileController extends Controller
             if ($authFlag) {
                 $validator = Validator::make($postData, ['user_id' => 'required']);
                 if (!$validator->fails()) {
-                    $userAccountBalance = $objUsersmetaModel->getUsermetaWhere(['rawQuery' => 'user_id=?','bindParams' => [$postData['user_id']]],['account_bal']);
+                    $userAccountBalance = $objUsersmetaModel->getUsermetaWhere(['rawQuery' => 'user_id=?', 'bindParams' => [$postData['user_id']]], ['account_bal']);
 
-                    if($userAccountBalance){
+                    if ($userAccountBalance) {
                         $response->code = 200;
                         $response->message = "Success";
                         $response->data = $userAccountBalance;
                         echo json_encode($response, true);
-                    }else{
+                    } else {
                         $response->code = 200;
                         $response->message = "Something went wrong Please try again after sometime.";
                         $response->data = null;;
@@ -95,6 +96,68 @@ class ProfileController extends Controller
             echo json_encode($response, true);
         }
     }
+
+    /*public function dashboard(Request $request)
+    {
+        $response = new stdClass();
+        $objModelUser = new User();
+        $objModelOrder = new Order();
+        if ($request->isMethod('post')) {
+            $postData = $request->all();
+//            dd($postData);
+            $userId = $postData['user_id'];
+            $authFlag = false;
+            if (isset($postData['api_token'])) {
+                if ($userId != '') {
+                    $where = ['rawQuery' => 'id=?', 'bindParams' => [$userId]];
+                    $selectColumn = array('login_token');
+                    $userCredentials = $objModelUser->getUsercredsWhere($where, $selectColumn);
+                    if ($userCredentials) {
+                        $apiToken = $postData['api_token'];
+                        if ($apiToken == $this->API_TOKEN) {
+                            $authFlag = true;
+                        } else if ($apiToken == $userCredentials->login_token) {
+                            $authFlag = true;
+                        }
+                    }
+                }
+            }
+            if ($authFlag) {
+                if ($userId != '') {
+//                    echo json_encode($userId, true);
+                    $whereForOrder = ['rawQuery' => 'by_user_id=?', 'bindParams' => [$userId]];
+//                    $selColms = ['orders.status'];
+                    $res = $objModelOrder->getOrderAndPaymentDetailsByUserId($whereForOrder);
+//                    dd($countAllUsers);
+                    if ($res) {
+                        $response->code = 200;
+                        $response->message = "Success";
+                        $response->data = $res;
+
+                    } else {
+                        $response->code = 400;
+                        $response->message = "No order and transaction Details found.";
+                        $response->data = null;
+                    }
+                } else {
+                    $response->code = 400;
+                    $response->message = "Please provide some user id.";
+                    $response->data = null;
+                }
+            } else {
+                $response->code = 401;
+                $response->message = "Access Denied";
+                $response->data = null;
+            }
+        } else {
+            $response->code = 401;
+            $response->message = "Invalid request. couldnt enter into the post request";
+            $response->data = null;
+        }
+
+
+    }
+*/
 
     public function  showProfileDetails(Request $request)
     {
@@ -174,13 +237,13 @@ class ProfileController extends Controller
             $objUserModel = new User();
             $objUsermetaModel = new Usersmeta();
 
-            $userId =(isset($postData['user_id']))?$postData['user_id']:'';
-            $firstname =(isset($postData['firstname']))?$postData['firstname']:'';
-            $lastname = (isset($postData['lastname']))?$postData['lastname']:'';
-            $email =(isset($postData['email']))?$postData['email']:'';
+            $userId = (isset($postData['user_id'])) ? $postData['user_id'] : '';
+            $firstname = (isset($postData['firstname'])) ? $postData['firstname'] : '';
+            $lastname = (isset($postData['lastname'])) ? $postData['lastname'] : '';
+            $email = (isset($postData['email'])) ? $postData['email'] : '';
 
-            $username =(isset($postData['username'])) ?$postData['username']:'';
-            $skypeUsername =(isset($postData['skypeUsername']))?$postData['skypeUsername']:'';
+            $username = (isset($postData['username'])) ? $postData['username'] : '';
+            $skypeUsername = (isset($postData['skypeUsername'])) ? $postData['skypeUsername'] : '';
 
             $addressline1 = "";
             if (isset($postData['addressline1'])) {
@@ -277,7 +340,7 @@ class ProfileController extends Controller
                             'rawQuery' => 'id =?',
                             'bindParams' => [$userId]
                         ];
-                        $data = array('name' => $firstname, 'lastname' => $lastname, 'username' => $username,'skype_username'=>$skypeUsername, 'email' => $email);
+                        $data = array('name' => $firstname, 'lastname' => $lastname, 'username' => $username, 'skype_username' => $skypeUsername, 'email' => $email);
                         $updategeneralinfo = $objUserModel->UpdateUserDetailsbyId($updateUserWhereId, $data);
 
                         $updateUsermetaWhereUserId = [
@@ -463,7 +526,7 @@ class ProfileController extends Controller
     }
 
 
-    //This method is directly called from Ajax call of profile-setting.blade.php page
+//This method is directly called from Ajax call of profile-setting.blade.php page
     public function changeAvatar(Request $request)
     {
 

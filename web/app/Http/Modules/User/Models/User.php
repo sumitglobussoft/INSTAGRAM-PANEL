@@ -3,6 +3,7 @@
 namespace InstagramAutobot\Http\Modules\User\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 //use Illuminate\Auth\Authenticatable;
 //use Illuminate\Auth\Passwords\CanResetPassword;
@@ -32,6 +33,15 @@ class User extends Model //implements AuthorizableContract
     {
         $result = User::whereId($userId)->first();
         return $result;
+    }
+
+    public function getUserWhere($where, $selectedCols = ['*'])
+    {
+        $res = DB::table($this->table)
+            ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+            ->select($selectedCols)
+            ->first();
+        return $res;
     }
 
 }

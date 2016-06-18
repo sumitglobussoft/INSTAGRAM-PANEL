@@ -11,7 +11,7 @@
 <link href="/assets/css/components-md.css" rel="stylesheet" id="style_components"/>
 <link href="/assets/css/plugins-md.css" rel="stylesheet"/>
 <link href="/assets/css/layout.css" rel="stylesheet"/>
-<link href="/assets/css/light.css" rel="stylesheet" id="style_color"/>
+<link href="/assets/css/default.css" rel="stylesheet" id="style_color"/>
 <link href="/assets/css/profile.css" rel="stylesheet"/>
 <link href="/assets/css/custom.css" rel="stylesheet"/>
 <!-- END THEME STYLES -->
@@ -19,7 +19,8 @@
 <link rel="shortcut icon" href="favicon.ico"/>
 
 @endsection
-
+@section('classMyAccount','active')
+@section('classMyAccount6','active')
 @section('content')
 {{--PAGE CONTENT GOES HERE--}}
         <!-- BEGIN CONTENT -->
@@ -83,6 +84,13 @@
                                                  height="236"
                                                  src="@if(isset(Session::get('ig_user')['profile_pic'])) {{Session::get('ig_user')['profile_pic']}} @else /assets/uploads/useravatar/default-profile-pic.png @endif ">
                                         </div>
+                                        {{--<div id="spinner" style="margin-left: 45%" hidden>--}}
+                                        {{--<img src="/assets/images/input-spinner.gif"--}}
+                                        {{--alt="Loading"/>--}}
+                                        {{--</div>--}}
+                                        <div id="spinner" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">
+                                            <img src='/assets/images/input-spinner.gif' width="64" height="64" /><br>Loading..</div>
+
                                         <div class="form-group col-md-6">
                                             <input type="file" name="profilepic" accept="image/*"><br>
 
@@ -144,6 +152,12 @@
         formData.append('user_id', '{{Session::get('ig_user')['id']}}');
         var profile_pic_url = "";
         $.ajax({
+            beforeSend: function () {
+                $('#spinner').show();
+            },
+            complete: function () {
+                $('#spinner').hide();
+            },
             type: "POST",
 //                url: "/user/changeAvatar",
             url: '{{env('API_URL')}}/user/changeAvatar',

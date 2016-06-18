@@ -18,73 +18,43 @@ use Yajra\Datatables\Datatables;
 
 class CommentController extends Controller
 {
-    public function addComment(Request $request)
+
+    public function showComments()
     {
         $objModelCommentGroup = Comment_group::getInstance();
-        $where = array('rawQuery' => 'comment_group_id=1 or 3');
+        $where = array('rawQuery' => 'status=1');
         $grpDetails = $objModelCommentGroup->getAllCommentsGroupDetailsWhere($where);
-//        dd($grpDetails);
-        if ($request->isMethod('post')) {
-            $comment = $request->input('comment');
-            $this->validate($request, [
-                'comment' => 'required'
-            ], [
-                'comment.required' => 'Whats in your mind, Please enter something'
-            ]);
-
-            $objComment = new Comment();
-//            dd($objComment);
-            $input = array(
-                'comment_group_id' => '',
-                'comments' => json_encode(array(trim(preg_replace('/\s+/', ' ', $comment))), true),
-                'added_by' => '1',
-                'comment_status' => '1',
-            );
-//            dd($input);
-//            $data = json_encode($input, true);
-//            dd($data);
-//            $result = DB::table('comments')->insert($data);
-            $result = $objComment->addNewComment($input);
-            if ($result) {
-                return Redirect::back()->with(['status' => 'Success', 'msg' => 'Your comment has successfully added, Add some more here!!!']);
-            } else {
-                return Redirect::back()->with(['status' => 'Error', 'msg' => 'Some Problem occurred, Please reload the page and try again.']);
-            }
-        }
-        return view('Admin::comments.addcomments', ['groupname' => $grpDetails]);
-
-
-    }
-
-    public function showRandomComments()
-    {
-        $objModelCommentGroup = Comment_group::getInstance();
-        $where = array('rawQuery' => 'comment_group_id=1 or 3');
-        $grpDetails = $objModelCommentGroup->getAllCommentsGroupDetailsWhere($where);
-//        dd($grpDetails);
         return view('Admin::comments.showcomments', ['groupname' => $grpDetails]);
     }
 
     public function showCommentsAjaxHandler(Request $request)
     {
-        $objModelComment = Comment::getInstance();
-        $where = array(
-            'rawQuery' => 'added_by = 1'
-        );
-        $selectedColumns = ['comments.*', 'comments_groups.comment_group_name'];
+        $objCommentGrp = Comment_group::getInstance();
+        $where = array('rawQuery' => 'status=1 or status=0');
+        $cmntGrpDetails = $objCommentGrp->getAllCommentsGroupDetailsWhere($where);
+
         $comments = new Collection;
-        $cmntDetails = $objModelComment->getCommentsDetails($where, $selectedColumns);
-        $cmntDetails = json_decode(json_encode($cmntDetails), true);
-        foreach ($cmntDetails as $cmnt) {
-            $id = $cmnt['comment_id'];
+
+        $cmntGrpDetails = json_decode(json_encode($cmntGrpDetails), true);
+        $count = 0;
+        foreach ($cmntGrpDetails as $cmnt) {
+            ++$count;
+            $id = $cmnt['comment_group_id'];
+            $status = $cmnt['status'];
+            $statusClass = ($status == 1) ? 'fa fa-check-circle' : 'fa fa-times-circle';
+            $color = ($status == 1) ? ' #00897b' : 'red';
+            $addedBy = $cmnt['added_by'];
+            $details = ($addedBy == 0) ? 'Admin Comment Group' : 'User Comment Group';
+
 //            $comm = $cmnt['comments'];
-            $comm = json_decode($cmnt['comments'], true);
+//            $comm = json_decode($cmnt['comments'], true);
             $comments->push([
-                'id' => $cmnt['comment_id'],
+                'id' => $count,
                 'comment_group_name' => $cmnt['comment_group_name'],
-                'comments' => $comm[0],// $cmnt['comments'],
-                'edit' => '<a href ="edit-comments/' . $id . '" class="btn btn-warning">edit</a>',
-//                'delete' => '<a href="delete-comments/' . $id . '" class="btn btn-danger">delete</a>'
+//                'comments' => $comm[0],// $cmnt['comments'],
+                'edit' => '<a href ="edit-comments/' . $id . '"><i class="material-icons">phonelink_setup</i></a>',
+                'delete' => ' <a href="javascript:;"><i class="material-icons" id="del" data-id=' . $id . '>delete</i></a>',
+                'status' => '<a href="javascript:;" style="color:' . $color . '" title=' . $details . '><i class="' . $statusClass . '" id="status" data-id=' . $id . ' data-status=' . $addedBy . '></i></a>'
             ]);
 
         }
@@ -96,52 +66,134 @@ class CommentController extends Controller
     {
         $objModelComment = Comment::getInstance();
         $whereForComment = array(
-            'rawQuery' => 'comment_id = ?',
+            'rawQuery' => 'comment_group_id = ?',
             'bindParams' => [$id]
         );
-        $commentDetails = $objModelComment->getAllCommentsWhere($whereForComment);
-//        dd($commentDetails);
-        foreach($commentDetails as $cd) {
-            $comm = $cd->comments;
-        }
-        $comm=json_decode($comm, true);
+        $commentDetails = $objModelComment->getCommentWhere($whereForComment);
+
+        $objModelCommentGrp = Comment_group::getInstance();
+        $commentGrpDetails = $objModelCommentGrp->getCommentGroupWhere($whereForComment);
 
         if ($request->isMethod('post')) {
+            $cmntGrpName = $request->input('comment_group_name');
             $comment = $request->input('comment');
             $this->validate($request, [
+                'comment_group_name' => 'required',
                 'comment' => 'required'
             ], [
+                'comment_group_name' => 'Please Enter Group Name',
                 'comment.required' => 'Whats in your mind, Please enter something'
             ]);
 
             $whereForUpdateComment = array(
-                'rawQuery' => 'comment_id = ?',
+                'rawQuery' => 'comment_group_id = ?',
                 'bindParams' => [$id]
             );
-            $dataForUpdateComment = array('comments' => json_encode(array(trim(preg_replace('/\s+/', ' ', $comment)))));
-            $updated = $objModelComment->updateCommentWhere($dataForUpdateComment, $whereForUpdateComment);
-            if ($updated) {
-//                return redirect('/admin/plans-list')->with('message', 'Updated!');
-                return Redirect::back()->with(['status' => 'Success', 'msg' => 'Your comment has successfully Updated.']);
-            } else {
+            $dataForUpdateCmntGrp = ['comment_group_name' => $cmntGrpName];
+            $updatedGrpName = $objModelCommentGrp->updateCommentGroupWhere($dataForUpdateCmntGrp, $whereForComment);
+            if ($commentDetails) {
+                $comment = explode(PHP_EOL, $comment);
+//            dd($comment);
+                $cmnt1 = '';
+                foreach ($comment as $cmnt) {
+                    if (trim(preg_replace('/\s+/', ' ', $cmnt)) != '') {
+                        $cmnt1 .= json_encode(trim(preg_replace('/\s+/', ' ', $cmnt))) . ',';
+                    }
+                }
 
-                return Redirect::back()->with(['status' => 'Error', 'msg' => 'Some Problem occurred, Please reload the page and try again.']);
+                $cmnt2 = (rtrim($cmnt1, ','));
+                $cmnt2 = '[' . $cmnt2 . ']';
+
+                $dataForUpdateComment = array('comments' => $cmnt2);
+                $updated = $objModelComment->updateCommentWhere($dataForUpdateComment, $whereForUpdateComment);
+                if ($updated) {
+//                return redirect('/admin/plans-list')->with('message', 'Updated!');
+                    return Redirect::back()->with(['status' => 'Success', 'msg' => 'Your comment has successfully Updated.']);
+                } elseif ($updatedGrpName) {
+                    return Redirect::back()->with(['status' => 'Success', 'msg' => 'Comment Group Name has successfully Updated.']);
+                } else {
+                    return Redirect::back()->with(['status' => 'Error', 'msg' => 'Same as previous comment, No changes.']);
+                }
+            } else {
+                $objComment = new Comment();
+                $comment = explode(PHP_EOL, $comment);
+
+                $cmnt1 = '';
+                foreach ($comment as $cmnt) {
+                    if (trim(preg_replace('/\s+/', ' ', $cmnt)) != '') {
+                        $cmnt1 .= json_encode(trim(preg_replace('/\s+/', ' ', $cmnt))) . ',';
+                    }
+                }
+
+                $cmnt2 = (rtrim($cmnt1, ','));
+                $cmnt2 = '[' . $cmnt2 . ']';
+
+                $input = array(
+                    'comment_group_id' => $id,
+                    'comments' => $cmnt2,
+                    'added_by' => '1',
+                    'comment_status' => '1',
+                );
+
+                $result = $objComment->addNewComment($input);
+
+                if ($result) {
+                    return Redirect::back()->with(['status' => 'Success', 'msg' => 'Your comment has been successfully added.']);
+                } else {
+                    return Redirect::back()->with(['status' => 'Error', 'msg' => 'Some Error Occurred, For checking errors, please again click on the add comments for group']);
+                }
             }
 
         }
-//        dd($commentDetails);
-        return view('Admin::comments.editcomments', ['cd' => $commentDetails,'comm'=>$comm]);
 
+        $commentList = 0;
+        if ($commentDetails) {
+            $commentList = $commentDetails->comments;
+            $commentList = json_decode($commentList, true);
+        }
+        return view('Admin::comments.editcomments', ['cd' => $commentList, 'cgd' => $commentGrpDetails]);
     }
 
-    public function deleteComments($id, Request $request)
+    public function deleteCommentGroup(Request $request)
     {
-        $objModelComment = Comment::getInstance();
-        $whereForDelete = array(
-            'rawQuery' => 'comment_id = ?',
-            'bindParams' => [$id]
-        );
-        $deleted = $objModelComment->deleteCommentWhere($whereForDelete);
+        if ($request->isMethod('post')) {
+            $cmntGrpId = $request->input('cmntGrpId');
+            $objModelComment = Comment::getInstance();
+            $objModelGroup = Comment_group::getInstance();
+            $whereForDelete = array(
+                'rawQuery' => 'comment_group_id = ?',
+                'bindParams' => [$cmntGrpId]
+            );
+            $deletedGroup = $objModelGroup->deleteCommentGroupWhere($whereForDelete);
+            $deleted = $objModelComment->deleteCommentWhere($whereForDelete);
+            if ($deleted || $deletedGroup) {
+                echo json_encode(array('status' => '200', 'message' => 'Comment grp has been successfully deleted'));
+            } else {
+                echo json_encode(array('status' => '400', 'message' => 'error'));
+            }
+        }
+    }
+
+    public function changeStatus(Request $request)
+    {
+
+        if ($request->isMethod('post')) {
+            $cmntGrpId = $request->input('cmntGrpId');
+            $cmntGrpStatus = $request->input('status');
+            $objModelGroup = Comment_group::getInstance();
+            $whereForUpdate = array(
+                'rawQuery' => 'comment_group_id = ?',
+                'bindParams' => [$cmntGrpId]
+            );
+            $dataForUpdate = ['status' => $cmntGrpStatus];
+            $updatedGroup = $objModelGroup->updateCommentGroupWhere($dataForUpdate, $whereForUpdate);
+
+            if ($updatedGroup) {
+                echo json_encode(array('status' => '200', 'message' => 'Status has been changed'));
+            } else {
+                echo json_encode(array('status' => '400', 'message' => 'Some error occurred. Please reload the page and try again.'));
+            }
+        }
     }
 
     public function addCommentsAjaxHandler(Request $request)
@@ -149,11 +201,12 @@ class CommentController extends Controller
 
         $comment_group_id = $_POST['select-comment'];
         if ($comment_group_id == 0) {
-            $addGroup = $request->input('group-name');
-           $this->validate($request, [
-                'group-name' => 'required'
+            $addGroup = $request->input('comment_group_name');
+            $this->validate($request, [
+                'comment_group_name' => 'required|unique:comments_groups'
             ], [
-                'group-name.required' => 'Please Provide Some Group Name.'
+                'comment_group_name.unique' => 'This comment group has already created. Please choose some other name',
+                'comment_group_name.required' => 'Please Provide Some Group Name.'
             ]);
             $objComment = new Comment_group();
             $input = array(
@@ -167,8 +220,6 @@ class CommentController extends Controller
                 $comment_group_id = $comment_group_details['comment_group_id'];
             }
         }
-
-
         $comment = $request->input('comment1');
         $this->validate($request, [
             'comment1' => 'required'
@@ -176,134 +227,74 @@ class CommentController extends Controller
             'comment1.required' => 'Whats in your mind, Please enter something'
         ]);
 
-        $objComment = new Comment();
-//            dd($objComment);
-        $input = array(
-            'comment_group_id' => $comment_group_id,
-            'comments' => json_encode(array(trim(preg_replace('/\s+/', ' ', $comment))), true),
-            'added_by' => '1',
-            'comment_status' => '1',
-        );
-//            dd($input);
-//            $data = json_encode($input, true);
-//            dd($data);
-//            $result = DB::table('comments')->insert($data);
-        $result = $objComment->addNewComment($input);
-        if ($result) {
-            return Redirect::back()->with(['status' => 'Success', 'msg' => 'Your comment has successfully added, Add some more here!!!']);
-        } else {
-            return Redirect::back()->with(['status' => 'Error', 'msg' => 'Some Error Occurred, For checking errors, please again click on the add comments for group']);
-        }
-    }
 
-    public function showSelectedComments(Request $request)
-    {
-        if ($request->isMethod('post')) {
-            $method = $request->input('method');
-            switch ($method) {
-                case "showSelectedComments":
-                    $status = $request->input('status');
-                    $objModelComment = Comment::getInstance();
-                    $whereForComment = array(
-                        'rawQuery' => 'comment_group_id = ?',
-                        'bindParams' => [$status]
-                    );
-                    $grpDetails = $objModelComment->getAllCommentsWhere($whereForComment);
-//                    dd($grpDetails);
-                    $grpDetails = json_decode(json_encode($grpDetails), true);
-                    $comments = new Collection;
-//                    echo json_encode(array('status' => '200', 'message' => 'success'));
-                    foreach ($grpDetails as $gd) {
-                        $id = $gd['comment_id'];
-//            $comm = $cmnt['comments'];
-                        $comm = json_decode($gd['comments'], true);
-                        $comments->push([
-                            'id' => $gd['comment_id'],
-//                            'comment_group_name' => $gd['comment_group_name'],
-                            'comments' => $comm[0],// $cmnt['comments'],
-//                            'edit' => '<a href ="edit-comments/' . $id . '" class="btn btn-warning">edit</a>',
-//                'delete' => '<a href="delete-comments/' . $id . '" class="btn btn-danger">delete</a>'
-                        ]);
+        //if comment_group already exists in cmnt table (update)
 
-                    }
-//                    dd($comments);
-                    $datatable = Datatables::of($comments)->make(true);
-                    echo json_encode(array('status' => '200', 'message' => 'success', 'data' => $comments));
-//                    return Datatables::of($comments)->make(true);
-
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-    }
-
-    public function sample(Request $request, $status)
-    {
-//        $status = $request->input('status');
-        dd($status);
         $objModelComment = Comment::getInstance();
         $whereForComment = array(
             'rawQuery' => 'comment_group_id = ?',
-            'bindParams' => [$status]
+            'bindParams' => [$comment_group_id]
         );
-        $grpDetails = $objModelComment->getAllCommentsWhere($whereForComment);
-//                    dd($grpDetails);
-        $grpDetails = json_decode(json_encode($grpDetails), true);
-        $comments = new Collection;
-//                    echo json_encode(array('status' => '200', 'message' => 'success'));
-        foreach ($grpDetails as $gd) {
-//                        $id = $gd['comment_id'];
-            $id = $gd['comment_id'];
-//            $comm = $cmnt['comments'];
-            $comm = json_decode($gd['comments'], true);
-            $comments->push([
-                'id' => $gd['comment_id'],
-//                            'comment_group_name' => $gd['comment_group_name'],
-                'comments' => $comm[0],// $cmnt['comments'],
-//                            'edit' => '<a href ="edit-comments/' . $id . '" class="btn btn-warning">edit</a>',
-//                'delete' => '<a href="delete-comments/' . $id . '" class="btn btn-danger">delete</a>'
-            ]);
+        $commentDetails = $objModelComment->getCommentWhere($whereForComment);
+//        dd($prevCmnt);
 
+        if ($commentDetails) {
+            $prevCmnt = rtrim(($commentDetails->comments), ']');
+            $comment = explode(PHP_EOL, $comment);
+//            dd($comment);
+            $cmnt1 = '';
+            foreach ($comment as $cmnt) {
+                if (trim(preg_replace('/\s+/', ' ', $cmnt)) != '') {
+                    $cmnt1 .= json_encode(trim(preg_replace('/\s+/', ' ', $cmnt))) . ',';
+                }
+            }
+            $cmnt1 = $prevCmnt . ',' . $cmnt1;
+
+            $cmnt2 = (rtrim($cmnt1, ','));
+            $cmnt2 = $cmnt2 . ']';
+
+            $dataForUpdateComment = array('comments' => $cmnt2);
+            $updated = $objModelComment->updateCommentWhere($dataForUpdateComment, $whereForComment);
+            if ($updated) {
+                return Redirect::back()->with(['status' => 'success', 'message' => 'Your comment has been successfully added.']);
+            } else {
+                return Redirect::back()->with(['status' => 'Error', 'message' => 'Some Error Occured. Please try again.']);
+            }
+
+
+        } else {
+            $objComment = new Comment();
+            $comment = explode(PHP_EOL, $comment);
+
+            $cmnt1 = '';
+            foreach ($comment as $cmnt) {
+                if (trim(preg_replace('/\s+/', ' ', $cmnt)) != '') {
+                    $cmnt1 .= json_encode(trim(preg_replace('/\s+/', ' ', $cmnt))) . ',';
+                }
+            }
+
+            $cmnt2 = (rtrim($cmnt1, ','));
+            $cmnt2 = '[' . $cmnt2 . ']';
+
+            $input = array(
+                'comment_group_id' => $comment_group_id,
+                'comments' => $cmnt2,
+                'added_by' => '1',
+                'comment_status' => '1',
+            );
+
+            $result = $objComment->addNewComment($input);
+
+            if ($result) {
+                return Redirect::back()->with(['status' => 'Success', 'msg' => 'Your comment has been successfully added.']);
+            } else {
+                return Redirect::back()->with(['status' => 'Error', 'msg' => 'Some Error Occurred, For checking errors, please again click on the add comments for group']);
+            }
         }
-        return Datatables::of($comments)->make(true);
-
     }
 
-    public function customSearch(Request $request)
+    public function hello()
     {
-        if ($request->isMethod('post')) {
-//            $searchterm = $request->input('name');
-//            $searchterm = $_POST['select-comment'];
-            $searchterm = $request->input('status');
-//print_r($searchterm);die;
-//
-//        $searchterm = Input::get('searchinput');
-
-//            if ($searchterm) {
-//
-//                $commentDetails = DB::table('comments_group');
-//                $results = $commentDetails->where('comment_group_name', 'LIKE', '%' . $searchterm . '%')
-////                ->orWhere('description', 'LIKE', '%'. $searchterm .'%')
-////                ->orWhere('brand', 'LIKE', '%'. $searchterm .'%')
-//                    ->get();
-//
-//
-//            }
-//            dd($results); die;
-//            foreach($results as $r){
-//            $grpid=$r->comment_group_id;
-//            }
-            $objModelComment = Comment::getInstance();
-            $whereForComment = array(
-                'rawQuery' => 'comment_group_id = ?',
-                'bindParams' => [$searchterm]
-            );
-            $grpDetails = $objModelComment->getAllCommentsWhere($whereForComment);
-            dd($grpDetails);
-            return view('Admin::comments.customsearch', ['cmnt' => $grpDetails]);
-        }
+        return "hello";
     }
 }

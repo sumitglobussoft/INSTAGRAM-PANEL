@@ -106,7 +106,7 @@ class PaymentController extends Controller
                     $cancelURL = "http://instagramautolike.localhost.com/paymentError/196";
 //                    $ipn_url = 'http://www.myurl.com/dev/inc/paypal/ipn.php';
                     $payment_request_quantity = 1;
-                    $description = "Adding Credit";
+                    $description = "Software License: Balance Deposit";
                     $payment_request_number = 1;
                     $payment_type = "Any";
                     $custom = "";
@@ -115,6 +115,7 @@ class PaymentController extends Controller
                     $objpaypal = Paypal::getInstance();
 
                     $result = $objpaypal->CallShortcutExpressCheckout($paymentAmount, $returnURL, $cancelURL, $payment_request_quantity, $description, $payment_request_number, $payment_type, $custom, $subscription_type);
+//                    dd($result);
 //                    return json_encode($result['TOKEN']);
 //                    echo'hrjkhfas';
 //                   echo "<pre>"; print_r($result);die;
@@ -200,6 +201,7 @@ class PaymentController extends Controller
 
     public function expressCallback(Request $request)
     {
+
 //        return 23;
         $response = new stdClass();
         $postData = $request->all();

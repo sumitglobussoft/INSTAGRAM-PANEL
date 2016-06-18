@@ -13,13 +13,13 @@
 <!-- END PAGE LEVEL STYLES -->
 
 <!-- BEGIN THEME STYLES -->
-<link href="/assets/css/components-md.css" rel="stylesheet" id="style_components"/>
-<link href="/assets/css/plugins-md.css" rel="stylesheet"/>
-<link href="/assets/css/layout.css" rel="stylesheet"/>
-<link href="/assets/css/light.css" rel="stylesheet" id="style_color"/>
-<link href="/assets/css/custom.css" rel="stylesheet"/>
+<link href="/assets/css/components-md.css" rel="stylesheet" id="style_components" />
+<link href="/assets/css/plugins-md.css" rel="stylesheet" />
+<link href="/assets/css/layout.css" rel="stylesheet" />
+<link href="/assets/css/default.css" rel="stylesheet" id="style_color" />
+<link href="/assets/css/profile.css" rel="stylesheet" />
+<link href="/assets/css/custom.css" rel="stylesheet" />
 <!-- END THEME STYLES -->
-
 <style>
     #myPopoverContent {
         display: none;
@@ -51,7 +51,8 @@
 <link rel="shortcut icon" href="favicon.ico"/>
 
 @endsection
-
+@section('classMarket','active')
+@section('classMarket2','active')
 @section('content')
 {{--PAGE CONTENT GOES HERE--}}
         <!-- BEGIN CONTENT -->
@@ -296,7 +297,7 @@
 <script src="/assets/js/layout.js"></script>
 <script src="/assets/js/demo.js"></script>
 <script src="/assets/js/datatable.js"></script>
-<script src="/assets/js/table-ajax.js"></script>
+{{--<script src="/assets/js/table-ajax.js"></script>--}}
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <script>
@@ -373,9 +374,14 @@
                     "ajax": {
                         "url": "/user/orderHistoryAjax" // ajax source
                     },
-                    "order": [
-                        [1, "asc"]
-                    ]// set first column as a default sort by asc
+
+                    "columnDefs": [
+                        {orderable: false, targets: 0},
+                        {orderable: false, targets: -1}
+                    ],
+
+                    "order": [[1, "desc"]]
+                    // set first column as a default sort by asc
                 }
             });
 

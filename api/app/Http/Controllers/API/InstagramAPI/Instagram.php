@@ -8,7 +8,10 @@ class Instagram
     //The API base URL.
 
 
-    private $apiClientID = 'd89b5cfa3796458ebbb2520d70eeb498';
+    private $apiClientID = 'd6371f111591437cab59ea2f7fae0246';
+//    private $apiClientID = 'd89b5cfa3796458ebbb2520d70eeb498';
+//    private $apiClientID = 'd6371f111591437cab59ea2f7fae0246';
+//    private $apiClientID = '8898c0c6ed1441b7850127cac45d390c';
     const API_URL = 'https://api.instagram.com/v1/';
 
     public function getUserDetailsByUsername($username, $latestPostCount)
@@ -28,38 +31,98 @@ class Instagram
             $profileDetails = $this->getUserProfileDetails($userId);
             if (!($profileDetails['meta']['code'] == 400)) {
                 $data['followers_count'] = (isset($profileDetails['data']['counts']['followed_by'])) ? $profileDetails['data']['counts']['followed_by'] : 0;
+                //modified by saurabh // code for load more page
 
+//                for ($count = 0; $count <= $latestPostCount; $count += 20) {
                 $mediaDetails = $this->getUserMediaDetailsById($userId);
-                $mediaDetails = $mediaDetails['data'];
+                $count = 0;
+                $i = 0;
+                while ((count($mediaDetails) + $count - 3) <= $latestPostCount) {
+//                    dd($mediaDetails);
+                    if (isset($mediaDetails['pagination']) && !empty($mediaDetails['pagination']))//!= []
+                        $nextUrl = $mediaDetails['pagination']['next_url'];
+                    $mediaDetails = $mediaDetails['data'];
 
 //            echo "<pre>"; print_r($mediaDetails);
 
-                if (isset($mediaDetails)) {
-                    foreach ($mediaDetails as $key => $value) {
-                        $data['likes_count'] += $value['likes']['count'];
-                        $data['comments_count'] += $value['comments']['count'];
-                    }
-                }
-
-                $instagramUserData = '';
-                if (isset($mediaDetails)) {
-                    foreach ($mediaDetails as $key => $value) {
-                        if ($key > ($latestPostCount - 1)) {
-                            break;
+                    if (isset($mediaDetails)) {
+                        foreach ($mediaDetails as $key => $value) {
+                            $data['likes_count'] += $value['likes']['count'];
+                            $data['comments_count'] += $value['comments']['count'];
                         }
-//                  echo "<pre>"; print_r($key);
-                        $data['instagramUsersData'][$key]['created_time'] = $value['created_time'];
-                        $data['instagramUsersData'][$key]['link'] = $value['link'];
-                        $data['instagramUsersData'][$key]['comments_count'] = $value['comments']['count'];
-                        $data['instagramUsersData'][$key]['likes_count'] = $value['likes']['count'];
-                        $data['instagramUsersData'][$key]['username'] = $value['user']['username'];
-                        $data['instagramUsersData'][$key]['profile_picture'] = $value['user']['profile_picture'];
                     }
-                    return $data;
+
+                    $instagramUserData = '';
+                    if (isset($mediaDetails)) {
+                        foreach ($mediaDetails as $key => $value) {
+                            if ($i > ($latestPostCount - 1)) {
+                                break;
+                            }
+//                  echo "<pre>"; print_r($key);
+                            $data['instagramUsersData'][$i]['created_time'] = $value['created_time'];
+                            $data['instagramUsersData'][$i]['link'] = $value['link'];
+                            $data['instagramUsersData'][$i]['comments_count'] = $value['comments']['count'];
+                            $data['instagramUsersData'][$i]['likes_count'] = $value['likes']['count'];
+                            $data['instagramUsersData'][$i]['username'] = $value['user']['username'];
+                            $data['instagramUsersData'][$i]['profile_picture'] = $value['user']['profile_picture'];
+                            $i++;
+                        }
+                        if ((count($mediaDetails) + $count - 3) <= $latestPostCount) {
+//                                dd($mediaDetails);
+                            if (isset($nextUrl)) {
+                                $mediaDetails = $this->http_post($nextUrl);
+                                $mediaDetails = json_decode($mediaDetails, true);
+                            }
+                            $count += 20;
+                        }
+                    }
                 }
+//                dd($key);
+                return $data;
+//                }
+
 
                 return "There are no any post";
 
+            } else {
+                return "user is private";
+            }
+        } else {
+            return "Username does not exist";
+        }
+
+    }
+
+    public function UserDetailsByUsernameWithLastPostCreatedTime($username, $lastPostCreatedTime)
+    {
+        $data=[];
+
+        $result = $this->searchUser($username);
+        if ($result == 429) {
+            return 'Too many request';
+        }
+
+        if ($result) {
+            $userId = $result['id'];
+            $profileDetails = $this->getUserProfileDetails($userId);
+            if (!($profileDetails['meta']['code'] == 400)) {
+                $mediaDetails = $this->getUserMediaDetailsById($userId);
+
+                $mediaDetails = $mediaDetails['data'];
+
+                if (isset($mediaDetails)) {
+                    foreach ($mediaDetails as $key => $value) {
+                        if ($value['created_time'] > $lastPostCreatedTime) {
+                            $data[$key]['created_time'] = $value['created_time'];
+                            $data[$key]['link'] = $value['link'];
+                            $data[$key]['comments_count'] = $value['comments']['count'];
+                            $data[$key]['likes_count'] = $value['likes']['count'];
+                            $data[$key]['username'] = $value['user']['username'];
+                            $data[$key]['profile_picture'] = $value['user']['profile_picture'];
+                        }
+                    }
+                }
+                return $data;
             } else {
                 return "user is private";
             }
@@ -75,6 +138,7 @@ class Instagram
         $url = self::API_URL . 'users/search?q=' . $username . '&client_id=' . $this->apiClientID;
         $result = $this->http_post($url);
         $result = json_decode($result, true);
+        dd($result);
         if ($result['meta']['code'] == 200) {
             $result = $result['data'];
             $userExist = false;
@@ -86,6 +150,7 @@ class Instagram
                     break;
                 }
             }
+//            dd($userExist);
             return ($userExist) ? $userData : null;
         } else if ($result['meta']['code'] == 429) {
             return 429; //to many request
@@ -103,7 +168,7 @@ class Instagram
         return $result;
     }
 
-    public function getMediaDetailsByShortcode($shortcode)
+    public function getMediaDetailsByShortcode($shortcode, $postImage = false)
     {
 
         $result = $this->getUserMediaDetailsByShortcode($shortcode);
@@ -116,8 +181,14 @@ class Instagram
             $instagramUserData['link'] = $result['link'];
             $instagramUserData['comments_count'] = $result['comments']['count'];
             $instagramUserData['likes_count'] = $result['likes']['count'];
+            $instagramUserData['views_count'] = (isset($result['video_views']) ? $result['video_views'] : 0); //modified by saurabh
             $instagramUserData['username'] = $result['user']['username'];
             $instagramUserData['profile_picture'] = $result['user']['profile_picture'];
+            $instagramUserData['type'] = $result['type'];
+
+            if ($postImage) {
+                $instagramUserData['post_image_url'] = $result['images']['thumbnail']['url'];
+            }
 
             return $instagramUserData;
         }

@@ -33,6 +33,7 @@ class Comment extends Model
      */
     public function addNewComment()
     {
+
         if (func_num_args() > 0) {
             $data = func_get_arg(0);
             try {

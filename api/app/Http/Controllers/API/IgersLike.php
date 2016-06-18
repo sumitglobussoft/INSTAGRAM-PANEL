@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\API;
+use Exception;
 /**
  * Class igerslike_market_consumer
  * This class should be used to consume the Market API for igerslike.com
@@ -34,16 +35,10 @@ class IgersLike
             $post_data['comments_data'] = $comments; // Here should arrived the RAW $_POST from the text box of COMMENTS, new lines with \\r\\n
         }
 
-//        dd($post_data);
-//        echo "<pre>";
-//        print_r($post_data); die;
-//        dd($post_data);
-//        $response = $this->http_post($this->api_url, $post_data);
-//        dd($response);
+        $response = $this->http_post($this->api_url, $post_data);
+        return $response;
 
-//        return $response;
-
-        return json_encode(["status" => "ok", "message" => "Order Added", "order" => 2614165], true);
+//        return json_encode(["status" => "ok", "message" => "Order Added", "order" => 2614165], true);
 //        return json_encode(["status"=>"fail","message"=>"Error Message : Error in add order"],true);
     }
 
@@ -60,7 +55,6 @@ class IgersLike
         $post_data['key'] = $this->api_key;
         /** Basic Order Fields */
         $post_data['order_id'] = (int)trim(strip_tags($order_id)); // The order Link Here
-//        $post_data['order_id'] = 34; // The order Link Here
         $response = $this->http_post($this->api_url, $post_data);
         return $response;
     }
@@ -297,25 +291,6 @@ class IgersLike
      */
     private function http_post($url, $post_paramas)
     {
-//        $ch = curl_init($url);
-//        curl_setopt($ch, CURLOPT_URL, $url);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-//        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-//        curl_setopt($ch, CURLOPT_POST, 1);
-//        curl_setopt($ch, CURLOPT_HEADER, false);
-//        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-//
-//        if(is_array($post_paramas)) {curl_setopt($ch, CURLOPT_POSTFIELDS,$post_paramas);}
-//
-//        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)');
-//        $result = curl_exec($ch);
-//
-//        curl_close($ch);
-//
-//        return $result;
-
-
         if (empty($url) || empty($post_paramas)) {
 
             return 'Parameter not Passed';
@@ -325,24 +300,34 @@ class IgersLike
             $fields_string .= $key . '=' . $value . '&';
         }
 
+
         $fields_string = rtrim($fields_string, '&');
+        $ch = '';
+        try {
+            $ch = curl_init();
+            //set the url, number of POST vars, POST data
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POST, count($post_paramas));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 600); # timeout after 10 seconds, you can increase it
 
-        $ch = curl_init();
-        //set the url, number of POST vars, POST data
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POST, count($post_paramas));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); # timeout after 10 seconds, you can increase it
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  # Set curl to return the data instead of printing it to the browser.
+            // curl_setopt($ch,  CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)"); # Some server may refuse your request if you dont pass user agent
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  # Set curl to return the data instead of printing it to the browser.
-        // curl_setopt($ch,  CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)"); # Some server may refuse your request if you dont pass user agent
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        //execute post
-        $result = curl_exec($ch);
+            $result = curl_exec($ch);
 
-        curl_close($ch);
-        return $result;
+            if (($result === FALSE) || (curl_errno($ch) != 0 && empty($result))) {
+                throw new Exception();
+            }
+
+            curl_close($ch);
+            return $result;
+        } catch (Exception $e) {
+            curl_close($ch);
+            throw new Exception("Error in Curl Execution !");
+        }
     }
 }
 

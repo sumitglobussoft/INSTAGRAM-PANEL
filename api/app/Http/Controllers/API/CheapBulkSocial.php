@@ -7,7 +7,7 @@
  */
 
 namespace App\Http\Controllers\API;
-
+use Exception;
 
 class CheapBulkSocial
 {
@@ -21,19 +21,20 @@ class CheapBulkSocial
         $post_data['o_type'] = $type; // The order type or service type string
         $post_data['c_url'] = trim(strip_tags($link)); // The order Link Here
         $post_data['o_qty'] = $quantity; // The order amount
+        $response = $this->http_post($this->api_url, $post_data);
+        return $response;
 
-//        $response = $this->http_post($this->api_url, $post_data);
-//        return $response;
 //        return json_encode(['status_code'=>0,'status_message'=>'Invalid Order Type.'], true);
-        return json_encode(["status_code" => 1, "status_message" => "Order placed successfully. [Order Number: 711467853]",
-            "count_start" => 71, "amount" => 0.02], true);
+//        return json_encode(["status_code" => 1, "status_message" => "Order placed successfully. [Order Number: 711467853]",
+//            "count_start" => 71, "amount" => 0.02], true);
     }
 
     public function order_status($order_id)
     { // Get status, remains
         $post_data = [];
         $post_data['key'] = $this->api_key;
-        $post_data['oid'] = (int)trim(strip_tags($order_id)); // The order Link Here
+        $post_data['action'] = 'status';
+        $post_data['id'] = (int)trim(strip_tags($order_id)); // The order Link Here
         $response = $this->http_post($this->api_url, $post_data);
         return $response;
     }
@@ -49,21 +50,30 @@ class CheapBulkSocial
         }
         $fields_string = rtrim($fields_string, '&');
         $url = $this->api_url . '?' . $fields_string;
-        $ch = curl_init();
-        //set the url, number of POST vars, POST data
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); # timeout after 10 seconds, you can increase it
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  # Set curl to return the data instead of printing it to the browser.
-        // curl_setopt($ch,  CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)"); # Some server may refuse your request if you dont pass user agent
+
+        $ch = '';
+        try {
+            $ch = curl_init();
+            //set the url, number of POST vars, POST data
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 600); # timeout after 10 seconds, you can increase it
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  # Set curl to return the data instead of printing it to the browser.
+            // curl_setopt($ch,  CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)"); # Some server may refuse your request if you dont pass user agent
 //        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        //execute post
-        $result = curl_exec($ch);
-        if (curl_errno($ch) != 0 && empty($result)) {
-            $result = false;
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+            $result = curl_exec($ch);
+
+            if (($result === FALSE) || (curl_errno($ch) != 0 && empty($result))) {
+                throw new Exception();
+            }
+
+            curl_close($ch);
+            return $result;
+        } catch (Exception $e) {
+            curl_close($ch);
+            throw new \Exception("Error in Curl Execution !");
         }
-        curl_close($ch);
-        return $result;
     }
 }

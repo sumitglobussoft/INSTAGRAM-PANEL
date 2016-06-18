@@ -313,7 +313,7 @@
                         <li>
                             <div class="comment-main-level">
                                 <!-- Avatar -->
-                                <div class="comment-avatar"><img src="http://dummyimage.com/60" alt=""></div>
+                                <div class="comment-avatar"><img src="{{$td->profile_pic}}" alt=""></div>
                                 <!-- Contenedor del Comentario -->
                                 <div class="comment-box">
                                     <div class="comment-head">
@@ -351,13 +351,14 @@
                                     <ul class="comments-list reply-list">
                                         <li>
 
-                                            <div class="comment-avatar"><img src="http://dummyimage.com/60" alt="">
+                                            <div class="comment-avatar"><img src="@if($reply->replied_by==1)
+                                                        http://dummyimage.com/60 @else {{$reply->profile_pic}} @endif" alt="">
                                             </div>
 
                                             <div class="comment-box">
                                                 <div class="comment-head">
-                                                    <h6 class="comment-name"><a href="#">@if($reply->replied_by==19)
-                                                                Saurabh @else {{$reply->username}} @endif</a></h6>
+                                                    <h6 class="comment-name"><a href="#">@if($reply->replied_by==1)
+                                                                Admin @else {{$reply->username}} @endif</a></h6>
                                                     <span class="posted-time">Posted on {{$reply->created_at}}</span>
                                                     {{--<i class="fa fa-heart"></i>--}}
                                                 </div>
@@ -426,7 +427,7 @@
             } else {
                 if ($(targetObject).hasClass("comment-main-level")) {
                     if ($(targetObject).siblings('.comments-list.reply-list')) {
-                        element_prepend = '<li> <div class="comment-avatar"><img alt="" src="http://dummyimage.com/60"></div><div class="comment-box"> <div class="comment-head"> <h6 class="comment-name"><a href="#">Saurabh</a></h6> <span class="posted-time">Posted on DD-MM-YYYY HH:MM</span> <i class="fa fa-reply"></i> <i class="fa fa-heart"></i> </div> <div class="comment-content">' + reply_text + '  </div></div></li>';
+                        element_prepend = '<li> <div class="comment-avatar"><img alt="" src="http://dummyimage.com/60"></div><div class="comment-box"> <div class="comment-head"> <h6 class="comment-name"><a href="#">Admin</a></h6> <span class="posted-time">Posted on DD-MM-YYYY HH:MM</span> <i class="fa fa-reply"></i> <i class="fa fa-heart"></i> </div> <div class="comment-content">' + reply_text + '  </div></div></li>';
                         $(targetObject).siblings('.comments-list.reply-list').prepend(element_prepend);
                     }
                 }

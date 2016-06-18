@@ -53,8 +53,7 @@
                 @else
 
                     <tr>
-                        <td colspan="5" style="color: royalblue; font-size: xx-large; text-align: center"> There is no
-                            any PENDING USERS
+                        <td colspan="5" style="font-size: medium; text-align: center"> No Pending Users Left.
                         </td>
                     </tr>
                 @endif

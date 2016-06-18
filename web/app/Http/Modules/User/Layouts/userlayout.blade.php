@@ -23,8 +23,8 @@
     <div class="page-header-inner">
         <!-- BEGIN LOGO -->
         <div class="page-logo">
-            <a href="index.html">
-                <strong> I N S T A P A N E L </strong>
+            <a href="/user/dashboard">
+                <img src="/assets/images/design%202.png" class="img-responsive" style="width: 150px; margin-top: -9%;"/>
             </a>
 
             <div class="menu-toggler sidebar-toggler">
@@ -145,7 +145,7 @@
                     {{--</ul>--}}
                     {{--</li>--}}
                     <li class="separator hide">
-                    <li class="list-box" style="margin-top: 16px;">
+                    <li class="list-box" style="margin-top: 7px; min-width:220px;">
                         <a id="account_bal" href="/user/payment">
                             BALANCE : &nbsp;
                             <span class="label label-success" style="font-size: 16px; border-radius: 12px;">
@@ -228,21 +228,21 @@
         <div class="page-sidebar md-shadow-z-2-i  navbar-collapse collapse">
             <!-- BEGIN SIDEBAR MENU -->
             <ul class="page-sidebar-menu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-                <li class="start ">
+                <li class="start @yield('classDashboard')">
                     <a href="/user/dashboard">
                         <i class="icon-speedometer"></i>
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
 
-                <li>
+                <li class="@yield('classMyAccount')">
                     <a href="javascript:;">
                         <i class="icon-user"></i>
                         <span class="title">My Account</span>
                         <span class="arrow "></span>
                     </a>
                     <ul class="sub-menu">
-                        <li>
+                        <li class="@yield('classMyAccount1')">
                             <a href="/user/accountOverview">
                                 <i class="fa fa-home"></i> Over View
                             </a>
@@ -252,7 +252,7 @@
                         {{--<i class="fa fa-money"></i>Add Balance--}}
                         {{--</a>--}}
                         {{--</li>--}}
-                        <li>
+                        <li class="@yield('classMyAccount2')">
                             <a href="javascript:;">
                                 <i class="fa fa-money"></i>
                                 <span class="title">Add Balance</span>
@@ -265,29 +265,29 @@
                                     </a>
                                 </li>
                                 <li>
-
-                                    <a href="/user/2coPayment">
+                                    <a href="/user/twoCO_payment">
                                         <i class="fa fa-credit-card"></i>Through 2CO
                                     </a>
+                                </li>
                             </ul>
                         </li>
-                        <li>
+                        <li class="@yield('classMyAccount3')">
                             <a href="/user/depositHistory">
                                 <i class="fa fa-files-o"></i> Deposit History
                             </a>
                         </li>
-                        <li>
+                        <li class="@yield('classMyAccount4')">
                             <a href="/user/updateProfileInfo">
                                 <i class="fa fa-cog"></i>Account Settings
                             </a>
                         </li>
 
-                        <li>
+                        <li class="@yield('classMyAccount5')">
                             <a href="/user/changePassword">
                                 <i class="fa fa-unlock"></i>Change Password
                             </a>
                         </li>
-                        <li>
+                        <li class="@yield('classMyAccount6')">
                             <a href="/user/changeAvatar">
                                 <i class="fa fa-unlock"></i> Change Avatar
                             </a>
@@ -298,7 +298,7 @@
                         {{--<i class="fa fa-instagram"></i>Instagram Settings--}}
                         {{--</a>--}}
                         {{--</li>--}}
-                        <li>
+                        <li class="@yield('classMyAccount7')">
                             <a href="/user/emailNotifications">
                                 <i class="fa fa-bell"></i>Notification
                             </a>
@@ -306,19 +306,19 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="@yield('classMarket')">
                     <a href="javascript:;">
                         <i class="icon-basket"></i>
                         <span class="title">Market</span>
                         <span class="arrow "></span>
                     </a>
                     <ul class="sub-menu">
-                        <li>
+                        <li class="@yield('classMarket1')">
                             <a href="/user/addOrder">
                                 <i class="icon-plus"></i> Add Order
                             </a>
                         </li>
-                        <li>
+                        <li class="@yield('classMarket2')">
                             <a href="/user/orderHistory">
                                 <i class="icon-clock"></i> Order History
                             </a>
@@ -328,12 +328,17 @@
                         {{--<i class="icon-doc"></i> Automatic Orders--}}
                         {{--</a>--}}
                         {{--</li>--}}
-                        <li>
+                        <li class="@yield('classMarket3')">
                             <a href="/user/addAutolikesOrder">
                                 <i class="fa fa-instagram"></i> Instagram Auto Likes
                             </a>
                         </li>
-                        <li>
+                        <li class="@yield('classMarket4')">
+                            <a href="/user/show-comments">
+                                <i class="icon-calendar"></i> Manage Comments
+                            </a>
+                        </li>
+                        <li class="@yield('classMarket5')">
                             <a href="/user/pricingInformation">
                                 <i class="icon-wallet"></i> Pricing &amp; Information
                             </a>
@@ -352,34 +357,34 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="@yield('classSupport')">
                     <a href="javascript:;">
-                        <i class="fa fa-money"></i>
+                        <i class="fa fa-question-circle"></i>
                         <span class="title">Support</span>
                         <span class="arrow "></span>
                     </a>
                     <ul class="sub-menu">
-                        <li>
+                        <li class="@yield('classSupport1')">
                             <a href="/user/faq">
                                 <i class="fa fa-instagram"></i>FAQ
                             </a>
                         </li>
-                        <li>
+                        <li class="@yield('classSupport2')">
                             <a href="/user/contactPage">
                                 <i class="fa fa-user"></i>Contact Us
                             </a>
                         </li>
-                        <li>
+                        <li class="@yield('classSupport3')">
                             <a href="/user/termsOfServicePage">
                                 <i class="fa fa-legal"></i>Terms of Service
                             </a>
                         </li>
-                        <li>
+                        <li class="@yield('classSupport4')">
                             <a href="/user/paymentPage">
                                 <i class="fa fa-shopping-cart"></i>Payment Policy
                             </a>
                         </li>
-                        <li>
+                        <li class="@yield('classSupport5')">
                             <a href="/user/refundsPage">
                                 <i class="fa fa-eye-slash"></i>Refunds Policy
                             </a>
@@ -387,19 +392,19 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="@yield('classTickets')">
                     <a href="javascript:;">
                         <i class="fa fa-ticket"></i>
                         <span class="title">Tickets</span>
                         <span class="arrow "></span>
                     </a>
                     <ul class="sub-menu">
-                        <li>
+                        <li class="@yield('classTickets1')">
                             <a href="/user/create-ticket">
-                                <i class="fa fa-plus-circle"></i>  Create Tickets
+                                <i class="fa fa-plus-circle"></i> Create Tickets
                             </a>
                         </li>
-                        <li>
+                        <li class="@yield('classTickets2')">
                             <a href="/user/show-tickets">
                                 <i class="fa fa-file-text-o"></i> Show Tickets
                             </a>
@@ -478,6 +483,22 @@
 @include('User/Layouts/usercommonfooterscripts')
 @yield('pagejavascripts')
 <script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: '/user/checkUserStatus',
+            type: 'post',
+            datatype: 'json',
+            success: function (response) {
+                response = $.parseJSON(response);
+                if (response['status'] == '400') {
+                    window.location.href = '/user/login';
+                }
+                else {
+                    console.log(response.message);
+                }
+            }
+        });
+    });
     setInterval(function () {
         //your jQuery ajax code
         $.ajax({
@@ -494,7 +515,7 @@
                 console.log(error);
             }
         });
-    }, 30000);
+    }, 60000);
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

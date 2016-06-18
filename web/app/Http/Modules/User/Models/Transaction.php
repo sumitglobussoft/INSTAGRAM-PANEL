@@ -198,4 +198,17 @@ class Transaction extends Model
             echo $e;
         }
     }
+    public function getAllOrdersDetails($where, $selectedColumns = ['*'])
+    {
+        if (func_num_args() > 0) {
+            $where = func_get_arg(0);
+            $result = DB::table('orders')
+                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                ->select($selectedColumns)
+                ->get();
+            return $result;
+        } else {
+            throw new Exception('Argument Not Passed');
+        }
+    }
 }

@@ -2,12 +2,14 @@
 
 namespace InstagramAutobot\Http\Modules\Admin\Controllers;
 
+use InstagramAutobot\Http\Modules\Admin\Models\Usergroup;
 use InstagramAutobot\Http\Modules\Admin\Models\Usersmeta;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use InstagramAutobot\Http\Modules\Admin\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use InstagramAutobot\Http\Modules\User\Models\Transaction;
 use InstagramAutobot\Http\Requests;
 use InstagramAutobot\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
@@ -83,61 +85,62 @@ class UserController extends Controller
      */
     public function availableUsers()
     {
-        $objModelUser = User::getInstance();
-        $whereForUsers = array(
-            'rawQuery' => 'role = 1 and (status = 1 or status = 2)'
-        );
-        $allActiveUsers = $objModelUser->getAllUsersWhere($whereForUsers);
+//        $objModelUser = User::getInstance();
+//        $whereForUsers = array(
+//            'rawQuery' => 'role = 1 and (status = 1 or status = 2)'
+//        );
+//        $allActiveUsers = $objModelUser->getAllUsersWhere($whereForUsers);
 //        foreach($allActiveUsers as $active){
 //            $id=$active->id;
 //            print_r($id);
 //        }
 //        die;
 //        dd($allActiveUsers);
-        return view('Admin::users.availableusers', ['approved_users' => $allActiveUsers]);//, ['approved_users' => $allActiveUsers]
+        return view('Admin::users.availableusers');//, ['approved_users' => $allActiveUsers]
 
     }
 
-//    public function availableUsersDatatables()
-//    {
-//        $objModelUser = User::getInstance();
-//        $whereForUsers = array(
-//            'rawQuery' => 'role = 1 and (status = 1 or status = 2)'
-//        );
-//        $allActiveUsers = $objModelUser->getAllUsersWhere($whereForUsers);
-//
-////        dd($allActiveUsers);
-//
-//
-//        $users = new Collection;
-//
-//        $allActiveUsers = json_decode(json_encode($allActiveUsers), true);
-////        dd($allRejectedUsers);
-//        $i = 0;
-//        foreach ($allActiveUsers as $active) {
-//            if ($active['status'] == 1) {
-//                $style = 'btn-success';
-//                $statement = 'Active';
-//            } else {
-//                $style = 'btn-danger';
-//                $statement = 'Inactive';
-//            }
-//            $id=$active['id'];
-//            $users->push([
-//                'id' => ++$i,
-//                'fullname' => $active['name'] . $active['lastname'],
-//                'username' => $active['username'],
-//                'email' => $active['email'],
-////                'action_change_status' => '<i data=' . $active['id'] . ' class="status_checks btn"' . $style . '"> hello</i>',
-////                'action_edit'=>'<a href ="/admin/edituser/' .$active['id']  . '" class="btn btn-warning">edit</a>'
-//                'edit' => '<a href ="edituser/' . $id . '" class="btn btn-warning">edit</a>'
-//            ]);
-//        }
-//
-//        return Datatables::of($users)->make(true);
-//
-//
-//    }
+    public function availableUsersDatatables()
+    {
+        $objModelUser = User::getInstance();
+        $whereForUsers = array(
+            'rawQuery' => 'role = 1 and (status = 1 or status = 2)'
+        );
+        $allActiveUsers = $objModelUser->getAllUsersWhere($whereForUsers);
+
+//        dd($allActiveUsers);
+
+
+        $users = new Collection;
+
+        $allActiveUsers = json_decode(json_encode($allActiveUsers), true);
+//        dd($allRejectedUsers);
+        $i = 0;
+        foreach ($allActiveUsers as $active) {
+            if ($active['status'] == 1) {
+                $style = 'btn btn-success';
+                $statement = 'Active';
+            } else {
+                $style = 'btn btn-danger';
+                $statement = 'Inactive';
+            }
+            $id = $active['id'];
+            $users->push([
+                'id' => ++$i,
+                'fullname' => $active['name'] . $active['lastname'],
+                'username' => $active['username'],
+                'email' => $active['email'],
+//                'status'=>$active['status'],
+                'status' => '<a data-id ="' . $id . '" class="status_checks ' . $style . '">' . $statement . '</a>',
+//                'action_edit'=>'<a href ="/admin/edituser/' .$active['id']  . '" class="btn btn-warning">edit</a>'
+                'edit' => '<a href ="edituser/' . $id . '" class="btn btn-warning">edit</a>'
+            ]);
+        }
+
+        return Datatables::of($users)->make(true);
+
+
+    }
 
     /**
      * Changing available Users from active to inactive and viceversa.
@@ -286,13 +289,16 @@ class UserController extends Controller
             $password_confirmation = $request->input('password_confirmation');
             $changeGeneralInfo = $request->input('change-generalinfo');
             $editPassword = $request->input('edit-password');
+            $ugId = $request->input('selectUsergroup');
+
+
             if (isset($changeGeneralInfo)) {
                 $this->validate($request, [
                     'firstname' => 'required',
                     'lastname' => 'required',
-                    'username' => 'required',
+                    'username' => 'required|unique:users,username,' . $id,
                     'email' => 'required|email|unique:users,email,' . $id,
-                    'account_bal' => 'regex:/^[1-9]\d*(\.\d+)?$/',//  /^[0-9]{0,4}+([.][0-9]+)?$/
+                    'account_bal' => 'regex:/^[0-9]{0,4}+([.][0-9]+)?$/',//  /^[0-9]{0,4}+([.][0-9]+)?$/   //   /^[1-9]\d*(\.\d+)?$/
                 ], ['firstname.required' => 'Please enter a name',
                         'lastname.required' => 'Please enter your lastname',
                         'username.required' => 'Please enter a username',
@@ -309,7 +315,7 @@ class UserController extends Controller
                     'rawQuery' => 'id = ?',
                     'bindParams' => [$id]
                 );
-                $dataForUpdateUser = array('name' => $firstname, 'lastname' => $lastname, 'username' => $username, 'email' => $email);
+                $dataForUpdateUser = array('name' => $firstname, 'lastname' => $lastname, 'username' => $username, 'email' => $email, 'usergroup_id' => $ugId);
                 $updated = $objModelUser->updateUserWhere($dataForUpdateUser, $whereForUpdateUser);
 
                 //for adding  or updating account_bal in usersmeta table
@@ -341,7 +347,7 @@ class UserController extends Controller
 //                    return redirect('admin/dashboard')->with('msg', 'your data has updated');
                     return Redirect::back()->with(['status' => 'Success', 'message' => 'Your Profile has Updated.']);
                 } else {
-                    return Redirect::back()->with(['status' => 'Error', 'message' => 'Something went wrong, please reload the page and try again...']);
+                    return Redirect::back()->with(['status' => 'Error', 'message' => 'Same contents. Nothing to update.']);
                 }
             } elseif (isset($editPassword)) {
 
@@ -366,7 +372,7 @@ class UserController extends Controller
                     $dataForUpdateUser = array('password' => Hash::make($password));
                     $updated = $objModelUser->updateUserWhere($dataForUpdateUser, $whereForUpdateUser);
                 } else {
-                    return Redirect::back()->with(['status' => 'Error', 'pswdErr' => 'Your Current Password didnt match']);
+                    return Redirect::back()->with(['status' => 'Error', 'pswdErr' => 'Your Current Password didn\'t match']);
                 }
                 if ($updated) {
                     return Redirect::back()->with(['status' => 'Success', 'message' => 'Your Password has Updated.']);
@@ -376,34 +382,28 @@ class UserController extends Controller
 
             }
         }
-//        $whereForUser = array(
-//            'rawQuery' => 'id = ?',
-//            'bindParams' => [$id]
-//        );
-//        $UserDetails = $objModelUser->getAllUsersWhere($whereForUser);
-
-//        $first = DB::table('users')
-//            ->where('users.id', '=', $id)
-//            ->get();
-//        echo '<pre>';
-//        print_r($first);
-//        die;
-//        $accountBalance = DB::table('usersmeta')
-//            ->join('users', 'users.id', '=', 'usersmeta.user_id')
-//            ->join('currencies', 'usersmeta.currency_id', '=', 'currencies.currency_id')
-//            ->select('users.id', 'currencies.conversion_symbol', 'usersmeta.account_bal')
-//            ->where('users.id', '=', $id)
-//            ->get();
-//        print_r($accountBalance);
-//        die;
         $objModelUsermeta = Usersmeta::getInstance();
         $where = array('rawQuery' => 'users.id = ?', 'bindParams' => [$id]);
         $selectedColumns = ['users.*', 'usersmeta.account_bal', 'currencies.conversion_symbol'];
         $userDetails = $objModelUsermeta->getUserMetaInfoByUserId($where, $selectedColumns);
+//        foreach($userDetails as $ud) {
+//            if ($ud->usergroup_id == 0) {
+//                die('good');
+//            } else {
+//                die('hsdjkf');
+//            }
+//        }
+        $objUserGroup = Usergroup::getInstance();
+        $where = array(
+            'rawQuery' => 'usergroup_status=1'
+        );
+        $ugDetails = $objUserGroup->getAllUsergroupsWhereTemp($where);
+
 //        print_r($userDetails);die;
 
-        return view('Admin::users.edituser', ['suppDetails' => $userDetails]);
+        return view('Admin::users.edituser', ['suppDetails' => $userDetails, 'ugDetails' => $ugDetails]);
     }
+
 
     public function rejectedUsers()
     {
@@ -447,4 +447,74 @@ class UserController extends Controller
         return Datatables::of($users)->make(true);
     }
 
+    public function userPaymentHistory()
+    {
+        return view('Admin::users.paymenthistory');
+    }
+
+    public function paymentHistoryAjaxHandler()
+    {
+        $objModelTransaction = Transaction::getInstance();
+        $transactionDetails = $objModelTransaction->getAvaiableUsersDetails();
+        $paymentHistory = new Collection();
+        $transactionDetails = json_decode(json_encode($transactionDetails), true);
+        foreach ($transactionDetails as $td) {
+            $class = ($td['tx_mode'] == 0) ? '<i class="fa fa-paypal" style="color: green"></i>' : '<i class="fa fa-credit-card" style="color: green"></i>';
+            $amount = ($td['amount'] >= 100) ? '<i style="color: #880000">' . $td['amount'] . '</i>' : $td['amount'];
+            $paymentHistory->push(
+                [
+                    'id' => $td['tx_id'],
+                    'username' => $td['username'],
+                    'email' => $td['email'],
+                    'transcationId' => $td['transaction_id'],
+                    'amount' => $amount,
+                    'date' => $this->convertUnixTimeToReadableFormat($td['payment_time']),
+                    'status' => 'completed',
+                    'details' => $class,
+                ]
+            );
+        }
+        return datatables::of($paymentHistory)->make(true);
+
+    }
+
+    public function convertUnixTimeToReadableFormat($unixTime)
+    {
+        $diff = time() - $unixTime;
+        if ($diff < 1)
+            return '0 seconds';
+        $readable = [
+            365 * 30 * 24 * 60 * 60 => 'year',
+            30 * 24 * 60 * 60 => 'month',
+            24 * 60 * 60 => 'day',
+            60 * 60 => 'hour',
+            60 => 'second',
+        ];
+        $readable_plural = [
+            'year' => 'years',
+            'month' => 'months',
+            'day' => 'days',
+            'hour' => 'hours',
+            'second' => 'seconds',
+        ];
+        foreach ($readable as $time => $str) {
+            $res = $diff / $time;
+            if ($res >= 1) {
+                $res = round($res);
+                return $res . ' ' . ($res > 1 ? $readable_plural[$str] : $str);
+            }
+        }
+
+    }
+
+    //code for Managing SERVER NEWS
+    public function servernews()
+    {
+        return view('Admin::users.servernews');
+    }
+
+    public function demo()
+    {
+        return view('Admin::users.demo');
+    }
 }

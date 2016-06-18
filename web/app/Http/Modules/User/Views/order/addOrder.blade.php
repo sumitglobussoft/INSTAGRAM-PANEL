@@ -15,7 +15,7 @@
 <link href="/assets/css/components-md.css" rel="stylesheet" id="style_components"/>
 <link href="/assets/css/plugins-md.css" rel="stylesheet"/>
 <link href="/assets/css/layout.css" rel="stylesheet"/>
-<link href="/assets/css/light.css" rel="stylesheet" id="style_color"/>
+<link href="/assets/css/default.css" rel="stylesheet" id="style_color"/>
 <link href="/assets/css/profile.css" rel="stylesheet"/>
 <link href="/assets/css/custom.css" rel="stylesheet"/>
 <!-- END THEME STYLES -->
@@ -46,11 +46,29 @@
     #datatable_length label {
         display: inline-flex;
     }
+
+    .profile-pic img {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border: 10px solid #f1f2f7;
+        margin-top: 20px;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .valid {
+        color: green;
+    }
 </style>
 
 <link rel="shortcut icon" href="favicon.ico"/>
 @endsection
-
+@section('classMarket','active')
+@section('classMarket1','active')
 @section('content')
 {{--PAGE CONTENT GOES HERE--}}
         <!-- BEGIN CONTENT -->
@@ -327,12 +345,13 @@
                                                                 <input type="checkbox" name="starting_time_option"
                                                                        id="starting_time_option"
                                                                        class="form-control"> &nbsp;&nbsp;
-                                                                <label class="control-label">I want to use the schedule option <span style="font-size: 13px">(Order will be process after schedule time)</span>.</label>
+                                                                <label class="control-label">I want to use the schedule
+                                                                    option <span style="font-size: 13px">(Order will be process after schedule time)</span>.</label>
                                                             </div>
 
                                                             <div class="form-group schedule_time_option_area" hidden>
                                                                 {{--<label class="control-label">Schedule Starting--}}
-                                                                    {{--Time</label>--}}
+                                                                {{--Time</label>--}}
 
                                                                 <div class="">
                                                                     <div class="input-group date form_datetime">
@@ -444,7 +463,7 @@
                                                             <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <strong>Order Total</strong>
+                                                                    <strong>Order Cost ($)</strong>
                                                                 </td>
                                                                 <td align="right" id="order_total"
                                                                     style="vertical-align: middle;">-
@@ -473,7 +492,7 @@
                                                                 <td align="right" id="min_order">-</td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Max. p/ Link</td>
+                                                                <td>Max. Order</td>
                                                                 <td align="right" id="max_order">-</td>
                                                             </tr>
                                                             <tr>
@@ -498,8 +517,7 @@
                                                             </tbody>
                                                         </table>
                                                         <p class="text-muted">
-                                                            <small>Delivery time is avarage on the system latest
-                                                                orders, it can go up and
+                                                            <small>Delivery time can go up and
                                                                 down depending on the orders volume in real
                                                                 time. All orders are subject to
                                                                 terms of service delivery times.
@@ -514,76 +532,18 @@
                                     <div class="col-lg-4 col-md-4 col-sm-12">
                                         <div class="panel panel-default panel-divider">
                                             <div class="panel-heading">
-                                                <header> Order Resume</header>
+                                                <header> URL info</header>
                                             </div>
                                             <div class="panel-body" style="padding-top: 0; padding-bottom:0;">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <table class="table table-hover table-light">
-                                                            <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <strong>Order Total</strong>
-                                                                </td>
-                                                                <td align="right" id="order_total"
-                                                                    style="vertical-align: middle;">-
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Price per 1K</td>
-                                                                <td align="right" id="price">-</td>
-                                                            </tr>
-
-                                                            {{--<tr>--}}
-                                                            {{--<td>Delivery time</td>--}}
-                                                            {{--<td align="right" id="order_overall_amount">-</td>--}}
-                                                            {{--</tr>--}}
-
-                                                            {{--<tr>--}}
-                                                            {{--<td>Delivery for 1K</td>--}}
-                                                            {{--<td align="right" id="order_overall_time">-</td>--}}
-                                                            {{--</tr>--}}
-                                                            <tr>
-                                                                <td>Status</td>
-                                                                <td align="right" id="status">-</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Min. Order</td>
-                                                                <td align="right" id="min_order">-</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Max. p/ Link</td>
-                                                                <td align="right" id="max_order">-</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Current Balance</td>
-                                                                <td align="right" id="current_balance">
-                                                                    $ <span class="account_bal">
-                                                    @if(isset(Session::get('ig_user')['account_bal']))
-                                                                            {{Session::get('ig_user')['account_bal']}}
-                                                                        @else
-                                                                            0.0000
-                                                                        @endif
-                                                  </span>
-                                                                </td>
-
-
-                                                            </tr>
-                                                            {{--<tr>--}}
-                                                            {{--<td>Pricing &amp; Info</td>--}}
-                                                            {{--<td align="right"><a href="#">Click here</a>--}}
-                                                            {{--</td>--}}
-                                                            {{--</tr>--}}
-                                                            </tbody>
-                                                        </table>
-                                                        <p class="text-muted">
-                                                            <small>Delivery time is avarage on the system latest
-                                                                orders, it can go up and
-                                                                down depending on the orders volume in real
-                                                                time. All orders are subject to
-                                                                terms of service delivery times.
-                                                            </small>
-                                                        </p>
+                                                <div class="row" style="padding-top: 10px; padding-bottom:10px;">
+                                                    <div class="form-group input-group-sm col-md-12 col-sm-12 col-xs-12 m-bot15">
+                                                        <div class="profile-pic text-center">
+                                                            <img id="AvatarPic" src="/images/url_avatar.png">
+                                                        </div>
+                                                        <span class="alert-success" id="URLLabel"
+                                                              style="width:100% !important; font-size:10pt; cursor:default; text-align:left;"></span><br>
+                                                        <span class="alert-default" id="URLInfo"
+                                                              style="width:100% !important; font-size:10pt; cursor:default; text-align:left;"></span><br>
                                                     </div>
                                                 </div>
                                             </div>
@@ -657,9 +617,9 @@
         var plan_type_id = $("#plan_type_id").children("option").filter(":selected").val();
         var service_type_id = $("#service_type_id").children("option").filter(":selected").val();
 
-        if(plan_type_id==0 || plan_type_id==2 || plan_type_id==4){
+        if (plan_type_id == 0 || plan_type_id == 2 || plan_type_id == 4) {
             $('#order_url').attr('placeholder', 'Enter Post URL ( https://www.instagram.com/p/vrTV-bAp9E/ )');
-        }else if(plan_type_id==1){
+        } else if (plan_type_id == 1) {
             $('#order_url').attr('placeholder', 'Enter Profile or Post URL');
         }
 
@@ -678,7 +638,7 @@
                 service_type_id: service_type_id
             },
             success: function (response) {
-                console.log(response);
+//                console.log(response);
                 if (response['status'] == 'success') {
                     var data = response['data'];
                     var html = "<option value='' selected>Please select a Service </option>";
@@ -731,7 +691,7 @@
                 service_type_id: service_type_id
             },
             success: function (response) {
-                console.log(response);
+//                console.log(response);
                 if (response['status'] == 'success') {
                     var data = response['data'];
                     var html = "<option value='' selected>Please select a Service </option>";
@@ -759,7 +719,6 @@
 
     });
 
-
     $('#plan_id').change(function (e) {
         e.preventDefault();
 
@@ -770,7 +729,6 @@
         } else {
             $('#spreadOrdersOption').hide();
         }
-
 
 
         if (selectedPlan.attr('data-supplierServerId') == 1 && selectedPlan.attr('data-planType') == 3) {
@@ -797,24 +755,73 @@
         $('#max_order').text(selectedPlan.attr('data-maxQuantity'));
     });
 
+    $(document.body).on('keypress', '#quantity', function (e) {
+        return validateNumber(e);
+    });
 
-    $('#quantity').on('change click', function (e) {
+    $(document.body).on('change click', '#quantity', function (e) {
         e.preventDefault();
         var quantity = $('#quantity').val();
         var totalOrder = ($('#plan_id option:selected').attr('data-chargePer1K') / 1000) * quantity;
         $('#order_total').text(totalOrder.toFixed(4));
     });
 
+
     $('#spreadOrders').change(function (e) {
         e.preventDefault();
         if ($(this).is(":checked")) {
+            $('#startSpreadIndex').val('');
             $('.spreadOrderBetween').show();
+            $('#endSpreadIndex').val('');
             $('#order_url').attr('placeholder', 'Enter Profile URL ( https://www.instagram.com/username/ )');
         } else {
+            $('#startSpreadIndex').val('');
+            $('#endSpreadIndex').val('');
             $('.spreadOrderBetween').hide();
             $('#order_url').attr('placeholder', 'Enter Post URL ( https://www.instagram.com/p/vrTV-bAp9E/ )');
+            $('#min_order').text($('#plan_id option:selected').attr('data-minQuantity'));
         }
     });
+
+    $(document.body).on('change', '#endSpreadIndex', function (e) {
+        e.preventDefault();
+        if ($('#spreadOrders').is(":checked")) {
+            if ((parseInt($("#startSpreadIndex").val()) > 0) && (parseInt($(this).val()) > 0)) {
+                if (parseInt($("#startSpreadIndex").val()) <= parseInt($(this).val())) {
+                    var minMultiply = parseInt($(this).val()) - parseInt($("#startSpreadIndex").val()) + 1;
+                    var minQuantity = parseInt($("#plan_id").children("option").filter(":selected").attr('data-minQuantity'));
+                    $('#min_order').text(minQuantity * minMultiply);
+                }
+            }
+        }
+    });
+    $(document.body).on('keypress', '#endSpreadIndex', function (e) {
+        return validateNumber(e);
+    });
+
+    $(document.body).on('change', '#startSpreadIndex', function (e) {
+        e.preventDefault();
+        if ($('#spreadOrders').is(":checked")) {
+            if ((parseInt($(this).val()) > 0) && (parseInt($("#endSpreadIndex").val()) > 0)) {
+                if (parseInt($(this).val()) <= parseInt($("#endSpreadIndex").val())) {
+                    var minMultiply = parseInt($("#endSpreadIndex").val()) - parseInt($(this).val()) + 1;
+                    var minQuantity = parseInt($("#plan_id").children("option").filter(":selected").attr('data-minQuantity'));
+                    $('#min_order').text(minQuantity * minMultiply);
+                }
+            }
+        }
+    });
+    $(document.body).on('keypress', '#startSpreadIndex', function (e) {
+        return validateNumber(e);
+    });
+
+    $(document.body).on('keyup', '#endSpreadIndex', function (e) {
+        if ($(this).val() > 12) {
+            alert("Post Limited to latest 12 posts only. We are working on it , Soon we will come up with spread opt feature with more no. of posts");
+            return false;
+        }
+    });
+
 
     $('#commentType').change(function (e) {
         e.preventDefault();
@@ -857,25 +864,28 @@
         $('#quantity').attr('data-min', $('#plan_id option:selected').attr('data-minQuantity'));
     });
 
-    $("#ordersPerRun").keypress(function (e) {
-        //if the letter is not digit then display error and don't type anything
-        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-            //display error message
-            toastr.error('Please enter integer value only.', {timeOut: 4000});
-            $(this).focus();
-            return false;
-        }
+    $(document.body).on('keypress', '#ordersPerRun', function (e) {
+        return validateNumber(e);
     });
 
     $.validator.addMethod('greaterThan', function (value, element, param) {
         var startSpreadIndex = parseInt($(param).val());
         var endSpreadIndex = parseInt(value);
-//            console.log(startSpreadIndex);
-//            console.log(endSpreadIndex);
-        if (endSpreadIndex < startSpreadIndex)
+        var minQuantity = $("#plan_id").children("option").filter(":selected").attr('data-minQuantity');
+//        console.log(startSpreadIndex);
+//        console.log(endSpreadIndex);
+        if (endSpreadIndex < startSpreadIndex) {
+            $('#min_order').text(minQuantity);
             return false;
-        else
+        }
+        else {
+            var minOrder = parseInt((endSpreadIndex - startSpreadIndex + 1) * parseInt(minQuantity));
+//            console.log(minOrder);
+            $('#min_order').text(minOrder);
+//            $('#max_order').text('-');
             return true;
+        }
+
     }, "Value of End Pic Index must be greater value of Start Pic Index");
 
     $.validator.addMethod("fivelines", function (value, element) {
@@ -888,7 +898,7 @@
             if (a.length != 0)
                 lineCount++;
         });
-        console.log(lineCount);
+//        console.log(lineCount);
         $('#quantity').val(lineCount);
         $('#quantity').removeAttr('min');
 
@@ -914,20 +924,20 @@
     }, "Comments should be atleast 5 characters.");
 
     $.validator.addMethod("quantmin", function (value, element) {
-        var min = $('#quantity').attr('data-min');
-        var max = $('#quantity').attr('data-max');
+        var min = parseInt($('#quantity').attr('data-min'));
+        var max = parseInt($('#quantity').attr('data-max'));
         var minMulitplier = 1;
         if ($('#spreadOrders').is(':checked')) {
-            console.log("spread checked");
+//            console.log("spread checked");
             minMulitplier = parseInt($('#endSpreadIndex').val() - $('#startSpreadIndex').val() + 1);
             $('#min_order').text(min * minMulitplier);
         }
-        console.log(minMulitplier);
-        if ((parseInt(value) >= (min * minMulitplier)) && (parseInt(value) < max)) {
-            console.log("true");
+//        console.log(minMulitplier);
+        if ((parseInt(value) >= (min * minMulitplier)) && (parseInt(value) <= max)) {
+//            console.log("true");
             return true;
         } else {
-            console.log("false");
+//            console.log("false");
             return false;
         }
     }, "Qunatity should be greater than min order qunatity and less than max order quantity.");
@@ -935,7 +945,7 @@
     $.validator.addMethod("validateURL", function (value, element) {
 
         // var pattern = /^(http|https)?:\/\/(instagram.com)\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
-        var pattern = /^(http(s)?:\/\/)?(www\.)?(instagram)\.+(com)+\/(([a-zA-Z0-9\.\_])*)+\/(([a-zA-Z0-9\_\.\-\=])*)/;
+        var pattern = /^(http(s)?:\/\/)?(www\.)?(instagram)\.+(com)+\/(([a-zA-Z0-9\.\_])*)+(([a-zA-Z0-9\_\.\-\=])*)/;///^(http(s)?:\/\/)?(www\.)?(instagram)\.+(com)+\/(([a-zA-Z0-9\.\_])*)+\/(([a-zA-Z0-9\_\.\-\=])*)/;
         var regex = new RegExp(pattern);
         var url = value;
         if (url.match(regex)) {
@@ -945,38 +955,55 @@
         }
     }, "Please enter valid instagram URL");
 
+
+    var minOrder = '';
+    var getMinOrderMessage = function getMinOrderMessage() {
+        return "This attribute value should be greater than min order quantity ( " + minOrder + " ) !";
+    };
     $.validator.addMethod("minAmount", function (value, element) {
         var amountPerRun = parseInt($('#ordersPerRun').val());
-        var minOrder = parseInt($('#min_order').text());
+        minOrder = parseInt($('#min_order').text());
+
         if (amountPerRun >= minOrder) {
             return true;
         } else {
             return false;
         }
-    }, "This attribute value should be greater than min order quantity.");
+    }, getMinOrderMessage);
 
+    var maxOrder = '';
+    var getMaxOrderMessage = function getMaxOrderMessage() {
+        return "This attribute value should be less than Amount to delivery quantity ( " + maxOrder + " ) !";
+    };
     $.validator.addMethod("maxAmount", function (value, element) {
         var amountPerRun = parseInt($('#ordersPerRun').val());
-        var quantity = parseInt($('#quantity').val());
-        if (amountPerRun <= quantity) {
+        maxOrder = parseInt($('#quantity').val());
+        if (amountPerRun <= maxOrder) {
             return true;
         } else {
             return false;
         }
-    }, "This attribute value should be less than Amount to delivery quantity.");
+    }, getMaxOrderMessage);
 
 
+    var minOrdersPerRun = '';
+    var getOrdersPerRunMessage = function getOrdersPerRunMessage() {
+//        console.log("test"+minOrdersPerRun);
+        return "This attribute value should be greater than " + minOrdersPerRun + " (Max sub orders is 50)! ";
+    };
     $.validator.addMethod("validateOrdersPerRun", function (value, element) {
         var amountPerRun = parseInt($('#ordersPerRun').val());
         var quantity = parseInt($('#quantity').val());
 
-        if (amountPerRun < Math.floor(quantity / 4))
-            return false;
-        else
-            return true;
-//    }, "This attribute value should be one-fourth (" + Math.floor(parseInt($('#quantity').val()) / 4) + ") of Amount to delivery quantity (" + parseInt($('#quantity').val()) + ").");
-    }, "This attribute value should be one-fourth of Amount to delivery quantity");
+        minOrdersPerRun = Math.ceil(quantity / 50);
 
+        if (amountPerRun < minOrdersPerRun) {
+            return false;
+        } else {
+            return true;
+        }
+    }, getOrdersPerRunMessage);
+    //    }, "This attribute value should be one-fourth of Amount to delivery quantity");
 
     $('#addOrderForm').validate({
         errorElement: 'span',
@@ -1065,10 +1092,13 @@
     $('#splitTotalAmounts').change(function (e) {
         e.preventDefault();
         if ($(this).is(':checked')) {
-            console.log('checkbox is selected');
+            $('#ordersPerRun').val('');
+//            console.log();
+            $('#timeInterval option:selected').removeAttr('selected');
             $('.splitAmountArea').show();
         } else {
-            console.log('checkbox is de selected');
+            $('#ordersPerRun').val('');
+            $('#timeInterval option:selected').removeAttr('selected');
             $('.splitAmountArea').hide();
         }
     });
@@ -1076,10 +1106,10 @@
     $('#starting_time_option').change(function (e) {
         e.preventDefault();
         if ($(this).is(':checked')) {
-            console.log('checkbox is selected');
+//            console.log('checkbox is selected');
             $('.schedule_time_option_area').show();
         } else {
-            console.log('checkbox is de selected');
+//            console.log('checkbox is de selected');
             $('.schedule_time_option_area').hide();
         }
     });
@@ -1114,26 +1144,65 @@
         $('#max_order').text('-');
 
     });
+
+    var validateNumber = function validateNumber(e) {
+        //if the letter is not digit then display error and don't type anything
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            //display error message
+            toastr.error('Please enter integer value only.', {timeOut: 4000});
+            return false;
+        }
+    }
+
 </script>
 <!--END CUSTOM PAGE LEVEL SCRIPT-->
 
 <script>
-    //    var jstz = require('jstz');
-    var timezone = jstz.determine();
-    console.log('Your timezone is: ' + timezone.name());
-    var myDate = new Date();
-    console.log('Your timezone different is: ' + myDate.getTimezoneOffset());
-    console.log(<?php echo time(); ?>);
 
+    $("#order_url").on("change", document, function () {
+//        $("#URLLabel").html($.trim($(this).val()));
+        $("#URLInfo").html("Loading...");
+        var data = $.trim($(this).val());
+//        console.log(data);
+        $.ajax({
+            type: "POST",
+            url: "/user/URLinfo",
+            data: {order_url: data},
+            dataType: "json",
+            beforeSend: function () {
+                $("#AvatarPic").attr("src", "/images/url_loader.gif");
+            },
+            success: function (response) {
 
-    $('#starting_time').change(function (e) {
-        e.preventDefault();
-        var time=$(this).val();
-        var d = Date.parse(time); // return unix time stamp in milliseconds
-        console.log(d/1000);
+//                console.log(response.status);
+
+                if (response.status != 'success') {
+                    $("#AvatarPic").attr("src", "/images/url_avatar.png");
+                    $("#URLInfo").html("");
+                } else {
+
+                    var url_data = response.url_data;
+
+//                    console.log(url_data['url_type']);
+                    if (url_data['url_type'] == "postLink") {
+
+                        $("#URLInfo").html("Likes: " + url_data['initial_likes_count'] + "<BR />Comments: " + url_data['initial_comments_count']);
+                        $("#AvatarPic").attr("src", url_data['image_url']);
+                    }
+                    if (url_data['url_type'] == "profileLink") {
+                        $("#URLInfo").html("Followed by: " + url_data['initial_followers_count']);
+                        $("#AvatarPic").attr("src", url_data['image_url']);
+                    }
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $("#AvatarPic").attr("src", "/images/url_avatar.png");
+                $("#URLInfo").html("");
+            }
+        });
     });
+
 </script>
 @endsection
-
 
 

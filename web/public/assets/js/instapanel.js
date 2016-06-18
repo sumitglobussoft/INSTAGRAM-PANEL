@@ -1,6 +1,6 @@
 /**
-Core script to handle the entire theme and core functions
-**/
+ Core script to handle the entire theme and core functions
+ **/
 var InstaPanel = function() {
 
     // IE mode
@@ -219,43 +219,43 @@ var InstaPanel = function() {
             var the = $(this);
             // find the first span which is our circle/bubble
             var el = $(this).children('span:first-child');
-              
+
             // add the bubble class (we do this so it doesnt show on page load)
             el.addClass('inc');
-              
+
             // clone it
-            var newone = el.clone(true);  
-              
+            var newone = el.clone(true);
+
             // add the cloned version before our original
-            el.before(newone);  
-              
+            el.before(newone);
+
             // remove the original so that it is ready to run on next click
             $("." + el.attr("class") + ":last", the).remove();
-        }); 
+        });
 
-        if ($('body').hasClass('page-md')) { 
+        if ($('body').hasClass('page-md')) {
             // Material design click effect
             // credit where credit's due; http://thecodeplayer.com/walkthrough/ripple-click-effect-google-material-design       
-            $('body').on('click', 'a.btn, button.btn, input.btn, label.btn', function(e) { 
+            $('body').on('click', 'a.btn, button.btn, input.btn, label.btn', function(e) {
                 var element, circle, d, x, y;
 
                 element = $(this);
-      
+
                 if(element.find(".md-click-circle").length == 0) {
                     element.prepend("<span class='md-click-circle'></span>");
                 }
-                    
+
                 circle = element.find(".md-click-circle");
                 circle.removeClass("md-click-animate");
-                
+
                 if(!circle.height() && !circle.width()) {
                     d = Math.max(element.outerWidth(), element.outerHeight());
                     circle.css({height: d, width: d});
                 }
-                
+
                 x = e.pageX - element.offset().left - circle.width()/2;
                 y = e.pageY - element.offset().top - circle.height()/2;
-                
+
                 circle.css({top: y+'px', left: x+'px'}).addClass("md-click-animate");
             });
         }
@@ -267,14 +267,14 @@ var InstaPanel = function() {
             } else {
                 el.removeClass('edited');
             }
-        } 
+        }
 
-        $('body').on('keydown', '.form-md-floating-label > .form-control', function(e) { 
+        $('body').on('keydown', '.form-md-floating-label > .form-control', function(e) {
             handleInput($(this));
         });
-        $('body').on('blur', '.form-md-floating-label > .form-control', function(e) { 
+        $('body').on('blur', '.form-md-floating-label > .form-control', function(e) {
             handleInput($(this));
-        });        
+        });
     }
 
     // Handles custom checkboxes & radios using jQuery iCheck plugin
@@ -317,7 +317,7 @@ var InstaPanel = function() {
         }
         $('[data-toggle=confirmation]').confirmation({ container: 'body', btnOkClass: 'btn-xs btn-success', btnCancelClass: 'btn-xs btn-danger'});
     }
-    
+
     // Handles Bootstrap Accordions.
     var handleAccordions = function() {
         $('body').on('shown.bs.collapse', '.accordion.scrollable', function(e) {
@@ -345,7 +345,7 @@ var InstaPanel = function() {
     };
 
     // Handles Bootstrap Modals.
-    var handleModals = function() {        
+    var handleModals = function() {
         // fix stackable modal issue: when 2 or more modals opened, closing one of modal will remove .modal-open class. 
         $('body').on('hide.bs.modal', function() {
             if ($('.modal:visible').size() > 1 && $('html').hasClass('modal-open') === false) {
@@ -404,8 +404,8 @@ var InstaPanel = function() {
     // Handles Bootstrap Dropdowns
     var handleDropdowns = function() {
         /*
-          Hold dropdown on click  
-        */
+         Hold dropdown on click
+         */
         $('body').on('click', '.dropdown-menu.hold-on-click', function(e) {
             e.stopPropagation();
         });
@@ -956,7 +956,7 @@ var InstaPanel = function() {
                 'lg' : 1200     // large
             };
 
-            return sizes[size] ? sizes[size] : 0; 
+            return sizes[size] ? sizes[size] : 0;
         }
     };
 

@@ -2,7 +2,6 @@
 
 @section('pageheadcontent')
 
-
 @endsection
 
 
@@ -56,10 +55,24 @@
 
                         <div class="error" style="color:red">{{ $errors->first('email') }}</div>
                     </div>
+                    <div class="form-group">
+                        {{--<input id="regular2" type="email" name="email" value="{{$sd->email}}" readonly>--}}
+                        {{--<label for="regular2">UserGroup</label>--}}
+                        {{--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--}}
+                        {{--Change to:--}}
+                        <select id="selectUsergroup" name="selectUsergroup" >
+                            <option value="0" selected="selected" @if($sd->usergroup_id==0) selected="selected" @endif>None</option>
+                            @foreach($ugDetails as $ug)
+                                <option value="{{$ug->usergroup_id}}" @if($ug->usergroup_id==$sd->usergroup_id) selected="selected" @endif>{{$ug->usergroup_name}}</option>
+                            @endforeach
+                        </select>
+                        <label for="select1">Select UserGroup</label>
+
+                    </div>
                     <div class="form-group floating-label">
                         <span style="color:blue;">@if(isset($sd->conversion_symbol)) {{$sd->conversion_symbol}} @endif</span>
                         <input class="form-control" id="regular2" type="text" name="account_bal"
-                               value="@if(isset($sd->account_bal)) {{$sd->account_bal}} @endif">
+                               value="@if(isset($sd->account_bal)){{$sd->account_bal}}@endif">
                         <label for="regular2">Account Balance</label>
 
                         <div class="error" style="color:red">{{ $errors->first('account_bal') }}</div>

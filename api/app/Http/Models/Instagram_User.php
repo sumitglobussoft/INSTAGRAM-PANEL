@@ -34,7 +34,7 @@ class Instagram_User extends Model
             $result = DB::table('instagram_users')
                 ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
                 ->update($data);
-            if ($result==0)
+            if ($result == 0)
                 return 1;
             else
                 return $result;
@@ -65,8 +65,8 @@ class Instagram_User extends Model
 
     public function getUserDetails($where, $selectedColumns = [])
     {
-        if(empty($selectedColumns)){
-            $selectedColumns=['instagram_users.*', 'plans.plan_name_code', 'plans.plan_name','plans.charge_per_unit', 'plans.status as plan_status'];
+        if (empty($selectedColumns)) {
+            $selectedColumns = ['instagram_users.*', 'plans.plan_name_code', 'plans.plan_name', 'plans.plan_type', 'plans.charge_per_unit', 'plans.status as plan_status', 'plans.supplier_server_id'];
         }
 
         try {
@@ -88,13 +88,26 @@ class Instagram_User extends Model
     public function getAllFilterUsers($where, $sortingOrder, $iDisplayStart, $iDisplayLength)
     {
         try {
-            $result = DB::table('instagram_users')
-                ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
-                ->join('plans', 'plans.plan_id', '=', 'instagram_users.plan_id')
-                ->orderBy($sortingOrder[0], $sortingOrder[1])
-                ->skip($iDisplayStart)->take($iDisplayLength)
-                ->select('instagram_users.*', 'plans.plan_name_code', 'plans.plan_name', 'plans.status as plan_status')
-                ->get();
+            $result = array();
+            if ($iDisplayLength < 0) {
+                $result = DB::table('instagram_users')
+                    ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                    ->join('plans', 'plans.plan_id', '=', 'instagram_users.plan_id')
+                    ->orderBy($sortingOrder[0], $sortingOrder[1])
+//                    ->orderBy('instagram_users.ins_user_id', 'asc')
+                    ->select('instagram_users.*', 'plans.plan_name_code', 'plans.plan_name', 'plans.status as plan_status')
+                    ->get();
+            } else {
+                $result = DB::table('instagram_users')
+                    ->whereRaw($where['rawQuery'], isset($where['bindParams']) ? $where['bindParams'] : array())
+                    ->join('plans', 'plans.plan_id', '=', 'instagram_users.plan_id')
+                    ->orderBy($sortingOrder[0], $sortingOrder[1])
+//                    ->orderBy('instagram_users.ins_user_id', 'asc')
+                    ->skip($iDisplayStart)->take($iDisplayLength)
+                    ->select('instagram_users.*', 'plans.plan_name_code', 'plans.plan_name', 'plans.status as plan_status')
+                    ->get();
+            }
+
             if ($result)
                 return $result;
             else
@@ -118,7 +131,6 @@ class Instagram_User extends Model
             return 0;
         }
     }
-
 
 
 }//END OF CLASS ORDER

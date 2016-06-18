@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use InstagramAutobot\Http\Requests;
 use InstagramAutobot\Http\Controllers\Controller;
-use DateTime;
-use DateTimeZone;
 
 class OrderController extends Controller
 {
@@ -25,13 +23,39 @@ class OrderController extends Controller
         $this->API_URL = env('API_URL');
     }
 
+    public function URLinfo(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $url = $this->API_URL . '/user/URLinfo';
+            $postData = $request->all();
+
+            $data = $request->all();
+            $data['user_id'] = Session::get('ig_user')['id'];
+            $data['api_token'] = $this->API_TOKEN;
+
+
+            $objCurlHandler = CurlRequestHandler::getInstance();
+            $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
+
+            if ($curlResponse->code == 200) {
+                echo json_encode(['status' => 'success', 'url_data' => $curlResponse->data], true);
+            } else {
+                echo json_encode(['status' => 'fail', 'url_data' => null], true);
+            }
+        } else {
+            echo json_encode(['status' => 'fail', 'url_data' => null], true);
+        }
+    }
 
     public function addOrder(Request $request)
     {
         if ($request->isMethod('post')) {
             $url = $this->API_URL . '/user/addOrder';
             $postData = $request->all();
-//dd($postData);
+//            echo $postData['starting_time'];
+//            print_r(date('U = Y-m-d h:i:s A T',strtotime($postData['starting_time'])));echo "\n";
+//            dd(strtotime($postData['starting_time']));
+
             $rules = [
                 'plan_id' => 'required',
                 'order_url' => 'required|url',
@@ -54,10 +78,33 @@ class OrderController extends Controller
                 $data['user_id'] = Session::get('ig_user')['id'];
                 $data['api_token'] = $this->API_TOKEN;
 
-//                echo "<pre>"; print_r($data); dd($data);
+                //TODO URL VALIDATION HIT CURLGET, BALANCE, QUANTITY
+
+//                $errorMessage = '';
+//                $errorMessageFlag = false;
+//                $regex = '/^(http(s)?:\/\/)?(www\.)?(instagram)\.+(com)+\/+(p)\/(([a-zA-Z0-9\.\-])*)/';
+//                if (isset($postData['spreadOrders']) && $postData['spreadOrders'] == 'on') {
+//                    if (preg_match($regex, $postData['order_url'])) {
+//                        $errorMessage = "Please enter only instagram username link. Ex. www.instagram.com/YourUsername/";
+//                        $errorMessageFlag = true;
+//                    }
+//                }else if (!preg_match($regex, $postData['order_url'])) {
+//                    $errorMessage = 'Your link looks invalid! Example of a correct link for this service : http://instagram.com/p/vrTV-bAp9E/';
+//                    $errorMessageFlag = true;
+//                }
+//
+//                if (!$errorMessageFlag) {
+//
+//                }
+//
+//
+//                echo $errorMessageFlag, $errorMessage;
+//                echo "<pre>";
+//                print_r($data);
+//                dd($data);
+
 
                 $objCurlHandler = CurlRequestHandler::getInstance();
-
                 $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
 
 //                echo "<pre>"; print_r($curlResponse); dd($curlResponse);
@@ -92,19 +139,6 @@ class OrderController extends Controller
             return view('User::order.addOrder', ['data' => $planDetailsData, 'commentsGroupListData' => $commentsGroupListData]);
         }
     }
-
-    function converToTz($time = "", $fromTz = '', $toTz = '')
-    {
-        // timezone by php friendly values
-        $date = new DateTime($time, new DateTimeZone($fromTz));
-        $date->setTimezone(new DateTimeZone($toTz));
-        $o = new \ReflectionObject($date);
-        $p = $o->getProperty('date');
-        $date = $p->getValue($date);
-        return strtotime($date);
-    }
-
-
 
     public function getFilterPlanList(Request $request)
     {
@@ -145,12 +179,14 @@ class OrderController extends Controller
 
         return view('User::order.orderHistory')->with(['orders' => $orderList, 'plansList' => $planList]);
 
-    }
 
+    }
 
     public function cancelOrder(Request $request)
     {
+
         $orderId = $request['orderId'];
+
         $url = $this->API_URL . '/user/cancelOrder';
         $data['api_token'] = $this->API_TOKEN;
         $data['order_id'] = json_encode($request['orderId'], true);
@@ -264,17 +300,47 @@ class OrderController extends Controller
     public function addAutolikesOrder(Request $request)
     {
         if ($request->isMethod('post')) {
-            $rules = [
-                'instagramUsername' => 'required',
-                'likesPerPic' => 'required|integer',
-                'picLimit' => 'required|integer',
-                'planId' => 'required|exists:plans,plan_id',
-            ];
 
+
+            $rules = array();
+            if ($request['orderType'] == "autolikes") {
+                $rules = [
+                    'instagramUsername' => 'required',
+                    'likesPerPic' => 'required|integer',
+                    'picLimit' => 'required|integer',
+                    'planId' => 'required|exists:plans,plan_id',
+                ];
+            } else if ($request['orderType'] == "autoviews") {
+                $rules = [
+                    'instagramUsername' => 'required',
+                    'viewsPerVideo' => 'required|integer',
+                    'videoLimit' => 'required|integer',
+                    'viewplanId' => 'required|exists:plans,plan_id',
+                ];
+            }
+
+            if (isset($request['autolikesSubscription']) && ($request['autolikesSubscription'] == 'on')) {
+                $pushRules = [
+                    'startDate' => 'required|date',
+                    'endDate' => 'required|date|after:' . $request['startDate']
+                ];
+                $rules = array_merge($rules, $pushRules);
+            }
+
+            if (isset($request['splitTotalAmounts']) && ($request['splitTotalAmounts'] == 'on')) {
+                $splitRules = [
+                    'ordersPerRun' => 'required|integer|min:0',
+                    'timeInterval' => 'required'
+                ];
+                $rules = array_merge($rules, $splitRules);
+            }
+
+//dd($rules);
             $validator = Validator::make($request->all(), $rules);
             if (!$validator->fails()) {
                 $url = $this->API_URL . '/user/addAutolikesOrder';
                 $data = $request->all();
+//                dd($data);
                 $data['api_token'] = $this->API_TOKEN;
                 $data['user_id'] = Session::get('ig_user')['id'];
 
@@ -342,7 +408,6 @@ class OrderController extends Controller
         }
     }
 
-
     public function autolikeOrderHistoryAjax(Request $request)
     {
         $url = $this->API_URL . '/user/autolikeOrderHistoryAjax';
@@ -353,6 +418,7 @@ class OrderController extends Controller
         $objCurlHandler = CurlRequestHandler::getInstance();
         $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
 
+//        dd($curlResponse);
         $records = array();
         if ($curlResponse->code == 200) {
             $records = $curlResponse->data;
@@ -363,36 +429,53 @@ class OrderController extends Controller
             foreach ($recordsData as $ORkey => $ORvalue) {
 
                 $details = ' <a href="javascript:;" class="show-details" data-toggle="modal" data-target="#showDetails" data-id="' . $ORvalue['ins_user_id'] . '">
-                                              <span class="label label-default"> Details </span>
+                                             <span class="label label-default"> <i class="fa fa-info-circle"></i>&nbsp; Details </span>
                                            </a>';
 
-                if ($ORvalue['ig_user_status'] == 2) { // replace with 0 if you want edit order option
-                    $details = $details . '&nbsp; <a href="javascript:;" class="edit-user" data-toggle="modal" data-target="#editOrder" data-id="' . $ORvalue['ins_user_id'] . '">
-                                <span class="label label-default"> Edit </span>
+                if ($ORvalue['ig_user_status'] != 0 || $ORvalue['ig_user_status'] != 1) { // replace with 5 if you don't want edit order option or replace with 2 if you want
+                    $details = $details . '&nbsp; <a href="javascript:;" class="edit-user" data-toggle="modal" data-target="#editOrder" data-id="' . $ORvalue['ins_user_id'] . '" data-status="' . $ORvalue['ig_user_status'] . '">
+                                <span class="label label-default"><i class="fa fa-pencil"></i>&nbsp; Edit </span>
                             </a>';
                 }
 
 
                 $status = '';
                 if ($ORvalue['ig_user_status'] == 0) {
-                    $status = '<span class="label label-success"><i class="icon-warning-sign"></i>&nbsp; Failed</span>';
+                    $status = '<span class="label label-danger"><i class="fa fa-times-circle"></i>&nbsp; Failed</span>';
                 } else if ($ORvalue['ig_user_status'] == 1) {
-                    $status = '<span class="label label-success"><i class="fa fa-check-circle-o"></i>&nbsp; Finished</span>';
+                    $status = '<span class="label label-success"><i class="fa fa-check-circle"></i>&nbsp; Finished</span>';
                 } else if ($ORvalue['ig_user_status'] == 2) {
-                    $status = '<span class="label label-success"><i class="fa fa-refresh fa-spin"></i>&nbsp; Waiting</span>';
+                    $status = '<span class="label label-info"><i class="fa fa-refresh fa-spin"></i>&nbsp; Waiting</span>';
+                } else if ($ORvalue['ig_user_status'] == 3) {
+                    $status = '<span class="label label-warning"><i class="fa fa-ban " ></i>&nbsp; Stopped</span>';
+                } else if ($ORvalue['ig_user_status'] == 4) {
+                    $status = '<span class="label label-warning" style="background-color: darkmagenta"><i class="fa fa-ban" ></i>&nbsp; Expired</span>';
+                } else if ($ORvalue['ig_user_status'] == 5) {
+                    $status = '<span class="label label-warning" style="background-color: indianred"><i class="fa fa-ban" ></i>&nbsp; Not Yet Started</span>';
                 }
+
+                $likesPerPics = '';
+//                if ($ORvalue['plan_type'] == 0) {
+                $likesPerPics = '<i class="fa fa-heart-o"></i> ' . $ORvalue['likes_per_pic'] . ' Likes/post';
+//                } elseif ($ORvalue['plan_type'] == 4) {
+//                    $likesPerPics = '<i class="fa fa-eye" aria-hidden="true"></i> ' . $ORvalue['likes_per_pic'] . ' Views/video';
+//                }
 
                 $records['data'][] = array(
                     '<input type="checkbox" class="orderCheckBox" name="orderId[]" value="' . $ORvalue['ins_user_id'] . '">',
-
                     $ORvalue['ins_user_id'],
                     '<p ><a class="btn btn-xs default text-case link-width" href="https://instagram.com/' . $ORvalue['ins_username'] . '/" target="_blank"><i style="font-size:10px" class="fa fa-instagram"></i>&nbsp;' . $ORvalue['ins_username'] . '</p>',
+                    '<p class="link-width" title="' . $ORvalue['plan_name'] . '"><i style="font-size:10px" class="fa fa-instagram"></i>&nbsp;' . $ORvalue['plan_name'] . '</p>',
+//                    $ORvalue['plan_name'],
+                    '<small><a class="btn btn-xs default text-case" href="#" target="_blank">' . $likesPerPics . '</a></small>',
                     $ORvalue['pics_done'],
                     $ORvalue['pics_limit'],
-                    '<small><a class="btn btn-xs default text-case" href="#" target="_blank"><i class="fa fa-heart-o"></i> ' . $ORvalue['likes_per_pic'] . ' Likes p/ picture</a></small>',
 
+                    $ORvalue['start_date_time'],
+                    $ORvalue['end_date_time'],
+//                    gmdate("Y-m-d H:i:s ", $ORvalue['end_date_time']),//$ORvalue['end_date_time'],
                     $ORvalue['last_check'],
-                    $ORvalue['last_delivery'],
+//                    $ORvalue['last_delivery'],
                     $status,
 
                     $details
@@ -433,7 +516,9 @@ class OrderController extends Controller
                 $url = $this->API_URL . '/user/updateUserOrderDetails';
                 $data = $request->all();
                 $data['api_token'] = $this->API_TOKEN;
+                $data['user_id'] = Session::get('ig_user')['id'];
                 $data['ins_user_id'] = $request['ins_user_id'];
+
 
                 $objCurlHandler = CurlRequestHandler::getInstance();
                 $curlResponse = $objCurlHandler->curlUsingPost($url, $data);
@@ -449,7 +534,6 @@ class OrderController extends Controller
 
         }
     }
-
 
     public function temp(Request $request)
     {
@@ -476,7 +560,7 @@ class OrderController extends Controller
                 3 => 'completed',
                 4 => 'refunded',
                 5 => 'Error',
-                6 => 'cancel'
+                6 => 'cancelled'
             );
 
             foreach ($recordsData as $ORkey => $ORvalue) {
@@ -495,7 +579,7 @@ class OrderController extends Controller
                     $price,
                     $ORvalue['added_time'],
                     $ORvalue['updated_time'],
-                    '<span class="label label-info"> <i class="fa fa-clock-o"></i>&nbsp;' . $status_list[$ORvalue['status']] . '</span>',
+                    '<span class="label label-info"> <i class="fa fa-clock-o"></i>' . $status_list[$ORvalue['status']] . '</span>',
                     '<button data-toggle="tooltip" title="popover" class="btn popovers btn-default btn-xs materialRipple-light materialRipple-btn"><i class="fa fa-info-circle"></i> Details
                                                         <div class="materialRipple-md-ripple-container"></div></button>'
                 );
@@ -526,15 +610,15 @@ class OrderController extends Controller
             $recordsData = $records['data'];
             $records['data'] = array();
             $status_list = array(
-                0 => 'pending',
-                1 => 'processing',//'Queue',
-                2 => 'processing',
-                3 => 'completed',
-                4 => 'refunded',
-                5 => 'Error',
-                6 => 'cancel'
+                0 => '<span class="label label-primary"> <i class="fa fa-clock-o"></i>&nbsp; Pending</span>',
+                1 => '<span class="label label-info"> <i class="fa fa-spin fa-refresh"></i>&nbsp; Processing</span>',//'Queue',
+                2 => '<span class="label label-info"> <i class="fa fa-spin fa-refresh"></i>&nbsp; Processing</span>',
+                3 => '<span class="label label-success"> <i class="fa fa-check-circle"></i>&nbsp; Completed</span>',
+                4 => '<span class="label label-primary" style="background-color: #d5ab07"> <i class="fa fa-dollar"></i>&nbsp; Refunded</span>',
+                5 => '<span class="label label-danger"> <i class="fa fa-ban"></i>&nbsp; Error</span>',
+                6 => '<span class="label label-warning" style="background-color: indianred "> <i class="fa fa-times-circle"></i>&nbsp; Cancelled</span>',
+                7 => '<span class="label label-success" style="background-color: green; text-align: center"> <i class="fa fa-check-circle"></i>&nbsp; Added</span>',
             );
-
             foreach ($recordsData as $ORkey => $ORvalue) {
 
                 //for display more details
@@ -562,16 +646,18 @@ class OrderController extends Controller
                                            </a>';
                 }
                 $price = '$' . $ORvalue['price'];
+
+
                 $records['data'][] = array(
                     '<input type="checkbox" class="orderCheckBox" name="orderId[]" value="' . $ORvalue['order_id'] . '">',
                     $ORvalue['order_id'],
-                    '<p class="link-width"><i style="font-size:10px" class="fa fa-instagram"></i>&nbsp;' . $ORvalue['plan_name'] . '</p>',
-                    '<p class="link-width"><a target="_blank" href="' . $ORvalue['ins_url'] . '">' . $ORvalue['ins_url'] . '</a> </p>',
+                    '<p class="link-width" title="' . $ORvalue['plan_name'] . '"><i style="font-size:10px" class="fa fa-instagram"></i>&nbsp;' . $ORvalue['plan_name'] . '</p>',
+                    '<p class="link-width" title="' . $ORvalue['ins_url'] . '"><a target="_blank" href="' . $ORvalue['ins_url'] . '">' . $ORvalue['ins_url'] . '</a> </p>',
                     $ORvalue['quantity_total'],
                     $price,
                     $ORvalue['added_time'],
                     $ORvalue['updated_time'],
-                    '<span class="label label-info"> <i class="fa fa-clock-o"></i>&nbsp;' . $status_list[$ORvalue['status']] . '</span>',
+                    $status_list[$ORvalue['status']],
                     $details
                 );
             }

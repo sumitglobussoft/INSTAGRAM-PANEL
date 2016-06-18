@@ -252,13 +252,13 @@ class AuthenticationController extends Controller
 //                            dd($userDetails);
 
                             // update the user timezone in user table
-                            if(isset($postData['user_timezone'])){
+                            if (isset($postData['user_timezone'])) {
                                 $whereForUpdate = [
                                     'rawQuery' => 'id =?',
                                     'bindParams' => [$userDetails->id]
                                 ];
-                                $data['user_timezone']=$postData['user_timezone'];
-                                $queryResult=$objUserModel->UpdateUserDetailsbyId($whereForUpdate, $data);
+                                $data['user_timezone'] = $postData['user_timezone'];
+                                $queryResult = $objUserModel->UpdateUserDetailsbyId($whereForUpdate, $data);
                             }
 
                             $response->code = 200;
